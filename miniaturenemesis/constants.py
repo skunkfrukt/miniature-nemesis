@@ -1,0 +1,6 @@
+GAME_TITLE = "Miniature Nemesis"
+GAME_VERSION = "0.1a"
+
+WIN_WIDTH = 640
+WIN_HEIGHT = 360
+WIN_TITLE = "%s v%s" % (GAME_TITLE, GAME_VERSION)
