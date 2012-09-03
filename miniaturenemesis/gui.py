@@ -2,10 +2,6 @@ import pyglet
 from .constants import *
 from pyglet.window import key
 
-guy = pyglet.sprite.Sprite(pyglet.resource.image('png/testguy.png'))
-guy.dx = 0.0
-guy.dy = 0.0
-
 class GameMenu:
     def __init__(self,options, initial_option = 0, wrap = True):
         self.options = options
@@ -37,51 +33,92 @@ class GameMenu:
         return self.options[self.selected_option()]
     
 class GameState:
-    def __init__(self):
+    def draw(self):
+        pass
+    def update(self, dt):
         pass
 
+class MenuState(GameState):
+    def __init__(self):
+        self.title_bg = pyglet.resource.image('png/title.png')
+    def draw(self):
+        self.title_bg.blit(0,0)
+    def update(self, dt):
+    	pass
+
+class PlayState(GameState):
+    def draw(self):
+        guy.draw()
+    def on_key_press(self, symbol, modifiers):
+        if symbol == key.W:
+            guy.dy = 75.0
+        elif symbol == key.A:
+            guy.dx = -50.0
+        elif symbol == key.S:
+            guy.dy = -75.0
+        elif symbol == key.D:
+            guy.dx = 75.0
+
+        if guy.dx < 0:
+            guy.play('stop')
+        elif guy.dx > 0:
+            guy.play('sprint')
+        else:
+            guy.play('run')
+            
+    def on_key_release(self, symbol, modifiers):
+        if symbol == key.W:
+            guy.dy = 0.0
+        elif symbol == key.A:
+            guy.dx = 0.0
+        elif symbol == key.S:
+            guy.dy = 0.0
+        elif symbol == key.D:
+            guy.dx = 0.0
+            
+    def update(self, dt):
+        guy.x += guy.dx * dt
+        guy.y += guy.dy * dt
+
+    
+class Hero(pyglet.sprite.Sprite):
+    def __init__(self):
+        fis = pyglet.image.Animation.from_image_sequence
+        guy_png = pyglet.resource.image('png/hero__spriteset00.png') # sprite sheet
+        guy_grid = pyglet.image.ImageGrid(guy_png, 1, 6) # 1 row, 6 cols
+        self.anims = {
+            'run': fis(guy_grid[:2], 0.12, True),
+            'sprint': fis(guy_grid[2:4], 0.12, True),
+            'stop': fis(guy_grid[4:6], 0.12, True)
+        }
+        super(Hero, self).__init__(self.anims['run'])
+        self.dx = 0.0
+        self.dy = 0.0
+    
+    def play(self, anim_name):
+        if anim_name in self.anims:
+            self.image = self.anims[anim_name]
+
+
+guy = Hero()
 
 class MainWindow(pyglet.window.Window):
     def __init__(self):
         super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE)
-        self.title_bg = pyglet.resource.image('png/title.png')
-        self.start_button = pyglet.text.HTMLLabel('<b>Start</b>',
-                                                  x = self.width//3,
-                                                  y = 20)
         guy.x = self.width//2
         guy.y = self.height//2
+        self.state = MenuState()
         pyglet.clock.schedule_interval(self.update,0.05)
         
     def on_key_press(self, symbol, modifiers):
-        global guy
-        if symbol == key.W:
-            guy.dy = 100.0
-        elif symbol == key.A:
-            guy.dx = -100.0
-        elif symbol == key.S:
-            guy.dy = -100.0
-        elif symbol == key.D:
-            guy.dx = 100.0
+        self.state.on_key_press(symbol, modifiers)
             
     def on_key_release(self, symbol, modifiers):
-        global guy
-        if symbol == key.W:
-            guy.dy = 0.0
-        elif symbol == key.A:
-            guy.dx = 0.0
-        elif symbol == key.S:
-            guy.dy = 0.0
-        elif symbol == key.D:
-            guy.dx = 0.0
-            
+        self.state.on_key_release(symbol, modifiers)
     
     def on_draw(self):
         self.clear()
-        self.title_bg.blit(0,0)
-        guy.draw()
-        self.start_button.draw()
-        
+        self.state.draw()
         
     def update(self,dt):
-        guy.x += guy.dx * dt
-        guy.y += guy.dy * dt
+        self.state.update(dt)
