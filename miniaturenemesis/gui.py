@@ -43,6 +43,9 @@ class MenuState(GameState):
         self.title_bg = pyglet.resource.image('png/title.png')
     def draw(self):
         self.title_bg.blit(0,0)
+    def on_key_press(self, symbol, modifiers):
+        if symbol == key.ENTER:
+            pass # TODO: Carry out current menu command.
     def update(self, dt):
     	pass
 
