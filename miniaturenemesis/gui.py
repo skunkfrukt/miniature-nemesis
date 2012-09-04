@@ -40,16 +40,52 @@ class GameState:
 
 class MenuState(GameState):
     def __init__(self):
+        self.switch_to = None
         self.title_bg = pyglet.resource.image('png/title.png')
+        self.menu = GameMenu(['Run','Quit'])
+        self.menu.labels = []
+        for o in self.menu.options:
+            l = pyglet.text.Label(o, font_size=16, color=(0,0,0,255), anchor_x = 'center', x = 320)
+            l.y = 60 - len(self.menu.labels) * 20
+            self.menu.labels.append(l)
+        self.select_menu_item(self.menu.selected_option())
     def draw(self):
         self.title_bg.blit(0,0)
+        for l in self.menu.labels:
+            l.draw()
+        
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ENTER:
-            pass # TODO: Carry out current menu command.
+            if self.menu.selected_option_name() == 'Run':
+                self.switch_state(PlayState())
+            elif self.menu.selected_option_name() == 'Quit':
+                self.quit()
+        elif symbol == key.UP:
+            self.unselect_menu_item(self.menu.selected_option())
+            self.menu.previous_option()
+            self.select_menu_item(self.menu.selected_option())
+        elif symbol == key.DOWN:
+            self.unselect_menu_item(self.menu.selected_option())
+            self.menu.next_option()
+            self.select_menu_item(self.menu.selected_option())
+            
+    def on_key_release(self, symbol, modifiers):
+        pass        
+    
     def update(self, dt):
     	pass
+    def unselect_menu_item(self, index):
+        self.menu.labels[index].color = (0,0,0,255)
+    def select_menu_item(self, index):
+        self.menu.labels[index].color = (255,0,0,255)
+    def quit(self):
+        self.switch_to = 'QUIT'
+    def switch_state(self, state):
+        self.switch_to = state
 
 class PlayState(GameState):
+    def __init__(self):
+        self.switch_to = None
     def draw(self):
         guy.draw()
     def on_key_press(self, symbol, modifiers):
@@ -121,7 +157,14 @@ class MainWindow(pyglet.window.Window):
     
     def on_draw(self):
         self.clear()
-        self.state.draw()
+        if not self.state.switch_to:
+            self.state.draw()
+        else:
+            if self.state.switch_to == 'QUIT':
+                self.close()
+            else:
+                self.state = self.state.switch_to
+                print(self.state)
         
     def update(self,dt):
         self.state.update(dt)
