@@ -1,6 +1,9 @@
+import math
 import pyglet
 from .constants import *
 from pyglet.window import key
+
+keys = key.KeyStateHandler()
 
 class GameMenu:
     def __init__(self,options, initial_option = 0, wrap = True):
@@ -86,40 +89,28 @@ class MenuState(GameState):
 class PlayState(GameState):
     def __init__(self):
         self.switch_to = None
+        self.level = Level('Derpington Abbey')
     def draw(self):
+        off = int(self.level.offset) % 32
+        for x in range(-off,639,32):
+            self.level.bg.blit(x, 0)
         guy.draw()
+        peck.draw()
     def on_key_press(self, symbol, modifiers):
-        if symbol == key.W:
-            guy.dy = 75.0
-        elif symbol == key.A:
-            guy.dx = -50.0
-        elif symbol == key.S:
-            guy.dy = -75.0
-        elif symbol == key.D:
-            guy.dx = 75.0
-
-        if guy.dx < 0:
-            guy.play('stop')
-        elif guy.dx > 0:
-            guy.play('sprint')
-        else:
-            guy.play('run')
+        guy.fixSpeed()
             
     def on_key_release(self, symbol, modifiers):
-        if symbol == key.W:
-            guy.dy = 0.0
-        elif symbol == key.A:
-            guy.dx = 0.0
-        elif symbol == key.S:
-            guy.dy = 0.0
-        elif symbol == key.D:
-            guy.dx = 0.0
+        guy.fixSpeed()
             
     def update(self, dt):
         guy.x += guy.dx * dt
         guy.y += guy.dy * dt
+        peck.angle += peck.speed * dt
+        peck.x += 100.0 * math.cos(peck.angle) * dt
+        peck.y += 100.0 * math.sin(peck.angle) * dt
+        self.level.offset += 100 * dt
 
-    
+
 class Hero(pyglet.sprite.Sprite):
     def __init__(self):
         fis = pyglet.image.Animation.from_image_sequence
@@ -133,20 +124,67 @@ class Hero(pyglet.sprite.Sprite):
         super(Hero, self).__init__(self.anims['run'])
         self.dx = 0.0
         self.dy = 0.0
+        self.speed = 60.0
     
     def play(self, anim_name):
         if anim_name in self.anims:
             self.image = self.anims[anim_name]
+            
+    def fixSpeed(self):
+        self.dx = 0.0
+        self.dy = 0.0
+        if keys[key.W]:
+            self.dy += self.speed
+        if keys[key.S]:
+            self.dy -= self.speed
+        if keys[key.A]:
+            self.dx -= self.speed
+        if keys[key.D]:
+            self.dx += self.speed
+        if self.dx and self.dy:
+            self.dx /= 1.4
+            self.dy /= 1.4
+        if self.dx > 0:
+            self.play('sprint')
+        elif self.dx < 0:
+            self.play('stop')
+        else:
+            self.play('run')
 
+
+class Woodpecker(pyglet.sprite.Sprite):
+    def __init__(self):
+        fis = pyglet.image.Animation.from_image_sequence
+        wpeck_png = pyglet.resource.image('png/woodpecker__spritesheet00.png') # sprite sheet
+        wpeck_grid = pyglet.image.ImageGrid(wpeck_png, 1, 2) # 1 row, 2 cols
+        self.anims = {
+            'fly': fis(wpeck_grid, 0.1, True)
+        }
+        super(Woodpecker, self).__init__(self.anims['fly'])
+        self.dx = 0.0
+        self.dy = 0.0
+        self.speed = 1.0
+        self.angle = math.pi / 2.0
+
+
+class Level:
+    def __init__(self, id):
+        self.id = id
+        self.offset = 0
+        self.bg = pyglet.resource.image('png/testbg.png')
 
 guy = Hero()
+peck = Woodpecker()
 
 class MainWindow(pyglet.window.Window):
     def __init__(self):
         super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE)
         guy.x = self.width//2
         guy.y = self.height//2
+        peck.x = guy.x + 75 - peck.image.get_max_width()//2
+        peck.y = guy.y + peck.image.get_max_height()//2
         self.state = MenuState()
+        self.push_handlers(keys)
         pyglet.clock.schedule_interval(self.update,0.05)
         
     def on_key_press(self, symbol, modifiers):
