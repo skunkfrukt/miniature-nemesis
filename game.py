@@ -1,6 +1,6 @@
 import pyglet
 
-from miniaturenemesis import gui
+from src import gui
 
 # Main window?
 mn_window = gui.MainWindow()

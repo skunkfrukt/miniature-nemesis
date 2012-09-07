@@ -4,7 +4,7 @@ class Collider:
         self.width, self.height = width, height
         
     def collide(self, other_collider):
-        return collide_x(other_collider) and collide_y(other_collider)
+        return self.collide_x(other_collider) and self.collide_y(other_collider)
     
     def collide_x(self, other_collider):
         diff = other_collider.x - self.x
