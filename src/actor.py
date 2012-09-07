@@ -5,7 +5,7 @@ from pyglet.window import key
 class Hero(pyglet.sprite.Sprite):
     def __init__(self):
         fis = pyglet.image.Animation.from_image_sequence
-        guy_png = pyglet.resource.image('png/hero__spriteset00.png') # sprite sheet
+        guy_png = pyglet.resource.image('img/hero__spriteset00.png') # sprite sheet
         guy_grid = pyglet.image.ImageGrid(guy_png, 1, 6) # 1 row, 6 cols
         self.anims = {
             'run': fis(guy_grid[:2], 0.12, True),
@@ -45,7 +45,7 @@ class Hero(pyglet.sprite.Sprite):
 class Woodpecker(pyglet.sprite.Sprite):
     def __init__(self):
         fis = pyglet.image.Animation.from_image_sequence
-        wpeck_png = pyglet.resource.image('png/woodpecker__spritesheet00.png') # sprite sheet
+        wpeck_png = pyglet.resource.image('img/woodpecker__spritesheet00.png') # sprite sheet
         wpeck_grid = pyglet.image.ImageGrid(wpeck_png, 1, 2) # 1 row, 2 cols
         self.anims = {
             'fly': fis(wpeck_grid, 0.1, True)
