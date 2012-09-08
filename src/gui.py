@@ -92,12 +92,12 @@ class PlayState(GameState):
     def __init__(self):
         self.switch_to = None
         self.level = stage.Stage('Derpington Abbey')
+        guy.batch = batch
+        peck.batch = batch
     def draw(self):
-        off = int(self.level.offset) % 32
-        for x in range(-off,639,32):
-            self.level.bg.blit(x, 0)
-        guy.draw()
-        peck.draw()
+        off = int(self.level.offset) % 240
+        self.level.grass_tex.blit_tiled(-off, 0, 0, 640+off, 360)
+        batch.draw()
     def on_key_press(self, symbol, modifiers):
         guy.fixSpeed(keys)
             
@@ -112,14 +112,15 @@ class PlayState(GameState):
         peck.y += 100.0 * math.sin(peck.angle) * dt
         self.level.offset += 100 * dt
 
+batch = pyglet.graphics.Batch()
 guy = actor.Hero()
 peck = actor.Woodpecker()
 
 class MainWindow(pyglet.window.Window):
     def __init__(self):
         super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE)
-        guy.x = self.width//2
-        guy.y = self.height//2
+        guy.x = 0
+        guy.y = 0
         peck.x = guy.x + 75 - peck.image.get_max_width()//2
         peck.y = guy.y + peck.image.get_max_height()//2
         self.state = MenuState()

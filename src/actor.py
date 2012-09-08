@@ -2,25 +2,62 @@ import pyglet
 import math
 from pyglet.window import key
 
-class Hero(pyglet.sprite.Sprite):
-    def __init__(self):
+class Actor(pyglet.sprite.Sprite):
+    @classmethod
+    def make_animations(cls, image, number_of_frames, frame_data):
+        """Makes an animation set for an Actor subclass.
+        
+        Keyword arguments:
+        image -- the image to be used as a sprite sheet
+        number_of_frames
+        frame_data -- data on how to process the sprite sheet
+        
+        The frame data is given in the form of a dictionary,
+        where the keys are the names of the animations, and the
+        values are tuples following this formula:
+            ((fa, fz), speed, loop),
+        where fa and fz are the start and end index of the frames
+        to be used, speed is the duration of each frame, and
+        loop is a boolean value determining whether to loop the
+        animation.
+        
+        """
         fis = pyglet.image.Animation.from_image_sequence
-        guy_png = pyglet.resource.image('img/hero__spriteset00.png') # sprite sheet
-        guy_grid = pyglet.image.ImageGrid(guy_png, 1, 6) # 1 row, 6 cols
-        self.anims = {
-            'run': fis(guy_grid[:2], 0.12, True),
-            'sprint': fis(guy_grid[2:4], 0.12, True),
-            'stop': fis(guy_grid[4:6], 0.12, True)
-        }
-        super(Hero, self).__init__(self.anims['run'])
+        grid = pyglet.image.ImageGrid(image, 1, number_of_frames)
+        animations = {}
+        for name, template in frame_data.items():
+            animations[name] = fis(grid[slice(*template[0])], *template[1:])
+        return animations
+
+    def __init__(self, animations=None, default=None):
+        if animations is not None:
+            self.animations = animations
+        if default is None:
+            default = self.animations.keys()[0]
+            print("No default anim; using %s" % default)
+        pyglet.sprite.Sprite.__init__(self, self.animations[default])
+    
+    def play(self, animation):
+        if animation in self.animations:
+            self.image = self.animations[animation]
+        else:
+            print("WARNING: %s tried to play invalid animation %s" %
+                  (self, animation))
+
+
+class Hero(Actor):
+    _image = pyglet.resource.image('img/hero__spriteset00.png')
+    _frame_data = {'run': ((0, 2), 0.12, True),
+                   'sprint': ((2, 4), 0.12, True),
+                   'stop': ((4, 6), 0.12, True)}
+    animations = Actor.make_animations(_image, 6, _frame_data)
+
+    def __init__(self):
+        Actor.__init__(self, default='run')
         self.dx = 0.0
         self.dy = 0.0
-        self.speed = 60.0
-    
-    def play(self, anim_name):
-        if anim_name in self.anims:
-            self.image = self.anims[anim_name]
-            
+        self.speed = 80.0
+
     def fixSpeed(self, keys):
         self.dx = 0.0
         self.dy = 0.0
@@ -42,15 +79,14 @@ class Hero(pyglet.sprite.Sprite):
         else:
             self.play('run')
 
-class Woodpecker(pyglet.sprite.Sprite):
+
+class Woodpecker(Actor):
+    _image = pyglet.resource.image('img/woodpecker__spritesheet00.png')
+    _frame_data = {'fly': ((0, 2), 0.1, True)}
+    animations = Actor.make_animations(_image, 2, _frame_data)
+
     def __init__(self):
-        fis = pyglet.image.Animation.from_image_sequence
-        wpeck_png = pyglet.resource.image('img/woodpecker__spritesheet00.png') # sprite sheet
-        wpeck_grid = pyglet.image.ImageGrid(wpeck_png, 1, 2) # 1 row, 2 cols
-        self.anims = {
-            'fly': fis(wpeck_grid, 0.1, True)
-        }
-        super(Woodpecker, self).__init__(self.anims['fly'])
+        Actor.__init__(self, default='fly')
         self.dx = 0.0
         self.dy = 0.0
         self.speed = 1.0
