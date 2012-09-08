@@ -9,7 +9,7 @@ class Collider:
     def collide_x(self, other_collider):
         diff = other_collider.x - self.x
         if diff == 0:
-            return true
+            return True
         elif diff < 0:
             return -diff < other_collider.width
         else: # diff > 0
@@ -18,7 +18,7 @@ class Collider:
     def collide_y(self, other_collider):
         diff = other_collider.y - self.y
         if diff == 0:
-            return true
+            return True
         elif diff < 0:
             return -diff < other_collider.height
         else: # diff > 0

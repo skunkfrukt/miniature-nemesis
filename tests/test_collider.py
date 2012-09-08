@@ -32,6 +32,12 @@ class TestCollider(unittest.TestCase):
         self.northeast_discrete = Collider(13,13,2,2)
         self.northeast_overlapping = Collider(5,5,10,10)
         
+        # Close colliders.
+        self.north_close = Collider(0,10,10,5)
+        self.south_close = Collider(0,-5,10,5)
+        self.west_close = Collider(-5,0,5,10)
+        self.east_close = Collider(10,0,5,10)
+        
     def assertCollides(self, other):
         return self.assertEqual(True, self.collider.collide(other))
         
@@ -91,6 +97,19 @@ class TestCollider(unittest.TestCase):
         
     def test_southwest_overlapping(self):
         self.assertCollides(self.west_overlapping)
+        
+    def test_north_close(self):
+        self.assertDodges(self.north_close)
+    
+    def test_south_close(self):
+        self.assertDodges(self.south_close)
+    
+    def test_west_close(self):
+        self.assertDodges(self.west_close)
+    
+    def test_east_close(self):
+        self.assertDodges(self.east_close)
+    
         
     
 if __name__ == '__main__':
