@@ -91,12 +91,11 @@ class MenuState(GameState):
 class PlayState(GameState):
     def __init__(self):
         self.switch_to = None
-        self.level = stage.Stage('Derpington Abbey')
+        self.level = stage.Stage('Derpington Abbey', (95,127,63,255))
         guy.batch = batch
         peck.batch = batch
     def draw(self):
-        off = int(self.level.offset) % 240
-        self.level.grass_tex.blit_tiled(-off, 0, 0, 640+off, 360)
+        self.level.background.blit(0,0)
         batch.draw()
     def on_key_press(self, symbol, modifiers):
         guy.fixSpeed(keys)
