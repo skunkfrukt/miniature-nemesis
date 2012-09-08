@@ -46,7 +46,7 @@ class GameState:
 class MenuState(GameState):
     def __init__(self):
         self.switch_to = None
-        self.title_bg = pyglet.resource.image('img/title.png')
+        self.title_bg = pyglet.resource.image('img/gui/title.png')
         self.menu = GameMenu(['Run','Quit'])
         self.menu.labels = []
         for o in self.menu.options:
