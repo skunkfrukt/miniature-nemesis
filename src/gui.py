@@ -38,26 +38,33 @@ class GameMenu:
         return self.options[self.selected_option()]
     
 class GameState:
+    def __init__(self):
+        self.batch = pyglet.graphics.Batch()
+        
     def draw(self):
-        pass
+        self.batch.draw()
+        
     def update(self, dt):
         pass
+        
 
 class MenuState(GameState):
     def __init__(self):
+        GameState.__init__(self)
         self.switch_to = None
-        self.title_bg = pyglet.resource.image('img/gui/title.png')
+        self.bg_group = pyglet.graphics.OrderedGroup(0)
+        self.button_group = pyglet.graphics.OrderedGroup(1)
+        self.title_bg = pyglet.sprite.Sprite(pyglet.resource.image(
+                'img/gui/title.png'), batch=self.batch, group=self.bg_group)
         self.menu = GameMenu(['Run','Quit'])
         self.menu.labels = []
         for o in self.menu.options:
-            l = pyglet.text.Label(o, font_size=16, color=(0,0,0,255), anchor_x = 'center', x = 320)
-            l.y = 60 - len(self.menu.labels) * 20
+            ly = 60 - len(self.menu.labels) * 20
+            l = pyglet.text.Label(o, font_size=16, color=(0, 0, 0, 255),
+                    anchor_x='center', batch=self.batch, x=320, y=ly,
+                    group=self.button_group)
             self.menu.labels.append(l)
         self.select_menu_item(self.menu.selected_option())
-    def draw(self):
-        self.title_bg.blit(0,0)
-        for l in self.menu.labels:
-            l.draw()
         
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ENTER:
@@ -78,25 +85,37 @@ class MenuState(GameState):
         pass        
     
     def update(self, dt):
-    	pass
+        pass
+        
     def unselect_menu_item(self, index):
         self.menu.labels[index].color = (0,0,0,255)
+        
     def select_menu_item(self, index):
         self.menu.labels[index].color = (255,0,0,255)
+        
     def quit(self):
         self.switch_to = 'QUIT'
+        
     def switch_state(self, state):
         self.switch_to = state
 
+
 class PlayState(GameState):
     def __init__(self):
+        GameState.__init__(self)
+        self.bg_group = pyglet.graphics.OrderedGroup(0)
+        # self.bg_prop_group = pyglet.graphics.OrderedGroup(1)
+        self.actor_group = pyglet.graphics.OrderedGroup(2)
+        # self.projectile_group = pyglet.graphics.OrderedGroup(3)
+        self.actor_group = pyglet.graphics.OrderedGroup(4)
+        # self.fg_prop_group = pyglet.graphics.OrderedGroup(5)
+        # self.gui_group = pyglet.graphics.OrderedGroup(6)
         self.switch_to = None
         self.level = stage.Stage('Derpington Abbey', (95,127,63,255))
-        guy.batch = batch
-        peck.batch = batch
-    def draw(self):
-        self.level.background.blit(0,0)
-        batch.draw()
+        self.bg = pyglet.sprite.Sprite(self.level.background, batch=self.batch,
+                group=self.bg_group)
+        guy.batch = self.batch
+        
     def on_key_press(self, symbol, modifiers):
         guy.fixSpeed(keys)
             
@@ -106,22 +125,15 @@ class PlayState(GameState):
     def update(self, dt):
         guy.x += guy.dx * dt
         guy.y += guy.dy * dt
-        peck.angle += peck.speed * dt
-        peck.x += 100.0 * math.cos(peck.angle) * dt
-        peck.y += 100.0 * math.sin(peck.angle) * dt
         self.level.offset += 100 * dt
 
-batch = pyglet.graphics.Batch()
 guy = actor.Hero()
-peck = actor.Woodpecker()
 
 class MainWindow(pyglet.window.Window):
     def __init__(self):
         super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE)
         guy.x = 0
         guy.y = 0
-        peck.x = guy.x + 75 - peck.image.get_max_width()//2
-        peck.y = guy.y + peck.image.get_max_height()//2
         self.state = MenuState()
         self.push_handlers(keys)
         pyglet.clock.schedule_interval(self.update,0.02)
@@ -134,14 +146,13 @@ class MainWindow(pyglet.window.Window):
     
     def on_draw(self):
         self.clear()
-        if not self.state.switch_to:
+        if self.state.switch_to is None:
             self.state.draw()
         else:
             if self.state.switch_to == 'QUIT':
                 self.close()
             else:
                 self.state = self.state.switch_to
-                print(self.state)
         
     def update(self,dt):
         self.state.update(dt)
