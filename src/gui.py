@@ -5,7 +5,8 @@ from pyglet.window import key
 
 
 keys = key.KeyStateHandler()
-import actor, stage
+import actor
+import stage
 
 class GameMenu:
     def __init__(self,options, initial_option = 0, wrap = True):
@@ -104,7 +105,7 @@ class PlayState(GameState):
     def __init__(self):
         GameState.__init__(self)
         self.bg_group = pyglet.graphics.OrderedGroup(0)
-        # self.bg_prop_group = pyglet.graphics.OrderedGroup(1)
+        self.bg_prop_group = pyglet.graphics.OrderedGroup(1)
         self.actor_group = pyglet.graphics.OrderedGroup(2)
         # self.projectile_group = pyglet.graphics.OrderedGroup(3)
         self.actor_group = pyglet.graphics.OrderedGroup(4)
@@ -115,6 +116,8 @@ class PlayState(GameState):
         self.bg = pyglet.sprite.Sprite(self.level.background, batch=self.batch,
                 group=self.bg_group)
         guy.batch = self.batch
+        self.stuff = []
+        self.new_stone = True
         
     def on_key_press(self, symbol, modifiers):
         guy.fixSpeed(keys)
@@ -123,9 +126,26 @@ class PlayState(GameState):
         guy.fixSpeed(keys)
             
     def update(self, dt):
+        bg_movement = 100 * dt
         guy.x += guy.dx * dt
         guy.y += guy.dy * dt
-        self.level.offset += 100 * dt
+        self.level.offset += bg_movement
+        for thing in self.stuff:
+            thing.x -= bg_movement
+            if thing.x < -50:
+                self.stuff.remove(thing)
+        if (self.level.offset // 32) % 4 == 0:
+            if self.new_stone:
+                self.stuff.append(stage.Rock())
+                self.stuff[-1].x = 640
+                self.stuff[-1].y = 150 + int(self.level.offset) % 100
+                self.stuff[-1].batch = self.batch
+                self.stuff[-1].group = self.bg_prop_group
+                print(len(self.stuff))
+                self.new_stone = False
+        else:
+            self.new_stone = True
+        
 
 guy = actor.Hero()
 
