@@ -118,6 +118,8 @@ class PlayState(GameState):
         guy.batch = self.batch
         self.stuff = []
         self.new_stone = True
+        self.props = stage.village_stage['props']
+        self.graveyard = {stage.Rock: []}
         
     def on_key_press(self, symbol, modifiers):
         guy.fixSpeed(keys)
@@ -134,15 +136,24 @@ class PlayState(GameState):
             thing.x -= bg_movement
             if thing.x < -50:
                 self.stuff.remove(thing)
-        if (self.level.offset // 32) % 4 == 0:
-            if self.new_stone:
-                self.stuff.append(stage.Rock())
-                self.stuff[-1].x = 640
-                self.stuff[-1].y = 150 + int(self.level.offset) % 100
-                self.stuff[-1].batch = self.batch
-                self.stuff[-1].group = self.bg_prop_group
-                print(len(self.stuff))
-                self.new_stone = False
+                print("%s at %d thrown on the graveyard." % (thing.__class__.__name__, thing.x))
+                self.graveyard[thing.__class__].append(thing)
+                print("Graveyard size: %d" %
+                        len(self.graveyard[thing.__class__]))
+        if len(self.props) and self.props[0][1] <= self.level.offset + 640:
+            prop = self.props.pop(0)
+            cls, prop_x, prop_y = prop
+            if len(self.graveyard[cls]):
+                print("Grabbing %s from graveyard." % cls.__name__)
+                new_prop = self.graveyard[cls].pop(0)
+                print("Graveyard size: %d" % len(self.graveyard[cls]))
+            else:
+                print("Creating new %s at %d" % (cls.__name__, prop_x))
+                new_prop = cls()
+                new_prop.batch = self.batch
+                new_prop.group = self.bg_prop_group
+            new_prop.x, new_prop.y = prop_x, prop_y
+            self.stuff.append(new_prop)
         else:
             self.new_stone = True
         
