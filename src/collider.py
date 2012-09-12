@@ -7,22 +7,16 @@ class Collider:
         return self.collide_x(other_collider) and self.collide_y(other_collider)
     
     def collide_x(self, other_collider):
-        diff = other_collider.x - self.x
-        if diff == 0:
-            return True
-        elif diff < 0:
-            return -diff < other_collider.width
-        else: # diff > 0
-            return diff < self.width
-    
+        cx0 = max(self.x, other_collider.x)
+        cx1 = min(self.x + self.width, other_collider.x + other_collider.width)
+        cw = cx1 - cx0
+        return cw > 0
+        
     def collide_y(self, other_collider):
-        diff = other_collider.y - self.y
-        if diff == 0:
-            return True
-        elif diff < 0:
-            return -diff < other_collider.height
-        else: # diff > 0
-            return diff < self.height
+        cy0 = max(self.y, other_collider.y)
+        cy1 = min(self.y + self.height, other_collider.y + other_collider.height)
+        ch = cy1 - cy0
+        return ch > 0
 
 class PointCollider(Collider):
     def __init__(self,x=0,y=0):

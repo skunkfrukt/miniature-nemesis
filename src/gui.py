@@ -8,6 +8,18 @@ keys = key.KeyStateHandler()
 import actor
 import stage
 
+
+def collide(a, b):
+    cx0 = max(a.x, b.x)
+    cx1 = min(a.x + a.width, b.x + b.width)
+    cw = cx1 - cx0
+    if cw < 50: return False
+    
+    cy0 = max(a.y, b.y)
+    cy1 = min(a.y + a.height, b.y + b.height)
+    ch = cy1 - cy0
+    return ch >= 50
+
 class GameMenu:
     def __init__(self,options, initial_option = 0, wrap = True):
         self.options = options
@@ -133,6 +145,7 @@ class PlayState(GameState):
         guy.fixSpeed(keys)
             
     def update(self, dt):
+        guy.colliding = False
         bg_movement = 100 * dt
         guy.x += guy.dx * dt
         guy.y += guy.dy * dt
@@ -156,8 +169,14 @@ class PlayState(GameState):
                 thing.visible = False
                 self.stuff.remove(thing)
                 self.graveyard[thing.__class__].append(thing)
+            if not guy.colliding:
+                if collide(guy, thing):
+                    guy.colliding = True
+        if guy.colliding:
+            guy.color = (255,0,0)
         else:
-        
+            guy.color = (255,255,255)
+
 
 guy = actor.Hero()
 
