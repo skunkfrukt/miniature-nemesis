@@ -47,9 +47,9 @@ class Actor(pyglet.sprite.Sprite):
 
 class Hero(Actor):
     _image = pyglet.resource.image('img/sprites/hero__sprite.png')
-    _frame_data = {'run': ((0, 2), 0.12, True),
-                   'sprint': ((2, 4), 0.12, True),
-                   'stop': ((4, 6), 0.12, True)}
+    _frame_data = {'run': ((0, 2), 0.1, True),
+                   'sprint': ((2, 4), 0.1, True),
+                   'stop': ((4, 6), 0.1, True)}
     animations = Actor.make_animations(_image, 6, _frame_data)
 
     def __init__(self):

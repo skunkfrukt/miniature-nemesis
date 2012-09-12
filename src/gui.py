@@ -124,7 +124,7 @@ class PlayState(GameState):
         # self.fg_prop_group = pyglet.graphics.OrderedGroup(5)
         # self.gui_group = pyglet.graphics.OrderedGroup(6)
         self.switch_to = None
-        self.level = stage.Stage('Derpington Abbey', (95,127,63,255))
+        self.level = stage.Stage('Derpington Abbey', (0,127,0,255))
         self.bg = pyglet.sprite.Sprite(self.level.background, batch=self.batch,
                 group=self.bg_group)
         guy.batch = self.batch
@@ -180,6 +180,8 @@ class PlayState(GameState):
 
 guy = actor.Hero()
 
+fps_display = pyglet.clock.ClockDisplay()
+
 class MainWindow(pyglet.window.Window):
     def __init__(self):
         super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE)
@@ -187,7 +189,7 @@ class MainWindow(pyglet.window.Window):
         guy.y = 0
         self.state = MenuState()
         self.push_handlers(keys)
-        pyglet.clock.schedule_interval(self.update,0.02)
+        pyglet.clock.schedule_interval(self.update,0.01)
         
     def on_key_press(self, symbol, modifiers):
         self.state.on_key_press(symbol, modifiers)
@@ -204,6 +206,7 @@ class MainWindow(pyglet.window.Window):
                 self.close()
             else:
                 self.state = self.state.switch_to
+        fps_display.draw()
         
     def update(self,dt):
         self.state.update(dt)
