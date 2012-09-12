@@ -9,11 +9,13 @@ class Stage:
         self.obstacles = obstacles
         background_image = pyglet.image.SolidColorImagePattern(color)
         self.background = background_image.create_image(640,360)
+        self.graveyard = {}
         
 
 class Prop(pyglet.sprite.Sprite):
     def __init__(self, image):
-        pyglet.sprite.Sprite.__init__(self, image)
+        pyglet.sprite.Sprite.__init__(self, image, x=-100, y=-100)
+        self.stage_x = 0
 
 
 class Rock(Prop):

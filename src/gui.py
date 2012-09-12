@@ -120,6 +120,11 @@ class PlayState(GameState):
         self.new_stone = True
         self.props = stage.village_stage['props']
         self.graveyard = {stage.Rock: []}
+        for i in range(10):
+            r = stage.Rock()
+            self.graveyard[stage.Rock].append(r)
+            r.batch = self.batch
+            r.group = self.bg_prop_group
         
     def on_key_press(self, symbol, modifiers):
         guy.fixSpeed(keys)
@@ -132,30 +137,26 @@ class PlayState(GameState):
         guy.x += guy.dx * dt
         guy.y += guy.dy * dt
         self.level.offset += bg_movement
-        for thing in self.stuff:
-            thing.x -= bg_movement
-            if thing.x < -50:
-                self.stuff.remove(thing)
-                print("%s at %d thrown on the graveyard." % (thing.__class__.__name__, thing.x))
-                self.graveyard[thing.__class__].append(thing)
-                print("Graveyard size: %d" %
-                        len(self.graveyard[thing.__class__]))
-        if len(self.props) and self.props[0][1] <= self.level.offset + 640:
+        while len(self.props) and self.props[0][1] <= self.level.offset + 700:
             prop = self.props.pop(0)
             cls, prop_x, prop_y = prop
-            if len(self.graveyard[cls]):
-                print("Grabbing %s from graveyard." % cls.__name__)
+            if len(self.graveyard[cls]) > 0:
                 new_prop = self.graveyard[cls].pop(0)
-                print("Graveyard size: %d" % len(self.graveyard[cls]))
             else:
-                print("Creating new %s at %d" % (cls.__name__, prop_x))
                 new_prop = cls()
                 new_prop.batch = self.batch
                 new_prop.group = self.bg_prop_group
-            new_prop.x, new_prop.y = prop_x, prop_y
+            new_prop.stage_x = prop_x
+            new_prop.y = prop_y
+            new_prop.visible = True
             self.stuff.append(new_prop)
+        for thing in self.stuff:
+            thing.x = thing.stage_x - self.level.offset
+            if thing.stage_x < self.level.offset - thing.width:
+                thing.visible = False
+                self.stuff.remove(thing)
+                self.graveyard[thing.__class__].append(thing)
         else:
-            self.new_stone = True
         
 
 guy = actor.Hero()
