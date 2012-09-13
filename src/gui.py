@@ -183,6 +183,13 @@ guy = actor.Hero()
 fps_display = pyglet.clock.ClockDisplay()
 
 class MainWindow(pyglet.window.Window):
+    icons = (pyglet.resource.image('img/icons/16x16.png'),
+            pyglet.resource.image('img/icons/24x24.png'),
+            pyglet.resource.image('img/icons/32x32.png'),
+            pyglet.resource.image('img/icons/48x48.png'),
+            pyglet.resource.image('img/icons/72x72.png'),
+            pyglet.resource.image('img/icons/128x128.png'))
+    
     def __init__(self):
         super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE)
         guy.x = 0
@@ -190,6 +197,7 @@ class MainWindow(pyglet.window.Window):
         self.state = MenuState()
         self.push_handlers(keys)
         pyglet.clock.schedule_interval(self.update,0.01)
+        self.set_icon(*self.icons)
         
     def on_key_press(self, symbol, modifiers):
         self.state.on_key_press(symbol, modifiers)
