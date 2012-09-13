@@ -13,12 +13,12 @@ def collide(a, b):
     cx0 = max(a.x, b.x)
     cx1 = min(a.x + a.width, b.x + b.width)
     cw = cx1 - cx0
-    if cw < 50: return False
+    if cw <= 20: return False
     
     cy0 = max(a.y, b.y)
     cy1 = min(a.y + a.height, b.y + b.height)
     ch = cy1 - cy0
-    return ch >= 50
+    return ch > 20
 
 class GameMenu:
     def __init__(self,options, initial_option = 0, wrap = True):
@@ -146,7 +146,7 @@ class PlayState(GameState):
             
     def update(self, dt):
         guy.colliding = False
-        bg_movement = 100 * dt
+        bg_movement = SPEED_EASY * dt
         guy.x += guy.dx * dt
         guy.y += guy.dy * dt
         self.level.offset += bg_movement
@@ -196,8 +196,8 @@ class MainWindow(pyglet.window.Window):
         guy.y = 0
         self.state = MenuState()
         self.push_handlers(keys)
-        pyglet.clock.schedule_interval(self.update,0.01)
         self.set_icon(*self.icons)
+        pyglet.clock.schedule_interval(self.update,0.02)
         
     def on_key_press(self, symbol, modifiers):
         self.state.on_key_press(symbol, modifiers)
