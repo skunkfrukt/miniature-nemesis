@@ -128,6 +128,7 @@ class PlayState(GameState):
         self.bg = pyglet.sprite.Sprite(self.level.background, batch=self.batch,
                 group=self.bg_group)
         guy.batch = self.batch
+        guy.group = self.actor_group
         self.stuff = []
         self.new_stone = True
         self.props = stage.village_stage['props']

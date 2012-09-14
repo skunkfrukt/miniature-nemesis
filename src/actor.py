@@ -90,5 +90,4 @@ class Woodpecker(Actor):
         self.dx = 0.0
         self.dy = 0.0
         self.speed = 1.0
-        self.angle = math.pi / 2.0
 
