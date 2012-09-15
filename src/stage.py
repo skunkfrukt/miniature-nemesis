@@ -39,3 +39,8 @@ village_stage = {
                 (Rock, 4000, 150), (Rock, 4567, 0), (Rock, 5000, 250),
         ]
 }
+
+import random
+
+for x in range(5200, 60001, 50):
+    village_stage['props'].append((Rock, x, random.randint(0,300)))

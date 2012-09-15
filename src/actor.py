@@ -36,10 +36,14 @@ class Actor(pyglet.sprite.Sprite):
             default = self.animations.keys()[0]
             print("No default anim; using %s" % default)
         pyglet.sprite.Sprite.__init__(self, self.animations[default])
+        self.current_animation = default
     
     def play(self, animation):
-        if animation in self.animations:
+        if animation == self.current_animation:
+            return
+        elif animation in self.animations:
             self.image = self.animations[animation]
+            self.current_animation = animation
         else:
             print("WARNING: %s tried to play invalid animation %s" %
                   (self, animation))
@@ -47,9 +51,9 @@ class Actor(pyglet.sprite.Sprite):
 
 class Hero(Actor):
     _image = pyglet.resource.image('img/sprites/hero__sprite.png')
-    _frame_data = {'run': ((0, 2), 0.1, True),
-                   'sprint': ((2, 4), 0.1, True),
-                   'stop': ((4, 6), 0.1, True)}
+    _frame_data = {'run': ((0, 2), 0.12, True),
+                   'sprint': ((2, 4), 0.12, True),
+                   'stop': ((4, 6), 0.12, True)}
     animations = Actor.make_animations(_image, 6, _frame_data)
 
     def __init__(self):
@@ -70,8 +74,8 @@ class Hero(Actor):
         if keys[key.D]:
             self.dx += self.speed
         if self.dx and self.dy:
-            self.dx /= 1.4
-            self.dy /= 1.4
+            self.dx *= 0.7
+            self.dy *= 0.7
         if self.dx > 0:
             self.play('sprint')
         elif self.dx < 0:

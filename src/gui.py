@@ -107,7 +107,8 @@ class MenuState(GameState):
         self.menu.labels[index].color = (255,0,0,255)
         
     def quit(self):
-        self.switch_to = 'QUIT'
+        pyglet.app.exit()
+        #self.switch_to = 'QUIT'
         
     def switch_state(self, state):
         self.switch_to = state
@@ -147,7 +148,7 @@ class PlayState(GameState):
             
     def update(self, dt):
         guy.colliding = False
-        bg_movement = SPEED_EASY * dt
+        bg_movement = SPEED_NORMAL * dt
         guy.x += guy.dx * dt
         guy.y += guy.dy * dt
         self.level.offset += bg_movement
@@ -211,11 +212,8 @@ class MainWindow(pyglet.window.Window):
         if self.state.switch_to is None:
             self.state.draw()
         else:
-            if self.state.switch_to == 'QUIT':
-                self.close()
-            else:
-                self.state = self.state.switch_to
-        fps_display.draw()
+            self.state = self.state.switch_to
+        # fps_display.draw()
         
     def update(self,dt):
         self.state.update(dt)
