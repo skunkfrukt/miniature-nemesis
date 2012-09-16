@@ -97,15 +97,19 @@ class Actor(pyglet.sprite.Sprite):
         effect, strength = other.collision_effect
         if effect == 'stun' and strength > self.stun_time:
             self.stun_time = strength
+            self.play('hurt')
 
 
 class Hero(Actor):
-    _image = pyglet.resource.image('img/sprites/hero__sprite.png')
-    _frame_data = {'run': ((0, 2), 0.12, True),
-                   'sprint': ((2, 4), 0.12, True),
-                   'stop': ((4, 6), 0.12, True),
-                   'hurt': ((4,5), 1, False)}
-    animations = Actor.make_animations(_image, 6, _frame_data)
+    _image = pyglet.resource.image('img/sprites/anim_hero_minimal.png')
+    _frame_data = {
+            'idle': ((0, 2), 0.12, True),
+            'run': ((2, 4), 0.12, True),
+            'sprint': ((4, 6), 0.12, True),
+            'stop': ((6, 8), 0.12, True),
+            'hurt': ((8, 10), 0.12, False)
+            }
+    animations = Actor.make_animations(_image, 10, _frame_data)
     
     max_speed = 80.0
     acceleration = (200, 400)
@@ -135,8 +139,20 @@ class Hero(Actor):
             self.play('run')
 
 
+class Peasant(Actor):
+    _image = pyglet.resource.image('img/sprites/anim_peasant-a_minimal.png')
+    _frame_data = {
+            'idle': ((0, 2), 1.2, True),
+            'run': ((2, 4), 1.2, True),
+            'notice': ((4, 6), 1.2, True),
+            'aim': ((6, 8), 1.2, False),
+            'throw': ((8, 9), 1.2, False)
+            }
+    animations = Actor.make_animations(_image, 9, _frame_data)
+
+
 class Woodpecker(Actor):
-    _image = pyglet.resource.image('img/sprites/woodpecker__sprite.png')
+    _image = pyglet.resource.image('img/sprites/anim_woodpecker_minimal.png')
     _frame_data = {'fly': ((0, 2), 0.1, True)}
     animations = Actor.make_animations(_image, 2, _frame_data)
 

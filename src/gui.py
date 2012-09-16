@@ -174,10 +174,10 @@ class PlayState(GameState):
             if not guy.colliding:
                 if collide(guy, thing):
                     guy.handle_collision(thing)
-        if guy.stun_time > 0:
+        '''if guy.stun_time > 0:
             guy.color = (255,0,0)
         else:
-            guy.color = (255,255,255)
+            guy.color = (255,255,255)'''
 
 
 guy = actor.Hero()
