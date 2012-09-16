@@ -1,8 +1,12 @@
 import pyglet
 import math
+import collider
 from pyglet.window import key
 
 class Actor(pyglet.sprite.Sprite):
+    max_speed = 0.0
+    acceleration = (100, 100)
+    
     @classmethod
     def make_animations(cls, image, number_of_frames, frame_data):
         """Makes an animation set for an Actor subclass.
@@ -37,6 +41,9 @@ class Actor(pyglet.sprite.Sprite):
             print("No default anim; using %s" % default)
         pyglet.sprite.Sprite.__init__(self, self.animations[default])
         self.current_animation = default
+        self.direction = (0, 0)
+        self.speed = (0, 0)
+        self.stun_time = 0.0
     
     def play(self, animation):
         if animation == self.current_animation:
@@ -47,38 +54,82 @@ class Actor(pyglet.sprite.Sprite):
         else:
             print("WARNING: %s tried to play invalid animation %s" %
                   (self, animation))
+                  
+    def update_speed(self, dt):
+        if self.stun_time <= 0:
+            dirx, diry = self.direction
+            tx, ty = dirx * self.max_speed, diry * self.max_speed
+            self.approach_target_speed(dt, (tx, ty))
+        else:
+            self.stun_time -= dt
+            self.speed = (-160, 0)
+        if self.stun_time > 0:
+            print "STUN: %d" % self.stun_time 
+        else: print self.speed
+        
+    def approach_target_speed(self, dt, target=(0, 0)):
+        dx, dy = self.speed
+        tx, ty = target
+        ax, ay = self.acceleration
+        if tx < dx:
+            dx -= ax * dt
+            dx = max(dx, tx)
+        elif tx > dx:
+            dx += ax * dt
+            dx = min(dx, tx)
+        if ty < dy:
+            dy -= ay * dt
+            dy = max(dy, ty)
+        elif ty > dy:
+            dy += ay * dt
+            dy = min(dy, ty)
+        self.speed = (dx, dy)
+            
+    
+    def update_position(self, dt):
+        dx, dy = self.speed
+        self.x += dx * dt
+        self.y += dy * dt
+        
+    def handle_collision(self, other):
+        if not other.collision_effect:
+            return
+        effect, strength = other.collision_effect
+        if effect == 'stun' and strength > self.stun_time:
+            self.stun_time = strength
 
 
 class Hero(Actor):
     _image = pyglet.resource.image('img/sprites/hero__sprite.png')
     _frame_data = {'run': ((0, 2), 0.12, True),
                    'sprint': ((2, 4), 0.12, True),
-                   'stop': ((4, 6), 0.12, True)}
+                   'stop': ((4, 6), 0.12, True),
+                   'hurt': ((4,5), 1, False)}
     animations = Actor.make_animations(_image, 6, _frame_data)
+    
+    max_speed = 80.0
+    acceleration = (200, 400)
 
     def __init__(self):
         Actor.__init__(self, default='run')
-        self.dx = 0.0
-        self.dy = 0.0
-        self.speed = 80.0
 
     def fixSpeed(self, keys):
-        self.dx = 0.0
-        self.dy = 0.0
-        if keys[key.W]:
-            self.dy += self.speed
-        if keys[key.S]:
-            self.dy -= self.speed
-        if keys[key.A]:
-            self.dx -= self.speed
-        if keys[key.D]:
-            self.dx += self.speed
-        if self.dx and self.dy:
-            self.dx *= 0.7
-            self.dy *= 0.7
-        if self.dx > 0:
+        dirx = 0
+        diry = 0
+        if keys[key.W] or keys[key.UP]:
+            diry += 1
+        if keys[key.S] or keys[key.DOWN]:
+            diry -= 1
+        if keys[key.A] or keys[key.LEFT]:
+            dirx -= 1
+        if keys[key.D] or keys[key.RIGHT]:
+            dirx += 1
+        self.direction = (dirx, diry)
+        if self.stun_time > 0:
+            self.play('hurt')
+        elif dirx > 0:
             self.play('sprint')
-        elif self.dx < 0:
+        elif dirx < 0 and self.speed[0] > -self.max_speed:
             self.play('stop')
         else:
             self.play('run')
@@ -89,9 +140,13 @@ class Woodpecker(Actor):
     _frame_data = {'fly': ((0, 2), 0.1, True)}
     animations = Actor.make_animations(_image, 2, _frame_data)
 
+    max_speed = 100
+    acceleration = (50, 50)
+
     def __init__(self):
         Actor.__init__(self, default='fly')
-        self.dx = 0.0
-        self.dy = 0.0
-        self.speed = 1.0
-
+        self.target_speed = (0, 0)
+        
+    def set_aim(x, y):
+        self.aim = (x, y)
+        

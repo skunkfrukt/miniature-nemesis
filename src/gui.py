@@ -16,7 +16,7 @@ def collide(a, b):
     if cw <= 20: return False
     
     cy0 = max(a.y, b.y)
-    cy1 = min(a.y + a.height, b.y + b.height)
+    cy1 = min(a.y + 30, b.y + b.height)
     ch = cy1 - cy0
     return ch > 20
 
@@ -149,8 +149,8 @@ class PlayState(GameState):
     def update(self, dt):
         guy.colliding = False
         bg_movement = SPEED_NORMAL * dt
-        guy.x += guy.dx * dt
-        guy.y += guy.dy * dt
+        guy.update_speed(dt)
+        guy.update_position(dt)
         self.level.offset += bg_movement
         while len(self.props) and self.props[0][1] <= self.level.offset + 700:
             prop = self.props.pop(0)
@@ -173,8 +173,8 @@ class PlayState(GameState):
                 self.graveyard[thing.__class__].append(thing)
             if not guy.colliding:
                 if collide(guy, thing):
-                    guy.colliding = True
-        if guy.colliding:
+                    guy.handle_collision(thing)
+        if guy.stun_time > 0:
             guy.color = (255,0,0)
         else:
             guy.color = (255,255,255)
