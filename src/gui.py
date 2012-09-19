@@ -9,17 +9,6 @@ import actor
 import stage
 
 
-def collide(a, b):
-    cx0 = max(a.x, b.x)
-    cx1 = min(a.x + a.width, b.x + b.width)
-    cw = cx1 - cx0
-    if cw <= 20: return False
-    
-    cy0 = max(a.y, b.y)
-    cy1 = min(a.y + 30, b.y + b.height)
-    ch = cy1 - cy0
-    return ch > 20
-
 class GameMenu:
     def __init__(self,options, initial_option = 0, wrap = True):
         self.options = options
@@ -123,13 +112,12 @@ class PlayState(GameState):
         # self.projectile_group = pyglet.graphics.OrderedGroup(3)
         self.actor_group = pyglet.graphics.OrderedGroup(4)
         # self.fg_prop_group = pyglet.graphics.OrderedGroup(5)
-        # self.gui_group = pyglet.graphics.OrderedGroup(6)
+        self.gui_group = pyglet.graphics.OrderedGroup(6)
         self.switch_to = None
         self.level = stage.Stage('Derpington Abbey', (0,127,0,255))
         self.bg = pyglet.sprite.Sprite(self.level.background, batch=self.batch,
                 group=self.bg_group)
-        guy.batch = self.batch
-        guy.group = self.actor_group
+        guy.setup_sprite(self.batch, self.actor_group)
         self.stuff = []
         self.new_stone = True
         self.props = stage.village_stage['props']
@@ -137,8 +125,8 @@ class PlayState(GameState):
         for i in range(10):
             r = stage.Rock()
             self.graveyard[stage.Rock].append(r)
-            r.batch = self.batch
-            r.group = self.bg_prop_group
+            r.setup_sprite(self.batch, self.bg_prop_group)
+        self.game_over_label = None
         
     def on_key_press(self, symbol, modifiers):
         guy.fixSpeed(keys)
@@ -149,9 +137,8 @@ class PlayState(GameState):
     def update(self, dt):
         guy.colliding = False
         bg_movement = SPEED_NORMAL * dt
-        guy.update_speed(dt)
-        guy.update_position(dt)
         self.level.offset += bg_movement
+        guy.move(dt, self.level.offset)
         while len(self.props) and self.props[0][1] <= self.level.offset + 700:
             prop = self.props.pop(0)
             cls, prop_x, prop_y = prop
@@ -159,25 +146,26 @@ class PlayState(GameState):
                 new_prop = self.graveyard[cls].pop(0)
             else:
                 new_prop = cls()
-                new_prop.batch = self.batch
-                new_prop.group = self.bg_prop_group
-            new_prop.stage_x = prop_x
+                new_prop.setup_sprite(self.batch, self.bg_prop_group)
+            new_prop.x = prop_x
             new_prop.y = prop_y
-            new_prop.visible = True
             self.stuff.append(new_prop)
         for thing in self.stuff:
-            thing.x = thing.stage_x - self.level.offset
-            if thing.stage_x < self.level.offset - thing.width:
-                thing.visible = False
+            thing.move(dt, self.level.offset)
+            if thing.x < self.level.offset - thing.width:
+                # thing.kill()
                 self.stuff.remove(thing)
                 self.graveyard[thing.__class__].append(thing)
             if not guy.colliding:
-                if collide(guy, thing):
-                    guy.handle_collision(thing)
-        '''if guy.stun_time > 0:
-            guy.color = (255,0,0)
-        else:
-            guy.color = (255,255,255)'''
+                guy.collide(thing)
+        if guy.x < self.level.offset - 50:
+            if not self.game_over_label:
+                self.game_over_label = pyglet.text.Label(
+                        text='Thou diest!', color=(255, 0, 0, 255),
+                        font_name='Papyrus', font_size=80,
+                        x=320, y=180, anchor_x='center', anchor_y='center',
+                        batch=self.batch, group=self.gui_group)
+                guy.stun_time = 1000000
 
 
 guy = actor.Hero()

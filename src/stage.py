@@ -1,8 +1,8 @@
 import pyglet
 import gui
+import collider
 
 class Stage:
-    
     def __init__(self, id, color=(0,0,0,0), obstacles={}):
         self.id = id
         self.offset = 0
@@ -12,12 +12,30 @@ class Stage:
         self.graveyard = {}
         
 
-class Prop(pyglet.sprite.Sprite):
+class Prop(object):
     collision_effect = None
     
     def __init__(self, image):
-        pyglet.sprite.Sprite.__init__(self, image, x=-100, y=-100)
-        self.stage_x = 0
+        self.sprite = pyglet.sprite.Sprite(image, x=-100, y=-100)
+        self.collider = None
+        self.x, self.y = (0, 0)
+        
+    def move(self, dt, stage_offset):
+        self.sprite.x = self.x - stage_offset
+        self.sprite.y = self.y
+        self.collider.x = self.x + 5
+        self.collider.y = self.y + 10
+        
+    def setup_sprite(self, batch, group):
+        if self.sprite is not None:
+            if batch is not None:
+                self.sprite.batch = batch
+            if group is not None:
+                self.sprite.group = group
+        
+    @property
+    def width(self):
+        return self.sprite.width
 
 
 class Rock(Prop):
@@ -26,6 +44,7 @@ class Rock(Prop):
 
     def __init__(self):
         Prop.__init__(self, self._image)
+        self.collider = collider.Collider(5, 10, 20, 20)
         
         
 village_stage = {

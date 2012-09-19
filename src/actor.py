@@ -3,48 +3,14 @@ import math
 import collider
 from pyglet.window import key
 
-class Actor(pyglet.sprite.Sprite):
-    max_speed = 0.0
-    acceleration = (100, 100)
-    
-    @classmethod
-    def make_animations(cls, image, number_of_frames, frame_data):
-        """Makes an animation set for an Actor subclass.
-        
-        Keyword arguments:
-        image -- the image to be used as a sprite sheet
-        number_of_frames
-        frame_data -- data on how to process the sprite sheet
-        
-        The frame data is given in the form of a dictionary,
-        where the keys are the names of the animations, and the
-        values are tuples following this formula:
-            ((fa, fz), speed, loop),
-        where fa and fz are the start and end index of the frames
-        to be used, speed is the duration of each frame, and
-        loop is a boolean value determining whether to loop the
-        animation.
-        
-        """
-        fis = pyglet.image.Animation.from_image_sequence
-        grid = pyglet.image.ImageGrid(image, 1, number_of_frames)
-        animations = {}
-        for name, template in frame_data.items():
-            animations[name] = fis(grid[slice(*template[0])], *template[1:])
-        return animations
-
+class AnimatedSprite(pyglet.sprite.Sprite):
     def __init__(self, animations=None, default=None):
-        if animations is not None:
-            self.animations = animations
+        self.animations = animations
         if default is None:
             default = self.animations.keys()[0]
             print("No default anim; using %s" % default)
         pyglet.sprite.Sprite.__init__(self, self.animations[default])
-        self.current_animation = default
-        self.direction = (0, 0)
-        self.speed = (0, 0)
-        self.stun_time = 0.0
-    
+        
     def play(self, animation):
         if animation == self.current_animation:
             return
@@ -54,18 +20,43 @@ class Actor(pyglet.sprite.Sprite):
         else:
             print("WARNING: %s tried to play invalid animation %s" %
                   (self, animation))
+
+
+class Actor(object):
+    max_speed = 0.0
+    acceleration = (100, 100)
+    
+    @classmethod
+    def make_animations(cls, image, number_of_frames, frame_data):
+        fis = pyglet.image.Animation.from_image_sequence
+        grid = pyglet.image.ImageGrid(image, 1, number_of_frames)
+        animations = {}
+        for name, template in frame_data.items():
+            animations[name] = fis(grid[slice(*template[0])], *template[1:])
+        return animations
+
+    def __init__(self, animations=None, default=None):
+        self.sprite = AnimatedSprite(animations, default)
+        self.sprite.current_animation = default
+        self.collider = None
+        self.direction = (0, 0)
+        self.speed = (0.0, 0.0)
+        self.stun_time = 0.0
+    
+    def play(self, animation):
+        self.sprite.play(animation)
                   
     def update_speed(self, dt):
         if self.stun_time <= 0:
             dirx, diry = self.direction
-            tx, ty = dirx * self.max_speed, diry * self.max_speed
+            tx, ty = 100 + dirx * self.max_speed, diry * self.max_speed
             self.approach_target_speed(dt, (tx, ty))
         else:
             self.stun_time -= dt
-            self.speed = (-160, 0)
+            self.speed = (-60, 0)
         if self.stun_time > 0:
-            print "STUN: %d" % self.stun_time 
-        else: print self.speed
+            print "STUN: %.2f" % self.stun_time 
+        # else: print self.speed
         
     def approach_target_speed(self, dt, target=(0, 0)):
         dx, dy = self.speed
@@ -84,12 +75,16 @@ class Actor(pyglet.sprite.Sprite):
             dy += ay * dt
             dy = min(dy, ty)
         self.speed = (dx, dy)
-            
     
-    def update_position(self, dt):
+    def move(self, dt, stage_offset):
+        self.update_speed(dt)
         dx, dy = self.speed
         self.x += dx * dt
         self.y += dy * dt
+        self.sprite.x = self.x - stage_offset
+        self.sprite.y = self.y
+        self.collider.x = self.x + 10
+        self.collider.y = self.y
         
     def handle_collision(self, other):
         if not other.collision_effect:
@@ -98,24 +93,44 @@ class Actor(pyglet.sprite.Sprite):
         if effect == 'stun' and strength > self.stun_time:
             self.stun_time = strength
             self.play('hurt')
+            
+    def collide(self, other):
+        if not (self.collider and other.collider):
+            return False
+        else:
+            collision = self.collider.collide(other.collider)
+            if collision:
+                self.handle_collision(other)
+            return collision
+        
+    def setup_sprite(self, batch, group):
+        if self.sprite is not None:
+            if batch is not None:
+                self.sprite.batch = batch
+            if group is not None:
+                self.sprite.group = group
 
 
 class Hero(Actor):
-    _image = pyglet.resource.image('img/sprites/anim_hero_minimal.png')
+    _image = pyglet.resource.image('img/sprites/anim_hero.png')
     _frame_data = {
             'idle': ((0, 2), 0.12, True),
             'run': ((2, 4), 0.12, True),
             'sprint': ((4, 6), 0.12, True),
             'stop': ((6, 8), 0.12, True),
-            'hurt': ((8, 10), 0.12, False)
+            'hurt': ((8, 10), 0.12, False),
+            'trip': ((10, 11), 0.12, False),
+            'tumble': ((11, 13), 0.12, True),
+            'rise': ((13, 14), 0.12, False)
             }
-    animations = Actor.make_animations(_image, 10, _frame_data)
+    animations = Actor.make_animations(_image, 14, _frame_data)
     
     max_speed = 80.0
     acceleration = (200, 400)
 
     def __init__(self):
-        Actor.__init__(self, default='run')
+        Actor.__init__(self, self.animations, default='run')
+        self.collider = collider.Collider(0,0,30,20)
 
     def fixSpeed(self, keys):
         dirx = 0
