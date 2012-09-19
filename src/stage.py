@@ -1,6 +1,7 @@
 import pyglet
 import gui
 import collider
+import actor
 
 class Stage:
     def __init__(self, id, color=(0,0,0,0), obstacles={}):
@@ -53,5 +54,7 @@ village_stage = {
 
 import random
 
+prop_classes = [Rock, actor.Peasant]
+
 for x in range(0, 60001, 75):
-    village_stage['props'].append((Rock, x, random.randint(0,300)))
+    village_stage['props'].append((prop_classes[random.randint(0,1)], x, random.randint(0,300)))

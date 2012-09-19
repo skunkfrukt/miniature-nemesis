@@ -121,7 +121,7 @@ class PlayState(GameState):
         self.stuff = []
         self.new_stone = True
         self.props = stage.village_stage['props']
-        self.graveyard = {stage.Rock: []}
+        self.graveyard = {stage.Rock: [], actor.Peasant: []}
         for i in range(10):
             r = stage.Rock()
             self.graveyard[stage.Rock].append(r)

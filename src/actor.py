@@ -1,6 +1,7 @@
 import pyglet
 import math
 import collider
+import random
 from pyglet.window import key
 
 class AnimatedSprite(pyglet.sprite.Sprite):
@@ -51,9 +52,17 @@ class Actor(object):
             dirx, diry = self.direction
             tx, ty = 100 + dirx * self.max_speed, diry * self.max_speed
             self.approach_target_speed(dt, (tx, ty))
-        else:
+        elif self.stun_type == 'stun':
             self.stun_time -= dt
             self.speed = (-60, 0)
+        elif self.stun_type == 'trip':
+            self.stun_time -= dt
+            if self.stun_time < 0.2:
+                self.speed = (0, 0)
+            else:
+                dx = self.speed[0]
+                time = self.stun_time - 0.2
+                self.approach_target_speed(dt, (0,0))
         if self.stun_time > 0:
             print "STUN: %.2f" % self.stun_time 
         # else: print self.speed
@@ -93,6 +102,12 @@ class Actor(object):
         if effect == 'stun' and strength > self.stun_time:
             self.stun_time = strength
             self.play('hurt')
+            self.stun_type = 'stun'
+        if effect == 'trip' and strength > self.stun_time:
+            self.stun_time = strength
+            # self.play('trip')
+            self.stun_type = 'trip'
+            self.speed = (80, 0)
             
     def collide(self, other):
         if not (self.collider and other.collider):
@@ -109,6 +124,10 @@ class Actor(object):
                 self.sprite.batch = batch
             if group is not None:
                 self.sprite.group = group
+                
+    @property
+    def width(self):
+        return self.sprite.width
 
 
 class Hero(Actor):
@@ -144,8 +163,17 @@ class Hero(Actor):
         if keys[key.D] or keys[key.RIGHT]:
             dirx += 1
         self.direction = (dirx, diry)
-        if self.stun_time > 0:
+        
+    def move(self, dt, stage_offset):
+        dirx, diry = self.direction
+        Actor.move(self, dt, stage_offset)
+        if self.stun_time > 0 and self.stun_type == 'stun':
             self.play('hurt')
+        elif self.stun_time > 0 and self.stun_type == 'trip':
+            if self.stun_time > 0.2:
+                self.play('tumble')
+            else:
+                self.play('rise')
         elif dirx > 0:
             self.play('sprint')
         elif dirx < 0 and self.speed[0] > -self.max_speed:
@@ -157,13 +185,29 @@ class Hero(Actor):
 class Peasant(Actor):
     _image = pyglet.resource.image('img/sprites/anim_peasant-a_minimal.png')
     _frame_data = {
-            'idle': ((0, 2), 1.2, True),
-            'run': ((2, 4), 1.2, True),
+            'idle': ((0, 2), 1.1, True),
+            'run': ((2, 4), 0.2, True),
             'notice': ((4, 6), 1.2, True),
             'aim': ((6, 8), 1.2, False),
             'throw': ((8, 9), 1.2, False)
             }
     animations = Actor.make_animations(_image, 9, _frame_data)
+    
+    max_speed = 60.0
+    acceleration = (150, 300)
+    collision_effect = ('trip', 0.5)
+
+    def __init__(self):
+        Actor.__init__(self, self.animations, default='idle')
+        self.collider = collider.Collider(0,0,30,20)
+        self.speed = (random.randint(0,1)*random.randint(0, self.max_speed), 0)
+        
+    def update_speed(self, dt):
+        x, y = self.speed
+        if x > 0:
+            self.sprite.play('run')
+        else:
+            self.sprite.play('idle')
 
 
 class Woodpecker(Actor):
