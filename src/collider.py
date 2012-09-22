@@ -4,7 +4,7 @@ class Collider:
         self.width, self.height = width, height
         
     def collide(self, other):
-        return (self.collide_x(other) and self.collide_y(other))
+        return self.collide_x(other) and self.collide_y(other) and self.x < other.x
     
     def collide_x(self, other):
         cx0 = max(self.x, other.x)
