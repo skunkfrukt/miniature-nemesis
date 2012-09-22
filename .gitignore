@@ -1,3 +1,14 @@
 miniaturenemesis/constants.pyc
 miniaturenemesis/gui.pyc
 miniaturenemesis/__init__.pyc
+miniaturenemesis/stage.pyc
+miniaturenemesis/actor.pyc
+src/__init__.pyc
+src/actor.pyc
+src/collider.pyc
+src/constants.pyc
+src/gui.pyc
+src/stage.pyc
+src/test_collider.pyc
+tests/test_collider.pyc
+tests/__init__.pyc
