@@ -1,5 +1,6 @@
 import math
 import pyglet
+import sys
 from .constants import *
 from pyglet.window import key
 
@@ -129,6 +130,8 @@ class PlayState(GameState):
         self.game_over_label = None
         
     def on_key_press(self, symbol, modifiers):
+        if symbol == key.ESCAPE:
+            pyglet.app.exit()
         guy.fixSpeed(keys)
             
     def on_key_release(self, symbol, modifiers):
@@ -183,7 +186,8 @@ class MainWindow(pyglet.window.Window):
             pyglet.resource.image('img/icons/128x128.png'))
     
     def __init__(self):
-        super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE)
+        fs = '-fs' in sys.argv
+        super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE, fullscreen=fs)
         guy.x = 0
         guy.y = 0
         self.state = MenuState()
