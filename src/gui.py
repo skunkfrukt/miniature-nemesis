@@ -55,6 +55,8 @@ class MenuState(GameState):
     def __init__(self):
         GameState.__init__(self)
         self.switch_to = None
+        if '--skipmenu' in sys.argv:
+            self.switch_state(PlayState())
         self.bg_group = pyglet.graphics.OrderedGroup(0)
         self.button_group = pyglet.graphics.OrderedGroup(1)
         self.title_bg = pyglet.sprite.Sprite(pyglet.resource.image(
