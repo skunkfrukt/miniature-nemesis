@@ -79,10 +79,10 @@ village_stage = {
 
 import random
 
-prop_classes = [Rock, Stone, actor.Peasant, None, None, None]
+prop_classes = [Rock, Stone, actor.Peasant, actor.Priest, None, None, None]
 
 for x in range(200, 30001, 30):
-    prop_index = random.randint(0,5)
+    prop_index = random.randint(0,6)
     if prop_classes[prop_index]:
         village_stage['props'].append((prop_classes[prop_index],
                 x, random.randint(0,250)))
