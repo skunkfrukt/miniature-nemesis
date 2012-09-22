@@ -48,13 +48,24 @@ class Rock(Prop):
         self.collider = collider.Collider(5, 10, 20, 20)
         
         
+class Stone(Prop):
+    collision_effect = ('trip', 0.75)
+    _image = pyglet.resource.image('img/sprites/pict_stone_temp.png')
+    
+    def __init__(self):
+        Prop.__init__(self, self._image)
+        self.collider = collider.Collider(0, 0, 20, 10);
+
+
 village_stage = {
         'props': []
 }
 
 import random
 
-prop_classes = [Rock, actor.Peasant]
+prop_classes = [Rock, Stone, actor.Peasant]
 
-for x in range(0, 60001, 75):
-    village_stage['props'].append((prop_classes[random.randint(0,1)], x, random.randint(0,300)))
+for x in range(200, 30001, 75):
+    prop_index = random.randint(0,2)
+    village_stage['props'].append((prop_classes[prop_index],
+            x, random.randint(0,300)))

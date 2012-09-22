@@ -142,6 +142,8 @@ class PlayState(GameState):
         while len(self.props) and self.props[0][1] <= self.level.offset + 700:
             prop = self.props.pop(0)
             cls, prop_x, prop_y = prop
+            if not cls in self.graveyard:
+                self.graveyard[cls] = []
             if len(self.graveyard[cls]) > 0:
                 new_prop = self.graveyard[cls].pop(0)
             else:
