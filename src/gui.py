@@ -167,7 +167,7 @@ class PlayState(GameState):
                         font_name='Papyrus', font_size=80,
                         x=320, y=180, anchor_x='center', anchor_y='center',
                         batch=self.batch, group=self.gui_group)
-                guy.stun_time = 1000000
+                guy.apply_status('dead')
 
 
 guy = actor.Hero()

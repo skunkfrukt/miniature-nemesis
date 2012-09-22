@@ -4,6 +4,17 @@ import collider
 import random
 from pyglet.window import key
 
+
+status_severity = {
+        'ok': 0,
+        'rise': 3,
+        'tumble': 2,
+        'trip': 1,
+        'stun': 4,
+        'dead': 999
+        }
+
+
 class AnimatedSprite(pyglet.sprite.Sprite):
     def __init__(self, animations=None, default=None):
         self.animations = animations
@@ -21,6 +32,9 @@ class AnimatedSprite(pyglet.sprite.Sprite):
         else:
             print("WARNING: %s tried to play invalid animation %s" %
                   (self, animation))
+
+
+# TODO: class ActorStatus()?
 
 
 class Actor(object):
@@ -43,29 +57,32 @@ class Actor(object):
         self.direction = (0, 0)
         self.speed = (0.0, 0.0)
         self.stun_time = 0.0
+        self.status = 'ok'
     
     def play(self, animation):
         self.sprite.play(animation)
                   
     def update_speed(self, dt):
-        if self.stun_time <= 0:
+        if self.status == 'ok':
             dirx, diry = self.direction
             tx, ty = 100 + dirx * self.max_speed, diry * self.max_speed
             self.approach_target_speed(dt, (tx, ty))
-        elif self.stun_type == 'stun':
-            self.stun_time -= dt
-            self.speed = (-60, 0)
-        elif self.stun_type == 'trip':
-            self.stun_time -= dt
-            if self.stun_time < 0.2:
-                self.speed = (0, 0)
+        elif self.status == 'rise':
+            if self.stun_time <= 0:
+                self.apply_status('ok')
+        elif self.status == 'tumble':
+            if self.speed[0] < 1:
+                self.apply_status('rise')
             else:
-                dx = self.speed[0]
-                time = self.stun_time - 0.2
                 self.approach_target_speed(dt, (0,0))
-        if self.stun_time > 0:
-            print "STUN: %.2f" % self.stun_time 
-        # else: print self.speed
+        elif self.status == 'trip':
+            if self.stun_time <= 0:
+                self.apply_status('tumble')
+        elif self.status == 'stun':
+            if self.stun_time <= 0:
+                self.speed = (100, 0)
+                self.apply_status('ok')
+        self.stun_time -= dt
         
     def approach_target_speed(self, dt, target=(0, 0)):
         dx, dy = self.speed
@@ -94,20 +111,42 @@ class Actor(object):
         self.sprite.y = self.y
         self.collider.x = self.x + 10
         self.collider.y = self.y
+        self.animate()
+        
+    def animate(self):
+        pass
         
     def handle_collision(self, other):
         if not other.collision_effect:
             return
         effect, strength = other.collision_effect
-        if effect == 'stun' and strength > self.stun_time:
+        if status_severity[effect] <= status_severity[self.status]:
+            return False
+        else:
+            return self.apply_status(effect, strength)
+            
+    def apply_status(self, effect, strength=0):
+        print("%s: status -> %s" % (self.__class__.__name__, effect))
+        if effect == 'ok':
+            self.stun_time = 0.0
+        elif effect == 'rise':
+            self.stun_time = 0.3
+            self.speed = (0, 0)
+        elif effect == 'tumble':
+            self.stun_time = 1
+            self.speed = (self.max_speed * 2, 0)
+        elif effect == 'trip':
+            self.stun_time = 0.2
+            # self.speed = (0,0)
+        elif effect == 'stun':
             self.stun_time = strength
-            self.play('hurt')
-            self.stun_type = 'stun'
-        if effect == 'trip' and strength > self.stun_time:
-            self.stun_time = strength
-            # self.play('trip')
-            self.stun_type = 'trip'
-            self.speed = (80, 0)
+            self.speed = (-100, 0)
+        elif effect == 'dead':
+            self.speed = (0, 0)
+        else:
+            return False
+        self.status = effect
+        return True
             
     def collide(self, other):
         if not (self.collider and other.collider):
@@ -167,19 +206,24 @@ class Hero(Actor):
     def move(self, dt, stage_offset):
         dirx, diry = self.direction
         Actor.move(self, dt, stage_offset)
-        if self.stun_time > 0 and self.stun_type == 'stun':
+                
+    def animate(self):
+        dirx, diry = self.direction
+        if self.status == 'stun':
             self.play('hurt')
-        elif self.stun_time > 0 and self.stun_type == 'trip':
-            if self.stun_time > 0.2:
-                self.play('tumble')
+        elif self.status == 'trip':
+            self.play('trip')
+        elif self.status == 'tumble':
+            self.play('tumble')
+        elif self.status == 'rise':
+            self.play('rise')
+        elif self.status == 'ok':
+            if dirx > 0:
+                self.play('sprint')
+            elif dirx < 0 and self.speed[0] > -self.max_speed:
+                self.play('stop')
             else:
-                self.play('rise')
-        elif dirx > 0:
-            self.play('sprint')
-        elif dirx < 0 and self.speed[0] > -self.max_speed:
-            self.play('stop')
-        else:
-            self.play('run')
+                self.play('run')
 
 
 class Peasant(Actor):
