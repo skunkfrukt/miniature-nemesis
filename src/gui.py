@@ -154,7 +154,7 @@ class PlayState(GameState):
             self.stuff.append(new_prop)
         for thing in self.stuff:
             thing.move(dt, self.level.offset)
-            if thing.x < self.level.offset - thing.width:
+            if thing.x < self.level.offset - thing.width and type(thing) != stage.SkyBackground:
                 # thing.kill()
                 self.stuff.remove(thing)
                 self.graveyard[thing.__class__].append(thing)

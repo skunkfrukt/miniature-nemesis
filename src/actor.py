@@ -4,6 +4,8 @@ import collider
 import random
 from pyglet.window import key
 
+MIN_Y, MAX_Y = 0, 275
+
 
 status_severity = {
         'ok': 0,
@@ -107,6 +109,7 @@ class Actor(object):
         dx, dy = self.speed
         self.x += dx * dt
         self.y += dy * dt
+        self.y = min(max(self.y, MIN_Y), MAX_Y)
         self.sprite.x = self.x - stage_offset
         self.sprite.y = self.y
         self.collider.x = self.x + 10

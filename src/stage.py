@@ -24,8 +24,9 @@ class Prop(object):
     def move(self, dt, stage_offset):
         self.sprite.x = self.x - stage_offset
         self.sprite.y = self.y
-        self.collider.x = self.x + 5
-        self.collider.y = self.y + 10
+        if self.collider:
+            self.collider.x = self.x + 5
+            self.collider.y = self.y + 10
         
     def setup_sprite(self, batch, group):
         if self.sprite is not None:
@@ -57,15 +58,32 @@ class Stone(Prop):
         self.collider = collider.Collider(0, 0, 20, 10);
 
 
+class SkyBackground(Prop):
+    collision_effect = None
+    _image = pyglet.resource.image('img/sprites/sky.png')
+    never_die = True
+    
+    def __init__(self):
+        Prop.__init__(self, self._image)
+        self.collider = None
+        self._x, self._y = 0, 0
+        
+    def move(self, dt, stage_offset):
+        self.sprite.x = -stage_offset * 0.1
+        self.sprite.y = self.y
+        
+
 village_stage = {
-        'props': []
+        'props': [(SkyBackground, 0, 300)]
 }
 
 import random
 
-prop_classes = [Rock, Stone, actor.Peasant]
+prop_classes = [Rock, Stone, actor.Peasant, None, None, None]
 
-for x in range(200, 30001, 75):
-    prop_index = random.randint(0,2)
-    village_stage['props'].append((prop_classes[prop_index],
-            x, random.randint(0,300)))
+for x in range(200, 30001, 30):
+    prop_index = random.randint(0,5)
+    if prop_classes[prop_index]:
+        village_stage['props'].append((prop_classes[prop_index],
+                x, random.randint(0,250)))
+            
