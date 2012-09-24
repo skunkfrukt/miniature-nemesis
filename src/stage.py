@@ -58,6 +58,15 @@ class Stone(Prop):
         self.collider = collider.Collider(0, 0, 20, 10);
 
 
+class House(Prop):
+    collision_effect = ('stun', 0.5)
+    _image = pyglet.resource.image('img/sprites/pict_house_temp.png')
+    
+    def __init__(self):
+        Prop.__init__(self, self._image)
+        self.collider = collider.Collider(0, 0, 180, 180)
+
+
 class SkyBackground(Prop):
     collision_effect = None
     _image = pyglet.resource.image('img/sprites/sky.png')
@@ -74,16 +83,21 @@ class SkyBackground(Prop):
         
 
 village_stage = {
-        'props': [(SkyBackground, 0, 300)]
+        'props': []
 }
 
 import random
 
-prop_classes = [Rock, Stone, actor.Peasant, actor.Priest, None, None, None]
+prop_classes = [Rock, Stone, actor.Peasant, None, None, None]
 
-for x in range(200, 30001, 30):
-    prop_index = random.randint(0,6)
+for x in range(180, 30001, 30):
+    prop_index = random.randint(0,5)
     if prop_classes[prop_index]:
         village_stage['props'].append((prop_classes[prop_index],
-                x, random.randint(0,250)))
-            
+                    x, random.randint(0,300)))
+    if x % 180 == 0:
+        village_stage['props'].append((House,
+                x + random.randint(-5, 5), random.randint(275,325)))
+    if x % 60 == 0:
+        village_stage['props'].append((Rock,
+                x + random.randint(-3, 3), random.randint(-15,10)))
