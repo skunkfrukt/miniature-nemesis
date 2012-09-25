@@ -170,6 +170,10 @@ class Actor(object):
     @property
     def width(self):
         return self.sprite.width
+        
+    def reset(self, checkpoint, difficulty=2):
+        self.x, self.y = checkpoint.x, checkpoint.y
+        self.apply_status('ok')
 
 
 class Hero(Actor):

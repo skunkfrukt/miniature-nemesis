@@ -2,16 +2,48 @@ import pyglet
 import gui
 import collider
 import actor
+from constants import *
 
 class Stage:
     def __init__(self, id, color=(0,0,0,0), obstacles={}):
         self.id = id
-        self.offset = 0
         self.obstacles = obstacles
         background_image = pyglet.image.SolidColorImagePattern(color)
         self.background = background_image.create_image(640,360)
         self.graveyard = {}
+        self.active_objects = []
+        self.props = []
+        self.checkpoints = [Checkpoint(320, 180)]
+        self.hero = actor.Hero()
+        self.setup()
         
+    def setup(self, difficulty=NORMAL, checkpoint_index=0):
+        '''Resets the stage to a pristine state, ready to be played.'''
+        if checkpoint_index in range(len(self.checkpoints)):
+            checkpoint = self.checkpoints[checkpoint_index]
+        else:
+            print("WARNING: Stage %s has no checkpoint %d. Using 0." %
+                    (self.id, checkpoint_index))
+            checkpoint = self.checkpoints[0]
+        self.offset = max(0, checkpoint.x - WIN_WIDTH // 2)
+        self.scroll_speed = SPEED_BASE * SPEED_FACTORS[difficulty]
+        self.clear()
+        
+        self.hero.reset(checkpoint, difficulty=difficulty)
+        
+    def clear(self):
+        '''Kills all active objects.'''
+        while len(self.active_objects) > 0:
+            item = self.active_objects.pop()
+            item.kill()
+            cls = type(item)
+            self.graveyard[cls].append(item)
+
+
+class Checkpoint(object):
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+
 
 class Prop(object):
     collision_effect = None
