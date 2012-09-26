@@ -38,6 +38,20 @@ class Stage:
             item.kill()
             cls = type(item)
             self.graveyard[cls].append(item)
+            
+    def add_checkpoint(self, x, y):
+        self.checkpoints.append(Checkpoint(x, y))
+        self.checkpoints.sort(key=lambda ckpt: ckpt.x)
+        
+    def spawn(self, cls, x, y):
+        assert cls in self.graveyard, "%s not in %s graveyard." % (cls, self.id)
+        if len(self.graveyard[cls]) > 0:
+            spawned_object = self.graveyard[cls].pop()
+        else:
+            spawned_object = cls()
+            spawned_object.setup_sprite(self.batch, self.bg_prop_group)
+        spawned_object.reset(x, y)
+        self.active_objects.append(spawned_object)
 
 
 class Checkpoint(object):
