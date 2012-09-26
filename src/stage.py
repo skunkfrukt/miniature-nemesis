@@ -57,8 +57,7 @@ class Prop(object):
         self.sprite.x = self.x - stage_offset
         self.sprite.y = self.y
         if self.collider:
-            self.collider.x = self.x + 5
-            self.collider.y = self.y + 10
+            self.collider.move(self.x, self.y)
         
     def setup_sprite(self, batch, group):
         if self.sprite is not None:
@@ -78,7 +77,7 @@ class Rock(Prop):
 
     def __init__(self):
         Prop.__init__(self, self._image)
-        self.collider = collider.Collider(5, 10, 20, 20)
+        self.collider = collider.Collider(5, 10, 25, 30)
         
         
 class Stone(Prop):
@@ -87,7 +86,7 @@ class Stone(Prop):
     
     def __init__(self):
         Prop.__init__(self, self._image)
-        self.collider = collider.Collider(0, 0, 20, 10);
+        self.collider = collider.Collider(0, 0, 10, 10);
 
 
 class House(Prop):

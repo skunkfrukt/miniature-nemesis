@@ -112,8 +112,7 @@ class Actor(object):
         self.y = min(max(self.y, MIN_Y), MAX_Y)
         self.sprite.x = self.x - stage_offset
         self.sprite.y = self.y
-        self.collider.x = self.x + 10
-        self.collider.y = self.y
+        self.collider.move(self.x, self.y)
         self.animate()
         
     def animate(self):

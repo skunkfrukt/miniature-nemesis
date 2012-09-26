@@ -40,6 +40,36 @@ class TestCollider(unittest.TestCase):
         self.west_close = Collider(-5,0,width=5,height=10)
         self.east_close = Collider(10,0,width=5,height=10)
         
+        all_colliders = [
+                self.collider,
+                self.collider_alternative,
+                self.small_collider, 
+                self.large_hadron_collider, 
+                self.north_discrete, 
+                self.north_overlapping,
+                self.south_discrete,
+                self.south_overlapping,
+                self.east_discrete, 
+                self.east_overlapping, 
+                self.west_discrete, 
+                self.west_overlapping, 
+                self.southwest_discrete, 
+                self.southwest_overlapping, 
+                self.southeast_discrete, 
+                self.southeast_overlapping, 
+                self.northwest_discrete, 
+                self.northwest_overlapping, 
+                self.northeast_discrete, 
+                self.northeast_overlapping, 
+                self.north_close, 
+                self.south_close, 
+                self.west_close, 
+                self.east_close
+                ]
+        
+        for collider in all_colliders:
+            collider.move(0,0)
+        
     def assertCollides(self, other):
         return self.assertEqual(True, self.collider.collide(other))
         
