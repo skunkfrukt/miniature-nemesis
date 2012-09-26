@@ -17,6 +17,19 @@ status_severity = {
         }
 
 
+class GameObject(object):
+    def __init__(self):
+        self.dead = True
+        self.x, self.y = 0, 0
+        
+    def kill(self):
+        self.dead = True
+        
+    def reset(self, x, y):
+        self.x, self.y = x, y
+        self.dead = False
+
+
 class AnimatedSprite(pyglet.sprite.Sprite):
     def __init__(self, animations=None, default=None):
         self.animations = animations
@@ -39,7 +52,7 @@ class AnimatedSprite(pyglet.sprite.Sprite):
 # TODO: class ActorStatus()?
 
 
-class Actor(object):
+class Actor(GameObject):
     max_speed = 0.0
     acceleration = (100, 100)
     
