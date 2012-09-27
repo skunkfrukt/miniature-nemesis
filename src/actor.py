@@ -2,6 +2,7 @@ import pyglet
 import math
 import collider
 import random
+from common import GameObject
 from pyglet.window import key
 
 MIN_Y, MAX_Y = 0, 275
@@ -15,19 +16,6 @@ status_severity = {
         'stun': 4,
         'dead': 999
         }
-
-
-class GameObject(object):
-    def __init__(self):
-        self.dead = True
-        self.x, self.y = 0, 0
-        
-    def kill(self):
-        self.dead = True
-        
-    def reset(self, x, y):
-        self.x, self.y = x, y
-        self.dead = False
 
 
 class AnimatedSprite(pyglet.sprite.Sprite):
@@ -141,7 +129,6 @@ class Actor(GameObject):
             return self.apply_status(effect, strength)
             
     def apply_status(self, effect, strength=0):
-        print("%s: status -> %s" % (self.__class__.__name__, effect))
         if effect == 'ok':
             self.stun_time = 0.0
         elif effect == 'rise':
@@ -183,8 +170,8 @@ class Actor(GameObject):
     def width(self):
         return self.sprite.width
         
-    def reset(self, checkpoint, difficulty=2):
-        self.x, self.y = checkpoint.x, checkpoint.y
+    def reset(self, x, y):
+        GameObject.reset(self, x, y)
         self.apply_status('ok')
 
 
@@ -243,6 +230,10 @@ class Hero(Actor):
                 self.play('stop')
             else:
                 self.play('run')
+                
+    def apply_status(self, effect, strength=0):
+        Actor.apply_status(self, effect, strength)
+        print("%s: status -> %s" % (self.__class__.__name__, effect))
 
 
 class Peasant(Actor):

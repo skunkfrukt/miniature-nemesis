@@ -109,73 +109,35 @@ class MenuState(GameState):
 class PlayState(GameState):
     def __init__(self):
         GameState.__init__(self)
-        self.bg_group = pyglet.graphics.OrderedGroup(0)
-        self.bg_prop_group = pyglet.graphics.OrderedGroup(1)
-        self.actor_group = pyglet.graphics.OrderedGroup(2)
-        # self.projectile_group = pyglet.graphics.OrderedGroup(3)
-        self.actor_group = pyglet.graphics.OrderedGroup(4)
-        # self.fg_prop_group = pyglet.graphics.OrderedGroup(5)
         self.gui_group = pyglet.graphics.OrderedGroup(6)
         self.switch_to = None
-        self.level = stage.Stage('Derpington Abbey', (0,127,0,255))
-        self.bg = pyglet.sprite.Sprite(self.level.background, batch=self.batch,
-                group=self.bg_group)
-        guy.setup_sprite(self.batch, self.actor_group)
-        self.stuff = []
-        self.new_stone = True
-        self.props = stage.village_stage['props']
-        self.graveyard = {stage.Rock: [], actor.Peasant: []}
-        for i in range(10):
-            r = stage.Rock()
-            self.graveyard[stage.Rock].append(r)
-            r.setup_sprite(self.batch, self.bg_prop_group)
+        self.level = stage.Stage('Derpington Abbey', (0,127,0,255), stage.village_props)
         self.game_over_label = None
         
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ESCAPE:
             pyglet.app.exit()
-        guy.fixSpeed(keys)
+        self.level.send_keys_to_hero(keys)
+        
             
     def on_key_release(self, symbol, modifiers):
-        guy.fixSpeed(keys)
+        self.level.send_keys_to_hero(keys)
             
     def update(self, dt):
-        guy.colliding = False
-        bg_movement = SPEED_NORMAL * dt
-        self.level.offset += bg_movement
-        guy.move(dt, self.level.offset)
-        while len(self.props) and self.props[0][1] <= self.level.offset + 700:
-            prop = self.props.pop(0)
-            cls, prop_x, prop_y = prop
-            if not cls in self.graveyard:
-                self.graveyard[cls] = []
-            if len(self.graveyard[cls]) > 0:
-                new_prop = self.graveyard[cls].pop(0)
-            else:
-                new_prop = cls()
-                new_prop.setup_sprite(self.batch, self.bg_prop_group)
-            new_prop.x = prop_x
-            new_prop.y = prop_y
-            self.stuff.append(new_prop)
-        for thing in self.stuff:
-            thing.move(dt, self.level.offset)
-            if thing.x < self.level.offset - thing.width and type(thing) != stage.SkyBackground:
-                # thing.kill()
-                self.stuff.remove(thing)
-                self.graveyard[thing.__class__].append(thing)
-            if not guy.colliding:
-                guy.collide(thing)
-        if guy.x < self.level.offset - 50:
+        self.level.update(dt)
+        '''if guy.x < self.level.offset - 50:
             if not self.game_over_label:
                 self.game_over_label = pyglet.text.Label(
                         text='Thou diest!', color=(255, 0, 0, 255),
                         font_name='Papyrus', font_size=80,
                         x=320, y=180, anchor_x='center', anchor_y='center',
                         batch=self.batch, group=self.gui_group)
-                guy.apply_status('dead')
+                guy.apply_status('dead')'''
+    
+    def draw(self):
+        self.level.batch.draw()
+        self.batch.draw()
 
-
-guy = actor.Hero()
 
 fps_display = pyglet.clock.ClockDisplay()
 
@@ -190,8 +152,6 @@ class MainWindow(pyglet.window.Window):
     def __init__(self):
         fs = '-fs' in sys.argv
         super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE, fullscreen=fs)
-        guy.x = 0
-        guy.y = 0
         self.state = MenuState()
         self.push_handlers(keys)
         self.set_icon(*self.icons)
