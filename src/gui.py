@@ -116,7 +116,7 @@ class PlayState(GameState):
         
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ESCAPE:
-            pyglet.app.exit()
+            self.switch_to = MenuState()  # pyglet.app.exit()
         self.level.send_keys_to_hero(keys)
         
             
