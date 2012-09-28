@@ -93,6 +93,7 @@ class Stage:
         bg_movement = SPEED_NORMAL * dt
         self.offset += bg_movement
         
+        self.check_despawns()
         self.check_spawns()
         self.move_active_objects(dt)
         self.check_collisions()
@@ -106,7 +107,8 @@ class Stage:
     def check_despawns(self):
         objects_to_despawn = []
         for obj in self.active_objects:
-            if obj.x < self.offset - obj.width:
+            if obj.x < self.offset - obj.width - 100:
+                print("Killing %s" % obj)
                 obj.kill()
                 objects_to_despawn.append(obj)
                 self.graveyard[type(obj)].append(obj)
