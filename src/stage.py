@@ -8,6 +8,8 @@ from constants import *
 class Stage:
     def __init__(self, id, color=(0,0,0,0), obstacles=[]):
         self.id = id
+        self.at_end = False
+        self.finished = False
         self.batch = pyglet.graphics.Batch()
         self.bg_group = pyglet.graphics.OrderedGroup(0)
         self.bg_prop_group = pyglet.graphics.OrderedGroup(1)
@@ -27,10 +29,13 @@ class Stage:
         self.next_spawn_index = 0
         self.checkpoints = [CheckPoint(320, 180)]
         self.hero = None
+        self.width = 30640
         self.setup()
         
     def setup(self, difficulty=NORMAL, checkpoint_index=0):
         '''Resets the stage to a pristine state, ready to be played.'''
+        self.finished = False
+        self.at_end = False
         if checkpoint_index in range(len(self.checkpoints)):
             checkpoint = self.checkpoints[checkpoint_index]
         else:
@@ -90,8 +95,18 @@ class Stage:
         
     def update(self, dt):
         self.hero.colliding = False
-        bg_movement = SPEED_NORMAL * dt
-        self.offset += bg_movement
+        if not self.at_end:
+            bg_movement = SPEED_HARD * dt
+            self.offset += bg_movement
+            if self.offset >= self.width - 640:
+                self.offset = self.width - 640
+                print("End of stage...")
+                self.at_end = True
+        else:
+            if not self.finished:
+                if self.hero.x > self.width:
+                    print("Finished!")
+                    self.finished = True
         
         self.check_despawns()
         self.check_spawns()
@@ -108,7 +123,6 @@ class Stage:
         objects_to_despawn = []
         for obj in self.active_objects:
             if obj.x < self.offset - obj.width - 100:
-                print("Killing %s" % obj)
                 obj.kill()
                 objects_to_despawn.append(obj)
                 self.graveyard[type(obj)].append(obj)
