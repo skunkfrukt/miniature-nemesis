@@ -243,7 +243,7 @@ class Peasant(Actor):
         Actor.__init__(self)
         self.set_sprite(AnimatedSprite(self.animations, default='idle'))
         self.collider = collider.Collider(0,0,30,20)
-        self.speed = (random.randint(0,1)*random.randint(0, self.max_speed), 0)
+        self.speed = (0, 0)
         
     def update_speed(self, dt):
         x, y = self.speed
