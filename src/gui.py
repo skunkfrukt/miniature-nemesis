@@ -119,11 +119,11 @@ class PlayState(GameState):
             self.switch_to = MenuState()  # pyglet.app.exit()
         elif symbol == key.O:
             print(len(self.level.active_objects))
-        self.level.send_keys_to_hero(keys)
+        self.level.send_keys_to_hero(keys, pressed=symbol)
         
             
     def on_key_release(self, symbol, modifiers):
-        self.level.send_keys_to_hero(keys)
+        self.level.send_keys_to_hero(keys, released=symbol)
             
     def update(self, dt):
         self.level.update(dt)
