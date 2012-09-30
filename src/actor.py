@@ -243,29 +243,7 @@ class Peasant(Actor):
         else:
             self.sprite.play('idle')
             
-            
-class Priest(Peasant):
-    _image = pyglet.resource.image('img/sprites/anim_priest_temp.png')
-    _frame_data = {
-            'idle': ((0, 2), 1.1, True),
-            'run': ((2, 4), 0.2, True),
-            'notice': ((4, 6), 1.2, True),
-            'aim': ((6, 8), 1.2, False),
-            'throw': ((8, 9), 1.2, False)
-            }
-    animations = Actor.make_animations(_image, 9, _frame_data)
-    
-    collision_effect = ('stun', 2.0)
-    pass
 
-
-class Woodpecker(Actor):
-    _image = pyglet.resource.image('img/sprites/anim_woodpecker_minimal.png')
-    _frame_data = {'fly': ((0, 2), 0.1, True)}
-    animations = Actor.make_animations(_image, 2, _frame_data)
-
-    max_speed = 100
-    acceleration = (50, 50)
 
 class Pebble(Projectile):
     _image = pyglet.resource.image('img/sprites/missile_pebble_minimal.png')

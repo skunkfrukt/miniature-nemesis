@@ -246,7 +246,7 @@ class SkyBackground(Prop):
 
 village_props = []
 
-import random
+
 
 prop_classes = [Rock, Stone, actor.Peasant, None, None, None]
 
