@@ -1,4 +1,27 @@
-class GameObject(object):
+import math
+import pyglet
+
+
+class AnimatedSprite(pyglet.sprite.Sprite):
+    def __init__(self, animations=None, default=None):
+        self.animations = animations
+        if default is None:
+            default = self.animations.keys()[0]
+            print("No default anim; using %s" % default)
+        pyglet.sprite.Sprite.__init__(self, self.animations[default])
+        
+    def play(self, animation):
+        if animation == self.current_animation:
+            return
+        elif animation in self.animations:
+            self.image = self.animations[animation]
+            self.current_animation = animation
+        else:
+            print("WARNING: %s tried to play invalid animation %s" %
+                  (self, animation))
+
+
+class GameObject(pyglet.event.EventDispatcher):
     '''Superclass of all objects that are drawn on stage.'''
     def __init__(self):
         self.dead = True
