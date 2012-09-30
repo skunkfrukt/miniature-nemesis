@@ -31,8 +31,8 @@ class Actor(GameObject):
             animations[name] = fis(grid[slice(*template[0])], *template[1:])
         return animations
 
-    def __init__(self, animations=None, default=None):
-        self.sprite = AnimatedSprite(animations, default)
+    def __init__(self):
+        GameObject.__init__(self)
         self.sprite.current_animation = default
         self.collider = None
         self.direction = (0, 0)
@@ -171,7 +171,8 @@ class Hero(Actor):
     acceleration = (200, 400)
 
     def __init__(self):
-        Actor.__init__(self, self.animations, default='run')
+        Actor.__init__(self)
+        self.set_sprite(AnimatedSprite(self.animations, default='run'))
         self.collider = collider.Collider(0,0,30,20)
 
     def fixSpeed(self, keys):
@@ -230,7 +231,8 @@ class Peasant(Actor):
     collision_effect = ('trip', 0.5)
 
     def __init__(self):
-        Actor.__init__(self, self.animations, default='idle')
+        Actor.__init__(self)
+        self.set_sprite(AnimatedSprite(self.animations, default='idle'))
         self.collider = collider.Collider(0,0,30,20)
         self.speed = (random.randint(0,1)*random.randint(0, self.max_speed), 0)
         

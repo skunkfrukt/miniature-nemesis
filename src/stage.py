@@ -176,10 +176,9 @@ class CheckPoint(SpawnPoint):
 class Prop(GameObject):
     collision_effect = None
     
-    def __init__(self, image):
-        self.sprite = pyglet.sprite.Sprite(image, x=-100, y=-100)
+    def __init__(self):
+        GameObject.__init__(self)
         self.collider = None
-        self.x, self.y = (0, 0)
         
     def move(self, dt, stage_offset):
         self.sprite.x = self.x - stage_offset
@@ -204,7 +203,8 @@ class Rock(Prop):
     _image = pyglet.resource.image('img/sprites/rock__sprite.png')
 
     def __init__(self):
-        Prop.__init__(self, self._image)
+        Prop.__init__(self)
+        self.set_sprite(pyglet.sprite.Sprite(self._image))
         self.collider = collider.Collider(5, 10, 25, 30)
         
         
@@ -213,7 +213,8 @@ class Stone(Prop):
     _image = pyglet.resource.image('img/sprites/pict_stone_temp.png')
     
     def __init__(self):
-        Prop.__init__(self, self._image)
+        Prop.__init__(self)
+        self.set_sprite(pyglet.sprite.Sprite(self._image))
         self.collider = collider.Collider(0, 0, 10, 10);
 
 
@@ -222,7 +223,8 @@ class House(Prop):
     _image = pyglet.resource.image('img/sprites/pict_house_temp.png')
     
     def __init__(self):
-        Prop.__init__(self, self._image)
+        Prop.__init__(self)
+        self.set_sprite(pyglet.sprite.Sprite(self._image))
         self.collider = collider.Collider(0, 0, 180, 180)
 
 
@@ -232,7 +234,8 @@ class SkyBackground(Prop):
     never_die = True
     
     def __init__(self):
-        Prop.__init__(self, self._image)
+        Prop.__init__(self)
+        self.set_sprite(pyglet.sprite.Sprite(self._image))
         self.collider = None
         self._x, self._y = 0, 0
         
