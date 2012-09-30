@@ -33,7 +33,6 @@ class Actor(GameObject):
 
     def __init__(self):
         GameObject.__init__(self)
-        self.sprite.current_animation = default
         self.collider = None
         self.direction = (0, 0)
         self.speed = (0.0, 0.0)
@@ -223,10 +222,6 @@ class Hero(Actor):
                 self.play('stop')
             else:
                 self.play('run')
-                
-    def apply_status(self, effect, strength=0):
-        Actor.apply_status(self, effect, strength)
-        print("%s: status -> %s" % (self.__class__.__name__, effect))
 
 
 class Peasant(Actor):

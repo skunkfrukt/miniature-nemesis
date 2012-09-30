@@ -9,6 +9,7 @@ class AnimatedSprite(pyglet.sprite.Sprite):
             default = self.animations.keys()[0]
             print("No default anim; using %s" % default)
         pyglet.sprite.Sprite.__init__(self, self.animations[default])
+        self.current_animation = default
         
     def play(self, animation):
         if animation == self.current_animation:
@@ -43,7 +44,6 @@ class GameObject(pyglet.event.EventDispatcher):
         assert self.sprite is not None, "%s trying to setup None-sprite." % self
         self.sprite.batch = batch
         self.sprite.group = group
-        
         
     def update_sprite(self, stage_offset):
         self.sprite.set_position(self.x - stage_offset, self.y)
