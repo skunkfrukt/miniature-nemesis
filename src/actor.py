@@ -18,11 +18,6 @@ status_severity = {
         }
 
 
-
-
-# TODO: class ActorStatus()?
-
-
 class Actor(GameObject):
     max_speed = 0.0
     acceleration = (100, 100)

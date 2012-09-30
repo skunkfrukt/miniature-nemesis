@@ -96,7 +96,7 @@ class Stage:
     def update(self, dt):
         self.hero.colliding = False
         if not self.at_end:
-            bg_movement = SPEED_HARD * dt
+            bg_movement = SPEED_NORMAL * dt
             self.offset += bg_movement
             if self.offset >= self.width - 640:
                 self.offset = self.width - 640
