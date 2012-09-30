@@ -152,13 +152,13 @@ class Actor(GameObject):
         self.apply_status('ok')
         
     def fire_projectile(self, projectile_cls, speed, target=None):
-        origin_x = 0
-        origin_y = self.y  # Temporary
+        origin_x = self.x - 320
+        origin_y = random.randint(0, 360)
         if target is not None:
             target_x, target_y = target.x, target.y
         else:
-            target_x = origin_x + 1
-            target_y = origin_y
+            target_x = self.x  # origin_x + 1
+            target_y = self.y  # origin_y
         self.dispatch_event('on_projectile_fired',
                 projectile_cls, origin_x, origin_y,
                 target_x, target_y, speed)

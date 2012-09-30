@@ -145,9 +145,11 @@ class Stage(pyglet.event.EventDispatcher):
                 if thing is not self.hero:
                     self.hero.collide(thing)
                     
-    def send_keys_to_hero(self, keys):
+    def send_keys_to_hero(self, keys, pressed=None, released=None):
         if self.hero is not None:
             self.hero.fixSpeed(keys)
+            if pressed == pyglet.window.key.X:
+                self.hero.fire_projectile(actor.Pebble, 200)
             
     def on_projectile_fired(self, projectile_cls, origin_x, origin_y,
             target_x, target_y, speed,
