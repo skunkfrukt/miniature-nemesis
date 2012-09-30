@@ -151,6 +151,20 @@ class Actor(GameObject):
     def reset(self, x, y):
         GameObject.reset(self, x, y)
         self.apply_status('ok')
+        
+    def fire_projectile(self, projectile_cls, speed, target=None):
+        origin_x = 0
+        origin_y = self.y  # Temporary
+        if target is not None:
+            target_x, target_y = target.x, target.y
+        else:
+            target_x = origin_x + 1
+            target_y = origin_y
+        self.dispatch_event('on_projectile_fired',
+                projectile_cls, origin_x, origin_y,
+                target_x, target_y, speed)
+
+Actor.register_event_type('on_projectile_fired')
 
 
 class Hero(Actor):
