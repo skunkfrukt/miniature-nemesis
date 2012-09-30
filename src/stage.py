@@ -5,7 +5,9 @@ import actor
 from common import GameObject, Point
 from constants import *
 
-class Stage:
+import random
+
+class Stage(pyglet.event.EventDispatcher):
     def __init__(self, id, color=(0,0,0,0), obstacles=[]):
         self.id = id
         self.at_end = False
@@ -26,6 +28,7 @@ class Stage:
             if not s.spawned_class in self.graveyard:
                 self.graveyard[s.spawned_class] = []
         self.graveyard[actor.Hero] = []
+        self.graveyard[actor.Pebble] = []
         self.next_spawn_index = 0
         self.checkpoints = [CheckPoint(320, 180)]
         self.hero = None
@@ -64,15 +67,22 @@ class Stage:
         cls = spawnpoint.spawned_class
         x = spawnpoint.x + spawnpoint.offset_x
         y = spawnpoint.y + spawnpoint.offset_y
-        assert cls in self.graveyard, "%s not in %s graveyard." % (cls, self.id)
-        if len(self.graveyard[cls]) > 0:
-            spawned_object = self.graveyard[cls].pop()
-        else:
-            spawned_object = cls()
-            spawned_object.setup_sprite(self.batch, self.bg_prop_group)
+        spawned_object = self.get_game_object_instance(cls)
         spawned_object.reset(x, y)
         self.active_objects.append(spawned_object)
         return spawned_object
+        
+    def get_game_object_instance(self, game_object_cls):
+        assert game_object_cls in self.graveyard, (
+                "%s not in %s graveyard." % (game_object_cls, self.id))
+        if len(self.graveyard[game_object_cls]) > 0:
+            obj = self.graveyard[game_object_cls].pop()
+        else:
+            obj = game_object_cls()
+            obj.setup_sprite(self.batch, self.bg_prop_group)
+            if hasattr(obj, 'event_types'):
+                obj.push_handlers(self)
+        return obj
         
     def check_initial_spawns(self):
         nsi = self.next_spawn_index
@@ -138,6 +148,17 @@ class Stage:
     def send_keys_to_hero(self, keys):
         if self.hero is not None:
             self.hero.fixSpeed(keys)
+            
+    def on_projectile_fired(self, projectile_cls, origin_x, origin_y,
+            target_x, target_y, speed,
+            source=None, valid_targets=None):
+        fired_projectile = self.get_game_object_instance(projectile_cls)
+        # fired_projectile.set_source(source)
+        # fired_projectile.set_valid_targets(valid_targets)
+        fired_projectile.launch(origin_x, origin_y, target_x, target_y, speed)
+        self.active_objects.append(fired_projectile)
+            
+
 
 
 class SpawnPoint(Point):
