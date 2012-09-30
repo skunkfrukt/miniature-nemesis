@@ -270,10 +270,14 @@ class Woodpecker(Actor):
     max_speed = 100
     acceleration = (50, 50)
 
+class Pebble(Projectile):
+    _image = pyglet.resource.image('img/sprites/missile_pebble_minimal.png')
+    _frame_data = {'thrown': ((0, 3), 0.2, True)}
+    animations = Actor.make_animations(_image, 3, _frame_data)
+    collision_effect = ('trip', 1.0)
+    
     def __init__(self):
-        Actor.__init__(self, default='fly')
-        self.target_speed = (0, 0)
-        
-    def set_aim(x, y):
-        self.aim = (x, y)
-        
+        Projectile.__init__(self)
+        self.set_sprite(AnimatedSprite(self.animations, default='thrown'))
+        self.collider = collider.Collider(0,0,1,1)
+    

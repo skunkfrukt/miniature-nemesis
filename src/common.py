@@ -24,8 +24,10 @@ class AnimatedSprite(pyglet.sprite.Sprite):
 class GameObject(pyglet.event.EventDispatcher):
     '''Superclass of all objects that are drawn on stage.'''
     def __init__(self):
-        self.dead = True
-        self.x, self.y = 0, 0
+        self.kill()
+        self.x = -1337
+        self.y = -1337
+        self.sprite = None
         
     def kill(self):
         self.dead = True
@@ -34,9 +36,41 @@ class GameObject(pyglet.event.EventDispatcher):
         self.x, self.y = x, y
         self.dead = False
         
+    def set_sprite(self, sprite):
+        self.sprite = sprite
+        
+    def setup_sprite(self, batch, group):
+        assert self.sprite is not None, "%s trying to setup None-sprite." % self
+        self.sprite.batch = batch
+        self.sprite.group = group
+        
+        
+    def update_sprite(self, stage_offset):
+        self.sprite.set_position(self.x - stage_offset, self.y)
+        
         
 class Point(object):
     '''A point in 2D space.'''
     def __init__(self, x, y):
         self.x = x
         self.y = y
+        
+        
+class Projectile(GameObject):
+    def launch(self, origin_x, origin_y, target_x, target_y, speed):
+        print("Launching %s." % self)
+        self.x = origin_x
+        self.y = origin_y
+        delta_x = target_x - origin_x
+        delta_y = target_y - origin_y
+        delta_x_squared = delta_x ** 2
+        delta_y_squared = delta_y ** 2
+        speed_squared = speed ** 2
+        speed_squared_from_deltas = delta_x_squared + delta_y_squared
+        speed_factor = math.sqrt(speed_squared / speed_squared_from_deltas)
+        self.dx = delta_x * speed_factor
+        self.dy = delta_y * speed_factor
+        self.dead = False;
+        
+
+        
