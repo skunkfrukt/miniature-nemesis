@@ -32,7 +32,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.next_spawn_index = 0
         self.checkpoints = [CheckPoint(320, 180)]
         self.hero = None
-        self.width = 30640
+        self.width = 6640
         self.setup()
         
     def setup(self, difficulty=NORMAL, checkpoint_index=0):
@@ -250,7 +250,7 @@ village_props = []
 
 prop_classes = [Rock, Stone, actor.Peasant, None, None, None]
 
-for x in range(180, 30001, 30):
+for x in range(180, 6320, 30):
     prop_index = random.randint(0,5)
     if prop_classes[prop_index]:
         village_props.append(SpawnPoint(x, random.randint(0,300),
