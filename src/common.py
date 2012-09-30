@@ -68,9 +68,17 @@ class Projectile(GameObject):
         speed_squared = speed ** 2
         speed_squared_from_deltas = delta_x_squared + delta_y_squared
         speed_factor = math.sqrt(speed_squared / speed_squared_from_deltas)
-        self.dx = delta_x * speed_factor
-        self.dy = delta_y * speed_factor
+        dx = delta_x * speed_factor
+        dy = delta_y * speed_factor
+        self.speed = (dx, dy)
         self.dead = False;
+        self.width = 1
         
+    def move(self, dt, stage_offset):
+        dx, dy = self.speed
+        self.x += dx * dt
+        self.y += dy * dt
+        self.update_sprite(stage_offset)
+        self.collider.move(self.x, self.y)
 
         
