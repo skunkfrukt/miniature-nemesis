@@ -123,8 +123,6 @@ class Stage(pyglet.event.EventDispatcher):
         self.move_active_objects(dt)
         self.check_collisions()
         
-        
-                
     def move_active_objects(self, dt):
         for obj in self.active_objects:
             obj.move(dt, self.offset)
@@ -181,12 +179,6 @@ class Prop(GameObject):
     def __init__(self):
         GameObject.__init__(self)
         self.collider = None
-        
-    def move(self, dt, stage_offset):
-        self.sprite.x = self.x - stage_offset
-        self.sprite.y = self.y
-        if self.collider:
-            self.collider.move(self.x, self.y)
         
     def setup_sprite(self, batch, group):
         if self.sprite is not None:

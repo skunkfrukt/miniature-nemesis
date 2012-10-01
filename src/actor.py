@@ -84,13 +84,7 @@ class Actor(GameObject):
     
     def move(self, dt, stage_offset):
         self.update_speed(dt)
-        dx, dy = self.speed
-        self.x += dx * dt
-        self.y += dy * dt
-        self.y = min(max(self.y, MIN_Y), MAX_Y)
-        self.sprite.x = self.x - stage_offset
-        self.sprite.y = self.y
-        self.collider.move(self.x, self.y)
+        GameObject.move(self, dt, stage_offset)
         self.animate()
         
     def animate(self):

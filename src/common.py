@@ -26,9 +26,11 @@ class GameObject(pyglet.event.EventDispatcher):
     '''Superclass of all objects that are drawn on stage.'''
     def __init__(self):
         self.kill()
-        self.x = -1337
+        self.x = -1337  #!! Magic number
         self.y = -1337
+        self.speed = None
         self.sprite = None
+        self.collider = None
         
     def kill(self):
         self.dead = True
@@ -48,6 +50,15 @@ class GameObject(pyglet.event.EventDispatcher):
     def update_sprite(self, stage_offset):
         self.sprite.set_position(self.x - stage_offset, self.y)
         
+    def move(self, dt, stage_offset):
+        if self.speed:
+            dx, dy = self.speed
+            self.x += dx * dt
+            self.y += dy * dt
+        if self.sprite:
+            self.update_sprite(stage_offset)
+        if self.collider:
+            self.collider.move(self.x, self.y)
         
 class Point(object):
     '''A point in 2D space.'''
@@ -73,12 +84,5 @@ class Projectile(GameObject):
         self.speed = (dx, dy)
         self.dead = False;
         self.width = 1
-        
-    def move(self, dt, stage_offset):
-        dx, dy = self.speed
-        self.x += dx * dt
-        self.y += dy * dt
-        self.update_sprite(stage_offset)
-        self.collider.move(self.x, self.y)
 
         
