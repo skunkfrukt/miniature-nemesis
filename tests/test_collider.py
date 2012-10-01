@@ -77,10 +77,10 @@ class TestCollider(unittest.TestCase):
         return self.assertEqual(False, self.collider.collide(other))
         
     def test_both_notations_work_for_x(self):
-        self.assertEqual(self.collider.x1, self.collider_alternative.x1)
+        self.assertEqual(self.collider.right, self.collider_alternative.right)
         
     def test_both_notations_work_for_y(self):
-        self.assertEqual(self.collider.y1, self.collider_alternative.y1)
+        self.assertEqual(self.collider.top, self.collider_alternative.top)
         
     def test_small_concentric_collider(self):
         self.assertCollides(self.small_collider)
