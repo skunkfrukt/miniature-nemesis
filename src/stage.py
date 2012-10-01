@@ -118,7 +118,6 @@ class Stage(pyglet.event.EventDispatcher):
                     print("Finished!")
                     self.finished = True
         
-        self.check_despawns()
         self.check_spawns()
         self.move_active_objects(dt)
         self.check_collisions()
@@ -126,16 +125,6 @@ class Stage(pyglet.event.EventDispatcher):
     def move_active_objects(self, dt):
         for obj in self.active_objects:
             obj.move(dt, self.offset)
-            
-    def check_despawns(self):
-        objects_to_despawn = []
-        for obj in self.active_objects:
-            if obj.x < self.offset - obj.width - 100:
-                obj.kill()
-                objects_to_despawn.append(obj)
-                self.graveyard[type(obj)].append(obj)
-        for obj in objects_to_despawn:
-            self.active_objects.remove(obj)
             
     def check_collisions(self):
         for thing in self.active_objects:
@@ -158,7 +147,10 @@ class Stage(pyglet.event.EventDispatcher):
         fired_projectile.launch(origin_x, origin_y, target_x, target_y, speed)
         self.active_objects.append(fired_projectile)
             
-
+    def on_despawn(self, despawned_object):
+        assert despawned_object in self.active_objects
+        self.graveyard[type(despawned_object)].append(despawned_object)
+        self.active_objects.remove(despawned_object)
 
 
 class SpawnPoint(Point):

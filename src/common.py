@@ -54,6 +54,15 @@ class GameObject(pyglet.event.EventDispatcher):
     def update_sprite(self, stage_offset):
         self.sprite.set_position(self.x - stage_offset, self.y)
         
+    def check_despawn(self, stage_offset):
+        if self.x + self.width < stage_offset:
+            return True
+        return False
+        
+    def despawn(self):
+        self.kill()
+        self.dispatch_event('on_despawn', self)
+        
     def move(self, dt, stage_offset):
         if self.speed:
             dx, dy = self.speed
@@ -63,7 +72,12 @@ class GameObject(pyglet.event.EventDispatcher):
             self.update_sprite(stage_offset)
         if self.collider:
             self.collider.move(self.x, self.y)
+        if self.check_despawn(stage_offset):
+            self.despawn()
         
+GameObject.register_event_type('on_despawn')
+
+
 class Point(object):
     '''A point in 2D space.'''
     def __init__(self, x, y):
