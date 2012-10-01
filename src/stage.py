@@ -186,10 +186,6 @@ class Prop(GameObject):
                 self.sprite.batch = batch
             if group is not None:
                 self.sprite.group = group
-        
-    @property
-    def width(self):
-        return self.sprite.width
 
 
 class Rock(Prop):

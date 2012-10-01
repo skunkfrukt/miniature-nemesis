@@ -28,6 +28,8 @@ class GameObject(pyglet.event.EventDispatcher):
         self.kill()
         self.x = -1337  #!! Magic number
         self.y = -1337
+        self.width = 1
+        self.height = 1
         self.speed = None
         self.sprite = None
         self.collider = None
@@ -41,6 +43,8 @@ class GameObject(pyglet.event.EventDispatcher):
         
     def set_sprite(self, sprite):
         self.sprite = sprite
+        self.width = self.sprite.width
+        self.height = self.sprite.height
         
     def setup_sprite(self, batch, group):
         assert self.sprite is not None, "%s trying to setup None-sprite." % self

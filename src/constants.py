@@ -1,5 +1,5 @@
 GAME_TITLE = "Miniature Nemesis"
-GAME_VERSION = "0.1a"
+GAME_VERSION = "0.0"
 
 WIN_WIDTH = 640
 WIN_HEIGHT = 360

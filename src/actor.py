@@ -136,10 +136,6 @@ class Actor(GameObject):
                 self.sprite.batch = batch
             if group is not None:
                 self.sprite.group = group
-                
-    @property
-    def width(self):
-        return self.sprite.width
         
     def reset(self, x, y):
         GameObject.reset(self, x, y)
