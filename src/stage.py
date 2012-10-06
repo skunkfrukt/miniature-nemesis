@@ -7,49 +7,78 @@ from constants import *
 
 import random
 
+
+class Graveyard(dict):
+    def allocate(self, *classes):
+        print("Graveyard.allocate(%s)" % str(classes))
+        for cls in classes:
+            if not cls in self:
+                self[cls] = []
+                self.allocate(*cls.required_classes)
+                
+    def get(self, cls):
+        assert cls in self, "%s not in %s." % (cls, self)
+        return self[cls].pop()
+        
+    def put(self, game_object):
+        cls = type(game_object)
+        allocate(cls)
+        self[cls].append(game_object)
+
+
 class Stage(pyglet.event.EventDispatcher):
     def __init__(self, id, color=(0,0,0,0), obstacles=[]):
         self.id = id
-        self.at_end = False
-        self.finished = False
         self.batch = pyglet.graphics.Batch()
-        self.bg_group = pyglet.graphics.OrderedGroup(0)
-        self.bg_prop_group = pyglet.graphics.OrderedGroup(1)
-        self.actor_group = pyglet.graphics.OrderedGroup(2)
-        background_image = pyglet.image.SolidColorImagePattern(color)
-        self.background = pyglet.sprite.Sprite(
-                background_image.create_image(640,360), batch=self.batch,
-                group=self.bg_group)
-        self.graveyard = {}
+        self.root_rendering_group = pyglet.graphics.OrderedGroup(0)
+        self.rendering_groups = []
+        self.setup_background(color)
+        self.graveyard = Graveyard()
         self.active_objects = []
-        self.spawns = obstacles  # .sort(lambda game_object: game_object.x)
-        # Temporary, hard-coded graveyard junk:
-        for s in self.spawns:
-            if not s.spawned_class in self.graveyard:
-                self.graveyard[s.spawned_class] = []
-        self.graveyard[actor.Hero] = []
-        self.graveyard[actor.Pebble] = []
+        self.build_stage(obstacles)
+        self.graveyard.allocate(actor.Hero)
         self.next_spawn_index = 0
         self.checkpoints = [CheckPoint(320, 180)]
-        self.hero = None
-        self.width = 6640
+        self.width = 6640  #!! Magic number
         self.setup()
         
     def setup(self, difficulty=NORMAL, checkpoint_index=0):
         '''Resets the stage to a pristine state, ready to be played.'''
         self.finished = False
         self.at_end = False
+        self.scroll_speed = SPEEDS[difficulty]
         if checkpoint_index in range(len(self.checkpoints)):
             checkpoint = self.checkpoints[checkpoint_index]
         else:
             print("WARNING: Stage %s has no checkpoint %d. Using 0." %
                     (self.id, checkpoint_index))
             checkpoint = self.checkpoints[0]
-        self.offset = max(0, checkpoint.x - WIN_WIDTH // 2)
-        self.scroll_speed = SPEED_BASE * SPEED_FACTORS[difficulty]
+        self.snap_to_checkpoint(checkpoint)
         self.clear()
         self.check_initial_spawns()
         self.hero = self.spawn(checkpoint)
+        
+    def setup_background(self, color):
+        background_pattern = pyglet.image.SolidColorImagePattern(color)
+        background_image = background_pattern.create_image(
+                WIN_WIDTH, WIN_HEIGHT)
+        self.background = pyglet.sprite.Sprite(
+                background_image, batch=self.batch,
+                group=self.get_rendering_group(R_GROUP_BG))
+        
+    def get_rendering_group(self, group_index):
+        assert group_index is not None, "Preferred group index is None."
+        while group_index >= len(self.rendering_groups):
+            new_index = len(self.rendering_groups)
+            new_group = pyglet.graphics.OrderedGroup(new_index,
+                    parent=self.root_rendering_group)
+            self.rendering_groups.append(new_group)
+        return self.rendering_groups[group_index]
+        
+    def build_stage(self, spawnpoints):
+        self.spawns = spawnpoints
+        classes = set([spawnpoint.spawned_class for spawnpoint in self.spawns])
+        self.graveyard.allocate(*classes)
         
     def clear(self):
         '''Kills all active objects.'''
@@ -79,19 +108,22 @@ class Stage(pyglet.event.EventDispatcher):
             obj = self.graveyard[game_object_cls].pop()
         else:
             obj = game_object_cls()
-            obj.setup_sprite(self.batch, self.bg_prop_group)
+            rendering_group = self.get_rendering_group(
+                    obj.preferred_rendering_group_index)
+            obj.setup_sprite(self.batch, rendering_group)
             if hasattr(obj, 'event_types'):
                 obj.push_handlers(self)
         return obj
         
     def check_initial_spawns(self):
-        nsi = self.next_spawn_index
-        msi = len(self.spawns)
-        while nsi < msi and self.spawns[nsi].x < self.offset - 100:
-                # Kill magic number
-            nsi += 1
+        next_spawn_index = 0
+        max_spawn_index = len(self.spawns)
+        while (next_spawn_index < max_spawn_index) and
+                (self.spawns[next_spawn_index].x < self.offset - 100):
+            #!! Magic number above: 100 --------------------------^
+            next_spawn_index += 1
+        self.next_spawn_index = next_spawn_index
         self.check_spawns()
-        self.next_spawn_index = nsi
         
     def check_spawns(self):
         nsi = self.next_spawn_index
@@ -104,29 +136,39 @@ class Stage(pyglet.event.EventDispatcher):
         self.next_spawn_index = nsi
         
     def update(self, dt):
-        self.hero.colliding = False
-        if not self.at_end:
-            bg_movement = SPEED_NORMAL * dt
-            self.offset += bg_movement
-            if self.offset >= self.width - 640:
-                self.offset = self.width - 640
-                print("End of stage...")
-                self.at_end = True
-        else:
-            if not self.finished:
-                if self.hero.x > self.width:
-                    print("Finished!")
-                    self.finished = True
-        
+        self.update_stage_offset(dt)
         self.check_spawns()
         self.move_active_objects(dt)
         self.check_collisions()
+        
+    def update_stage_offset(self, dt):
+        if not self.at_end:
+            self.offset += self.scroll_speed * dt
+            if self.offset + WIN_WIDTH >= self.width:
+                self.snap_to_right_edge()
+                self.at_end = True
+                print("End of stage...")
+        elif not self.finished:
+            if self.hero.x > self.width:
+                self.finished = True
+                print("Finished!")
+                
+    def snap_to_right_edge(self):
+        self.offset = self.width - WIN_WIDTH
+        
+    def snap_to_left_edge(self):
+        self.offset = 0
+        
+    def snap_to_checkpoint(self, checkpoint):
+        self.offset = min(max(0, checkpoint.x - WIN_WIDTH // 2),
+                self.width - WIN_WIDTH)
         
     def move_active_objects(self, dt):
         for obj in self.active_objects:
             obj.move(dt, self.offset)
             
     def check_collisions(self):
+        self.hero.colliding = False
         for thing in self.active_objects:
             if not self.hero.colliding:
                 if thing is not self.hero:
@@ -167,6 +209,7 @@ class CheckPoint(SpawnPoint):
     
 class Prop(GameObject):
     collision_effect = None
+    preferred_rendering_group_index = R_GROUP_PROPS
     
     def __init__(self):
         GameObject.__init__(self)
@@ -210,7 +253,7 @@ class House(Prop):
         self.collider = collider.Collider(0, 0, 180, 180)
 
 
-class SkyBackground(Prop):
+'''class SkyBackground(Prop):
     collision_effect = None
     _image = pyglet.resource.image('img/sprites/sky.png')
     never_die = True
@@ -223,7 +266,7 @@ class SkyBackground(Prop):
         
     def move(self, dt, stage_offset):
         self.sprite.x = -stage_offset * 0.1
-        self.sprite.y = self.y
+        self.sprite.y = self.y'''
         
 
 village_props = []

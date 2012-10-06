@@ -25,6 +25,9 @@ class AnimatedSprite(pyglet.sprite.Sprite):
 
 class GameObject(pyglet.event.EventDispatcher):
     '''Superclass of all objects that are drawn on stage.'''
+    preferred_rendering_group_index = None
+    required_classes = []
+    
     def __init__(self):
         self.kill()
         self.x = -1337  #!! Magic number
@@ -87,6 +90,8 @@ class Point(object):
         
         
 class Projectile(GameObject):
+    preferred_rendering_group_index = R_GROUP_PROJECTILES
+
     def launch(self, origin_x, origin_y, target_x, target_y, speed):
         print("Launching %s." % self)
         self.x = origin_x

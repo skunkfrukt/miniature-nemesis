@@ -22,6 +22,7 @@ status_severity = {
 class Actor(GameObject):
     max_speed = 0.0
     acceleration = (100, 100)
+    preferred_rendering_group_index = R_GROUP_ACTORS_BACK
     
     @classmethod
     def make_animations(cls, image, number_of_frames, frame_data):
@@ -170,6 +171,7 @@ class Hero(Actor):
             'rise': ((13, 14), 0.12, False)
             }
     animations = Actor.make_animations(_image, 14, _frame_data)
+    preferred_rendering_group_index = R_GROUP_HERO
     
     max_speed = 80.0
     acceleration = (200, 400)
@@ -215,6 +217,18 @@ class Hero(Actor):
                 self.play('run')
 
 
+class Pebble(Projectile):
+    _image = pyglet.resource.image('img/sprites/missile_pebble_minimal.png')
+    _frame_data = {'thrown': ((0, 3), 0.2, True)}
+    animations = Actor.make_animations(_image, 3, _frame_data)
+    collision_effect = ('trip', 1.0)
+    
+    def __init__(self):
+        Projectile.__init__(self)
+        self.set_sprite(AnimatedSprite(self.animations, default='thrown'))
+        self.collider = collider.Collider(0,0,1,1)
+
+
 class Peasant(Actor):
     _image = pyglet.resource.image('img/sprites/anim_peasant-a_minimal.png')
     _frame_data = {
@@ -224,6 +238,7 @@ class Peasant(Actor):
             'aim': ((6, 8), 1.2, False),
             'throw': ((8, 9), 1.2, False)
             }
+    required_classes = [Pebble]
     animations = Actor.make_animations(_image, 9, _frame_data)
     
     max_speed = 60.0
@@ -245,14 +260,3 @@ class Peasant(Actor):
             
 
 
-class Pebble(Projectile):
-    _image = pyglet.resource.image('img/sprites/missile_pebble_minimal.png')
-    _frame_data = {'thrown': ((0, 3), 0.2, True)}
-    animations = Actor.make_animations(_image, 3, _frame_data)
-    collision_effect = ('trip', 1.0)
-    
-    def __init__(self):
-        Projectile.__init__(self)
-        self.set_sprite(AnimatedSprite(self.animations, default='thrown'))
-        self.collider = collider.Collider(0,0,1,1)
-    
