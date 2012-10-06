@@ -155,7 +155,12 @@ class Actor(GameObject):
                 projectile_cls, origin_x, origin_y,
                 target_x, target_y, speed)
 
+    def reset(self, x, y):
+        GameObject.reset(self, x, y)
+        self.dispatch_event('on_spawn', self, x, y)
+
 Actor.register_event_type('on_projectile_fired')
+Actor.register_event_type('on_spawn')
 
 
 class Hero(Actor):
