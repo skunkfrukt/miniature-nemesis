@@ -253,22 +253,6 @@ class House(Prop):
         self.collider = collider.Collider(0, 0, 180, 180)
 
 
-'''class SkyBackground(Prop):
-    collision_effect = None
-    _image = pyglet.resource.image('img/sprites/sky.png')
-    never_die = True
-
-    def __init__(self):
-        Prop.__init__(self)
-        self.set_sprite(pyglet.sprite.Sprite(self._image))
-        self.collider = None
-        self._x, self._y = 0, 0
-
-    def move(self, dt, stage_offset):
-        self.sprite.x = -stage_offset * 0.1
-        self.sprite.y = self.y'''
-
-
 village_props = []
 
 
