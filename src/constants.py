@@ -1,3 +1,8 @@
+def bitrange(n):
+    for exponent in range(n):
+        yield 2 ** exponent
+
+
 GAME_TITLE = "Miniature Nemesis"
 GAME_VERSION = "0.0"
 
@@ -14,9 +19,9 @@ R_GROUP_ACTORS_FRONT,
 R_GROUP_PROJECTILES,
 R_GROUP_FG) = range(7)
 
-EASY = 1
-NORMAL = 2
-HARD = 4
+(EASY,
+NORMAL,
+HARD) = bitrange(3)
 
 SPEED_BASE = 100
 
