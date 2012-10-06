@@ -51,7 +51,7 @@ class GameObject(pyglet.event.EventDispatcher):
         self.height = self.sprite.height
         
     def setup_sprite(self, batch, group):
-        assert self.sprite is not None, "%s trying to setup None-sprite." % self
+        assert self.sprite is not None, "%s setting up None-sprite." % self
         self.sprite.batch = batch
         self.sprite.group = group
         
@@ -59,7 +59,7 @@ class GameObject(pyglet.event.EventDispatcher):
         self.sprite.set_position(self.x - stage_offset, self.y)
         
     def check_despawn(self, stage_offset):
-        if self.x + self.width < stage_offset:
+        if self.right <= stage_offset:
             return True
         return False
         
@@ -79,6 +79,38 @@ class GameObject(pyglet.event.EventDispatcher):
         if self.check_despawn(stage_offset):
             self.despawn()
         
+    @property
+    def left(self):
+        return self.x
+
+    @left.setter
+    def left(self, value):
+        self.x = value
+
+    @property
+    def right(self):
+        return self.x + self.width
+
+    @right.setter
+    def right(self, value):
+        self.x = value - self.width
+
+    @property
+    def bottom(self):
+        return self.y
+
+    @bottom.setter
+    def bottom(self, value):
+        self.y = value
+
+    @property
+    def top(self):
+        return self.y + self.height
+
+    @top.setter
+    def top(self, value):
+        self.y = value - self.height
+
 GameObject.register_event_type('on_despawn')
 
 

@@ -40,3 +40,10 @@ class Collider:
         self.bottom = base_y + self._offset_bottom
         self.right = base_x + self._offset_right
         self.top = base_y + self._offset_top
+
+
+def collide(*colliders):
+    if len(colliders) == 0:
+        return None
+    elif len(colliders) == 1:
+        return collide(colliders[0], colliders[0])

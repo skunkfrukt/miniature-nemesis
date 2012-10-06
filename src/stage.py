@@ -10,7 +10,6 @@ import random
 
 class Graveyard(dict):
     def allocate(self, *classes):
-        print("Graveyard.allocate(%s)" % str(classes))
         for cls in classes:
             if not cls in self:
                 self[cls] = []
@@ -55,7 +54,8 @@ class Stage(pyglet.event.EventDispatcher):
             checkpoint = self.checkpoints[0]
         self.snap_to_checkpoint(checkpoint)
         self.clear()
-        self.check_initial_spawns()
+        self.find_initial_spawn_index()
+        self.check_spawns()
         self.hero = self.spawn(checkpoint)
         
     def setup_background(self, color):
@@ -115,25 +115,25 @@ class Stage(pyglet.event.EventDispatcher):
                 obj.push_handlers(self)
         return obj
         
-    def check_initial_spawns(self):
-        next_spawn_index = 0
-        max_spawn_index = len(self.spawns)
-        while (next_spawn_index < max_spawn_index) and
-                (self.spawns[next_spawn_index].x < self.offset - 100):
-            #!! Magic number above: 100 --------------------------^
-            next_spawn_index += 1
-        self.next_spawn_index = next_spawn_index
-        self.check_spawns()
+    def find_initial_spawn_index(self):
+        spawn_index = 0
+        num_spawns = len(self.spawns)
+        left_edge = self.offset - SCREEN_MARGIN
+        while self.spawns[spawn_index].x <= left_edge:  # .right
+            spawn_index += 1
+        self.next_spawn_index = spawn_index
         
     def check_spawns(self):
-        nsi = self.next_spawn_index
-        msi = len(self.spawns)
-        while nsi < msi and self.spawns[nsi].x < self.offset + 740:
-            spawnpoint = self.spawns[nsi]
-            if spawnpoint.x + 50 > self.offset: # Magic number --> width
-                self.spawn(spawnpoint)
-            nsi += 1
-        self.next_spawn_index = nsi
+        spawn_index = self.next_spawn_index
+        num_spawns = len(self.spawns)
+        right_edge = self.offset + WIN_WIDTH + SCREEN_MARGIN
+        while (spawn_index < num_spawns) and (
+                self.spawns[spawn_index].x < right_edge):  # .left
+            spawnpoint = self.spawns[spawn_index]
+            assert spawnpoint.x > self.offset  # .right
+            self.spawn(spawnpoint)
+            spawn_index += 1
+        self.next_spawn_index = spawn_index
         
     def update(self, dt):
         self.update_stage_offset(dt)
