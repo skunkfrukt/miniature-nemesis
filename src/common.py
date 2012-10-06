@@ -1,5 +1,6 @@
 import math
 import pyglet
+from constants import *
 
 
 class AnimatedSprite(pyglet.sprite.Sprite):

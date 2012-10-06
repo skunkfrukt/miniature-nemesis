@@ -4,6 +4,7 @@ import collider
 import random
 from common import AnimatedSprite, GameObject, Projectile
 from pyglet.window import key
+from constants import *
 
 MIN_Y, MAX_Y = 0, 275
 
