@@ -23,7 +23,7 @@ class Actor(GameObject):
     max_speed = 0.0
     acceleration = (100, 100)
     preferred_rendering_group_index = R_GROUP_ACTORS_BACK
-    
+
     @classmethod
     def make_animations(cls, image, number_of_frames, frame_data):
         fis = pyglet.image.Animation.from_image_sequence
@@ -40,10 +40,10 @@ class Actor(GameObject):
         self.speed = (0.0, 0.0)
         self.stun_time = 0.0
         self.status = 'ok'
-    
+
     def play(self, animation):
         self.sprite.play(animation)
-                  
+
     def update_speed(self, dt):
         if self.status == 'ok':
             dirx, diry = self.direction
@@ -65,7 +65,7 @@ class Actor(GameObject):
                 self.speed = (100, 0)
                 self.apply_status('ok')
         self.stun_time -= dt
-        
+
     def approach_target_speed(self, dt, target=(0, 0)):
         dx, dy = self.speed
         tx, ty = target
@@ -83,15 +83,15 @@ class Actor(GameObject):
             dy += ay * dt
             dy = min(dy, ty)
         self.speed = (dx, dy)
-    
+
     def move(self, dt, stage_offset):
         self.update_speed(dt)
         GameObject.move(self, dt, stage_offset)
         self.animate()
-        
+
     def animate(self):
         pass
-        
+
     def handle_collision(self, other):
         if not other.collision_effect:
             return
@@ -100,7 +100,7 @@ class Actor(GameObject):
             return False
         else:
             return self.apply_status(effect, strength)
-            
+
     def apply_status(self, effect, strength=0):
         if effect == 'ok':
             self.stun_time = 0.0
@@ -122,7 +122,7 @@ class Actor(GameObject):
             return False
         self.status = effect
         return True
-            
+
     def collide(self, other):
         if not (self.collider and other.collider):
             return False
@@ -131,18 +131,18 @@ class Actor(GameObject):
             if collision:
                 self.handle_collision(other)
             return collision
-        
+
     def setup_sprite(self, batch, group):
         if self.sprite is not None:
             if batch is not None:
                 self.sprite.batch = batch
             if group is not None:
                 self.sprite.group = group
-        
+
     def reset(self, x, y):
         GameObject.reset(self, x, y)
         self.apply_status('ok')
-        
+
     def fire_projectile(self, projectile_cls, speed, target=None):
         origin_x = self.x - 320
         origin_y = random.randint(0, 360)
@@ -172,7 +172,7 @@ class Hero(Actor):
             }
     animations = Actor.make_animations(_image, 14, _frame_data)
     preferred_rendering_group_index = R_GROUP_HERO
-    
+
     max_speed = 80.0
     acceleration = (200, 400)
 
@@ -193,11 +193,11 @@ class Hero(Actor):
         if keys[key.D] or keys[key.RIGHT]:
             dirx += 1
         self.direction = (dirx, diry)
-        
+
     def move(self, dt, stage_offset):
         dirx, diry = self.direction
         Actor.move(self, dt, stage_offset)
-                
+
     def animate(self):
         dirx, diry = self.direction
         if self.status == 'stun':
@@ -222,7 +222,7 @@ class Pebble(Projectile):
     _frame_data = {'thrown': ((0, 3), 0.2, True)}
     animations = Actor.make_animations(_image, 3, _frame_data)
     collision_effect = ('trip', 1.0)
-    
+
     def __init__(self):
         Projectile.__init__(self)
         self.set_sprite(AnimatedSprite(self.animations, default='thrown'))
@@ -240,7 +240,7 @@ class Peasant(Actor):
             }
     required_classes = [Pebble]
     animations = Actor.make_animations(_image, 9, _frame_data)
-    
+
     max_speed = 60.0
     acceleration = (150, 300)
     collision_effect = ('trip', 0.5)
@@ -250,13 +250,10 @@ class Peasant(Actor):
         self.set_sprite(AnimatedSprite(self.animations, default='idle'))
         self.collider = collider.Collider(0,0,30,20)
         self.speed = (0, 0)
-        
+
     def update_speed(self, dt):
         x, y = self.speed
         if x > 0:
             self.sprite.play('run')
         else:
             self.sprite.play('idle')
-            
-
-

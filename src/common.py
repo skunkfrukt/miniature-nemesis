@@ -11,7 +11,7 @@ class AnimatedSprite(pyglet.sprite.Sprite):
             print("No default anim; using %s" % default)
         pyglet.sprite.Sprite.__init__(self, self.animations[default])
         self.current_animation = default
-        
+
     def play(self, animation):
         if animation == self.current_animation:
             return
@@ -27,7 +27,7 @@ class GameObject(pyglet.event.EventDispatcher):
     '''Superclass of all objects that are drawn on stage.'''
     preferred_rendering_group_index = None
     required_classes = []
-    
+
     def __init__(self):
         self.kill()
         self.x = -1337  #!! Magic number
@@ -37,36 +37,36 @@ class GameObject(pyglet.event.EventDispatcher):
         self.speed = None
         self.sprite = None
         self.collider = None
-        
+
     def kill(self):
         self.dead = True
-        
+
     def reset(self, x, y):
         self.x, self.y = x, y
         self.dead = False
-        
+
     def set_sprite(self, sprite):
         self.sprite = sprite
         self.width = self.sprite.width
         self.height = self.sprite.height
-        
+
     def setup_sprite(self, batch, group):
         assert self.sprite is not None, "%s setting up None-sprite." % self
         self.sprite.batch = batch
         self.sprite.group = group
-        
+
     def update_sprite(self, stage_offset):
         self.sprite.set_position(self.x - stage_offset, self.y)
-        
+
     def check_despawn(self, stage_offset):
         if self.right <= stage_offset:
             return True
         return False
-        
+
     def despawn(self):
         self.kill()
         self.dispatch_event('on_despawn', self)
-        
+
     def move(self, dt, stage_offset):
         if self.speed:
             dx, dy = self.speed
@@ -78,7 +78,7 @@ class GameObject(pyglet.event.EventDispatcher):
             self.collider.move(self.x, self.y)
         if self.check_despawn(stage_offset):
             self.despawn()
-        
+
     @property
     def left(self):
         return self.x
@@ -119,8 +119,8 @@ class Point(object):
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        
-        
+
+
 class Projectile(GameObject):
     preferred_rendering_group_index = R_GROUP_PROJECTILES
 
@@ -140,5 +140,3 @@ class Projectile(GameObject):
         self.speed = (dx, dy)
         self.dead = False;
         self.width = 1
-
-        

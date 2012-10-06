@@ -15,13 +15,13 @@ class GameMenu:
         self.options = options
         self.selected_index = initial_option
         self.wrap_around = wrap
-    
+
     def next_option(self):
         return self.change_selected_index(1)
-    
+
     def previous_option(self):
         return self.change_selected_index(-1)
-        
+
     def change_selected_index(self, di):
         new_selected_index = self.selected_index + di
         if self.wrap_around:
@@ -33,23 +33,23 @@ class GameMenu:
         else:
             pass # Throw some kind of an error or do nothing, maybe.
         return self.selected_index
-    
+
     def selected_option(self):
         return self.selected_index
-    
+
     def selected_option_name(self):
         return self.options[self.selected_option()]
-    
+
 class GameState:
     def __init__(self):
         self.batch = pyglet.graphics.Batch()
-        
+
     def draw(self):
         self.batch.draw()
-        
+
     def update(self, dt):
         pass
-        
+
 
 class MenuState(GameState):
     def __init__(self):
@@ -70,7 +70,7 @@ class MenuState(GameState):
                     group=self.button_group)
             self.menu.labels.append(l)
         self.select_menu_item(self.menu.selected_option())
-        
+
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ENTER:
             if self.menu.selected_option_name() == 'Run':
@@ -85,23 +85,23 @@ class MenuState(GameState):
             self.unselect_menu_item(self.menu.selected_option())
             self.menu.next_option()
             self.select_menu_item(self.menu.selected_option())
-            
+
     def on_key_release(self, symbol, modifiers):
-        pass        
-    
+        pass
+
     def update(self, dt):
         pass
-        
+
     def unselect_menu_item(self, index):
         self.menu.labels[index].color = (0,0,0,255)
-        
+
     def select_menu_item(self, index):
         self.menu.labels[index].color = (255,0,0,255)
-        
+
     def quit(self):
         pyglet.app.exit()
         #self.switch_to = 'QUIT'
-        
+
     def switch_state(self, state):
         self.switch_to = state
 
@@ -113,18 +113,18 @@ class PlayState(GameState):
         self.switch_to = None
         self.level = stage.Stage('Derpington Abbey', (0,127,0,255), stage.village_props)
         self.game_over_label = None
-        
+
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ESCAPE:
             self.switch_to = MenuState()  # pyglet.app.exit()
         elif symbol == key.O:
             print(len(self.level.active_objects))
         self.level.send_keys_to_hero(keys, pressed=symbol)
-        
-            
+
+
     def on_key_release(self, symbol, modifiers):
         self.level.send_keys_to_hero(keys, released=symbol)
-            
+
     def update(self, dt):
         self.level.update(dt)
         '''if guy.x < self.level.offset - 50:
@@ -135,7 +135,7 @@ class PlayState(GameState):
                         x=320, y=180, anchor_x='center', anchor_y='center',
                         batch=self.batch, group=self.gui_group)
                 guy.apply_status('dead')'''
-    
+
     def draw(self):
         self.level.batch.draw()
         self.batch.draw()
@@ -150,7 +150,7 @@ class MainWindow(pyglet.window.Window):
             pyglet.resource.image('img/icons/48x48.png'),
             pyglet.resource.image('img/icons/72x72.png'),
             pyglet.resource.image('img/icons/128x128.png'))
-    
+
     def __init__(self):
         fs = '-fs' in sys.argv
         super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE, fullscreen=fs)
@@ -158,13 +158,13 @@ class MainWindow(pyglet.window.Window):
         self.push_handlers(keys)
         self.set_icon(*self.icons)
         pyglet.clock.schedule_interval(self.update,0.02)
-        
+
     def on_key_press(self, symbol, modifiers):
         self.state.on_key_press(symbol, modifiers)
-            
+
     def on_key_release(self, symbol, modifiers):
         self.state.on_key_release(symbol, modifiers)
-    
+
     def on_draw(self):
         self.clear()
         if self.state.switch_to is None:
@@ -172,6 +172,6 @@ class MainWindow(pyglet.window.Window):
         else:
             self.state = self.state.switch_to
         # fps_display.draw()
-        
+
     def update(self,dt):
         self.state.update(dt)
