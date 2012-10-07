@@ -111,6 +111,23 @@ class GameObject(pyglet.event.EventDispatcher):
     def top(self, value):
         self.y = value - self.height
 
+    @property
+    def rect(self):
+        return (self.left, self.bottom, self.right, self.top)
+
+    @property
+    def collider(self):
+        return self._collider
+
+    @collider.setter
+    def collider(self, value):
+        self._collider = value
+        if self._collider is not None:
+            self._collider.push_handlers(self)
+
+    def on_collision(self, other, rect):
+        pass
+
 GameObject.register_event_type('on_despawn')
 
 

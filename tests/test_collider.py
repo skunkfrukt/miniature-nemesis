@@ -40,7 +40,7 @@ class TestCollider(unittest.TestCase):
         self.west_close = Collider(-5,0,width=5,height=10)
         self.east_close = Collider(10,0,width=5,height=10)
 
-        all_colliders = [
+        self.all_colliders = [
                 self.collider,
                 self.collider_alternative,
                 self.small_collider,
@@ -67,14 +67,14 @@ class TestCollider(unittest.TestCase):
                 self.east_close
                 ]
 
-        for collider in all_colliders:
+        for collider in self.all_colliders:
             collider.move(0,0)
 
     def assertCollides(self, other):
-        return self.assertEqual(True, self.collider.collide(other))
+        return self.assertTrue(self.collider.collide(other))
 
     def assertDodges(self, other):
-        return self.assertEqual(False, self.collider.collide(other))
+        return self.assertFalse(self.collider.collide(other))
 
     def test_both_notations_work_for_x(self):
         self.assertEqual(self.collider.right, self.collider_alternative.right)
@@ -147,3 +147,7 @@ class TestCollider(unittest.TestCase):
 
     def test_east_close(self):
         self.assertDodges(self.east_close)
+
+    def test_collisions_are_symmetric(self):
+        for a, b in pairs(self.all_colliders):
+            self.assertEqual(a.collide(b), b.collide(a))

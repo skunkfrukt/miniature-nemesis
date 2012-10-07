@@ -38,6 +38,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.graveyard.allocate(actor.Hero)
         self.checkpoints = [CheckPoint(320, 180)]
         self.width = 6640  #!! Magic number
+        self.spatial_hash = collider.SpatialHash(self.width, 360, 40)
         self.setup()
 
     def setup(self, difficulty=NORMAL, checkpoint_index=0):
@@ -170,10 +171,8 @@ class Stage(pyglet.event.EventDispatcher):
 
     def check_collisions(self):
         self.hero.colliding = False
-        for thing in self.active_objects:
-            if not self.hero.colliding:
-                if thing is not self.hero:
-                    self.hero.collide(thing)
+        colliders = [thing.collider for thing in self.active_objects]
+        self.spatial_hash.collide(self.visible_rect, colliders)
 
     def send_keys_to_hero(self, keys, pressed=None, released=None):
         if self.hero is not None:
@@ -194,6 +193,10 @@ class Stage(pyglet.event.EventDispatcher):
         assert despawned_object in self.active_objects
         self.graveyard[type(despawned_object)].append(despawned_object)
         self.active_objects.remove(despawned_object)
+
+    @property
+    def visible_rect(self):
+        return (self.offset, 0, self.offset + WIN_WIDTH, 0 + WIN_HEIGHT)
 
 
 class SpawnPoint(Point):
