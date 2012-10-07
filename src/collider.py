@@ -25,10 +25,12 @@ class Collider(pyglet.event.EventDispatcher):
         assert self.bottom is not None, "Collider's real bottom is None."
         assert self.right is not None, "Collider's real right is None."
         assert self.top is not None, "Collider's real top is None."
-        collision_rect = self.get_collision_rect(other)
         collision_speed = self.get_collision_speed(other)
-        colliding = collision_rect is not None and collision_speed is not None
-        if colliding:
+        if collision_speed is not None:
+            collision_rect = self.get_collision_rect(other)
+        else:
+            collision_rect = None
+        if collision_rect is not None:
             self.dispatch_event('on_collision', other, collision_rect,
                     collision_speed)
         return collision_rect
