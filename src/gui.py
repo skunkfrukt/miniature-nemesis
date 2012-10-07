@@ -135,7 +135,8 @@ class PlayState(GameState):
             self.level.update(0)
 
     def draw(self):
-        self.level.batch.draw()
+        if self.level.ready:
+            self.level.batch.draw()
         self.batch.draw()
 
 
