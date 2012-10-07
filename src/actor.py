@@ -51,19 +51,19 @@ class Actor(GameObject):
             self.approach_target_speed(dt, (tx, ty))
         elif self.status == 'rise':
             if self.stun_time <= 0:
-                self.apply_status('ok')
+                self.apply_status('ok', force=True)
         elif self.status == 'tumble':
             if self.speed[0] < 1:
-                self.apply_status('rise')
+                self.apply_status('rise', force=True)
             else:
                 self.approach_target_speed(dt, (0,0))
         elif self.status == 'trip':
             if self.stun_time <= 0:
-                self.apply_status('tumble')
+                self.apply_status('tumble', force=True)
         elif self.status == 'stun':
             if self.stun_time <= 0:
                 self.speed = (100, 0)
-                self.apply_status('ok')
+                self.apply_status('ok', force=True)
         self.stun_time -= dt
 
     def approach_target_speed(self, dt, target=(0, 0)):
@@ -92,16 +92,10 @@ class Actor(GameObject):
     def animate(self):
         pass
 
-    def handle_collision(self, other):
-        if not other.collision_effect:
-            return
-        effect, strength = other.collision_effect
-        if status_severity[effect] <= status_severity[self.status]:
-            return False
-        else:
-            return self.apply_status(effect, strength)
-
-    def apply_status(self, effect, strength=0):
+    def apply_status(self, effect, strength=0, force=False):
+        if not force:
+            if status_severity[effect] <= status_severity[self.status]:
+                return False
         if effect == 'ok':
             self.stun_time = 0.0
         elif effect == 'rise':
@@ -122,15 +116,6 @@ class Actor(GameObject):
             return False
         self.status = effect
         return True
-
-    def collide(self, other):
-        if not (self.collider and other.collider):
-            return False
-        else:
-            collision = self.collider.collide(other.collider)
-            if collision:
-                self.handle_collision(other)
-            return collision
 
     def setup_sprite(self, batch, group):
         if self.sprite is not None:
@@ -220,6 +205,10 @@ class Hero(Actor):
                 self.play('stop')
             else:
                 self.play('run')
+
+    def on_collision(self, other, rect, speed, effect):
+        if effect:
+            self.apply_status(*effect)
 
 
 class Pebble(Projectile):

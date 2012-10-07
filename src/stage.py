@@ -237,7 +237,8 @@ class Rock(Prop):
     def __init__(self):
         Prop.__init__(self)
         self.set_sprite(pyglet.sprite.Sprite(self._image))
-        self.collider = collider.Collider(5, 10, 25, 30)
+        self.collider = collider.Collider(5, 10, 25, 30,
+                effect=self.collision_effect)
 
 
 class Stone(Prop):
@@ -247,7 +248,8 @@ class Stone(Prop):
     def __init__(self):
         Prop.__init__(self)
         self.set_sprite(pyglet.sprite.Sprite(self._image))
-        self.collider = collider.Collider(0, 0, 10, 10);
+        self.collider = collider.Collider(0, 0, 10, 10,
+                effect=self.collision_effect)
 
 
 class House(Prop):
@@ -257,7 +259,8 @@ class House(Prop):
     def __init__(self):
         Prop.__init__(self)
         self.set_sprite(pyglet.sprite.Sprite(self._image))
-        self.collider = collider.Collider(0, 0, 180, 180)
+        self.collider = collider.Collider(0, 0, 180, 180,
+                effect=self.collision_effect)
 
 
 village_props = []

@@ -133,7 +133,7 @@ class GameObject(pyglet.event.EventDispatcher):
             self._collider.move(self.x, self.y)
             self._collider.push_handlers(self)
 
-    def on_collision(self, other, rect, speed):
+    def on_collision(self, other, rect, speed, effect):
         pass
 
 GameObject.register_event_type('on_despawn')

@@ -2,7 +2,7 @@ import pyglet
 
 class Collider(pyglet.event.EventDispatcher):
     def __init__(self, left=0, bottom=0, right=None, top=None,
-            width=None, height=None):
+            width=None, height=None, effect=None):
         self.left, self.bottom, self.right, self.top = None, None, None, None
         self._offset_left, self._offset_bottom = left, bottom
         if width is not None:
@@ -19,6 +19,7 @@ class Collider(pyglet.event.EventDispatcher):
             self._offset_top = top
         assert self._offset_left < self._offset_right, "Collider's left >= right"
         assert self._offset_bottom < self._offset_top, "Collider's bottom >= top"
+        self.effect = effect
 
     def collide(self, other):
         assert self.left is not None, "Collider's real left is None."
@@ -32,7 +33,7 @@ class Collider(pyglet.event.EventDispatcher):
             collision_rect = None
         if collision_rect is not None:
             self.dispatch_event('on_collision', other, collision_rect,
-                    collision_speed)
+                    collision_speed, other.effect)
         return collision_rect
 
     def get_collision_rect(self, other):
