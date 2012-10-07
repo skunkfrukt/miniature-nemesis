@@ -45,6 +45,7 @@ class Stage(pyglet.event.EventDispatcher):
         '''Resets the stage to a pristine state, ready to be played.'''
         self.ready = False
         self.clear()
+        self.time = 0.0
         self.finished = False
         self.at_end = False
         self.scroll_speed = SPEEDS[difficulty]
@@ -138,6 +139,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.next_spawn_index = spawn_index
 
     def update(self, dt):
+        self.time += dt
         self.update_stage_offset(dt)
         self.check_spawns()
         self.move_active_objects(dt)
@@ -167,6 +169,7 @@ class Stage(pyglet.event.EventDispatcher):
 
     def move_active_objects(self, dt):
         for obj in self.active_objects:
+            obj.behave(self.time)
             obj.move(dt, self.offset)
 
     def check_collisions(self):

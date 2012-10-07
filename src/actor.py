@@ -265,3 +265,10 @@ class Peasant(Actor):
             self.sprite.play('run')
         else:
             self.sprite.play('idle')
+
+    def reset(self, x, y):
+        Actor.reset(self, x, y)
+        self.behavior = self.behave_idle
+
+    def behave_idle(self, time):
+        pass

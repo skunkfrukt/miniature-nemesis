@@ -32,6 +32,7 @@ class GameObject(pyglet.event.EventDispatcher):
         self.kill()
         self.x = -1337  #!! Magic number
         self.y = -1337
+        self.behavior = None
         self.width = 1
         self.height = 1
         self.speed = None
@@ -78,6 +79,10 @@ class GameObject(pyglet.event.EventDispatcher):
             self.collider.move(self.x, self.y)
         if self.check_despawn(stage_offset):
             self.despawn()
+
+    def behave(self, time):
+        if self.behavior is not None:
+            self.behavior(time)
 
     @property
     def left(self):
