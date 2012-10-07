@@ -114,6 +114,7 @@ class PlayState(GameState):
         self.level = stage.Stage('Derpington Abbey', (0,127,0,255),
                 stage.village_props)
         self.game_over_label = None
+        self.paused = False
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ESCAPE:
@@ -128,7 +129,10 @@ class PlayState(GameState):
         self.level.send_keys_to_hero(keys, released=symbol)
 
     def update(self, dt):
-        self.level.update(dt)
+        if not self.paused:
+            self.level.update(dt)
+        else:
+            self.level.update(0)
 
     def draw(self):
         self.level.batch.draw()
