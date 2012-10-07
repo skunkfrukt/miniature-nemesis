@@ -109,32 +109,26 @@ class MenuState(GameState):
 class PlayState(GameState):
     def __init__(self):
         GameState.__init__(self)
-        self.gui_group = pyglet.graphics.OrderedGroup(6)
+        self.gui_group = pyglet.graphics.OrderedGroup(1)
         self.switch_to = None
-        self.level = stage.Stage('Derpington Abbey', (0,127,0,255), stage.village_props)
+        self.level = stage.Stage('Derpington Abbey', (0,127,0,255),
+                stage.village_props)
         self.game_over_label = None
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ESCAPE:
             self.switch_to = MenuState()  # pyglet.app.exit()
         elif symbol == key.O:
-            print(len(self.level.active_objects))
+            print("%s active game objects." % len(self.level.active_objects))
+        elif symbol == key.P:
+            self.paused = not self.paused
         self.level.send_keys_to_hero(keys, pressed=symbol)
-
 
     def on_key_release(self, symbol, modifiers):
         self.level.send_keys_to_hero(keys, released=symbol)
 
     def update(self, dt):
         self.level.update(dt)
-        '''if guy.x < self.level.offset - 50:
-            if not self.game_over_label:
-                self.game_over_label = pyglet.text.Label(
-                        text='Thou diest!', color=(255, 0, 0, 255),
-                        font_name='Papyrus', font_size=80,
-                        x=320, y=180, anchor_x='center', anchor_y='center',
-                        batch=self.batch, group=self.gui_group)
-                guy.apply_status('dead')'''
 
     def draw(self):
         self.level.batch.draw()

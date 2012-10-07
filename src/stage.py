@@ -36,13 +36,14 @@ class Stage(pyglet.event.EventDispatcher):
         self.active_objects = []
         self.build_stage(obstacles)
         self.graveyard.allocate(actor.Hero)
-        self.next_spawn_index = 0
         self.checkpoints = [CheckPoint(320, 180)]
         self.width = 6640  #!! Magic number
         self.setup()
 
     def setup(self, difficulty=NORMAL, checkpoint_index=0):
         '''Resets the stage to a pristine state, ready to be played.'''
+        self.ready = False
+        self.clear()
         self.finished = False
         self.at_end = False
         self.scroll_speed = SPEEDS[difficulty]
@@ -53,10 +54,10 @@ class Stage(pyglet.event.EventDispatcher):
                     (self.id, checkpoint_index))
             checkpoint = self.checkpoints[0]
         self.snap_to_checkpoint(checkpoint)
-        self.clear()
         self.find_initial_spawn_index()
         self.check_spawns()
         self.hero = self.spawn(checkpoint)
+        self.ready = True
 
     def setup_background(self, color):
         background_pattern = pyglet.image.SolidColorImagePattern(color)
@@ -178,7 +179,7 @@ class Stage(pyglet.event.EventDispatcher):
         if self.hero is not None:
             self.hero.fixSpeed(keys)
             if pressed == pyglet.window.key.X:
-                self.hero.fire_projectile(actor.Pebble, 200)
+                self.hero.fire_projectile(actor.Pebble, 300)
 
     def on_projectile_fired(self, projectile_cls, origin_x, origin_y,
             target_x, target_y, speed,
