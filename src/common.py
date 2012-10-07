@@ -69,14 +69,16 @@ class GameObject(pyglet.event.EventDispatcher):
         self.dispatch_event('on_despawn', self)
 
     def move(self, dt, stage_offset):
-        if self.speed:
-            dx, dy = self.speed
-            self.x += dx * dt
-            self.y += dy * dt
-        if self.sprite:
-            self.update_sprite(stage_offset)
+        if self.speed is not None:
+            dx, dy = (spd * dt for spd in self.speed)
+            self.x += dx
+            self.y += dy
+        else:
+            dx, dy = 0, 0
         if self.collider:
-            self.collider.move(self.x, self.y)
+            self.collider.move(self.x, self.y, (dx, dy))
+        if self.sprite is not None:
+            self.update_sprite(stage_offset)
         if self.check_despawn(stage_offset):
             self.despawn()
 
@@ -128,9 +130,10 @@ class GameObject(pyglet.event.EventDispatcher):
     def collider(self, value):
         self._collider = value
         if self._collider is not None:
+            self._collider.move(self.x, self.y)
             self._collider.push_handlers(self)
 
-    def on_collision(self, other, rect):
+    def on_collision(self, other, rect, speed):
         pass
 
 GameObject.register_event_type('on_despawn')

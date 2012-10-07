@@ -159,9 +159,6 @@ class Actor(GameObject):
         GameObject.reset(self, x, y)
         self.dispatch_event('on_spawn', self, x, y)
 
-    def on_collision(self, other, rect):
-        print("%s collides at %s" % (self, rect))
-
 Actor.register_event_type('on_projectile_fired')
 Actor.register_event_type('on_spawn')
 

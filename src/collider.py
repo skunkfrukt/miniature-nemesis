@@ -26,9 +26,11 @@ class Collider(pyglet.event.EventDispatcher):
         assert self.right is not None, "Collider's real right is None."
         assert self.top is not None, "Collider's real top is None."
         collision_rect = self.get_collision_rect(other)
-        colliding = collision_rect is not None
+        collision_speed = self.get_collision_speed(other)
+        colliding = collision_rect is not None and collision_speed is not None
         if colliding:
-            self.dispatch_event('on_collision', other, collision_rect)
+            self.dispatch_event('on_collision', other, collision_rect,
+                    collision_speed)
         return collision_rect
 
     def get_collision_rect(self, other):
@@ -41,7 +43,19 @@ class Collider(pyglet.event.EventDispatcher):
         else:
             return None
 
-    def move(self, base_x, base_y):
+    def get_collision_speed(self, other):
+        self_speed_x, self_speed_y = self.speed
+        other_speed_x, other_speed_y = other.speed
+        if self_speed_x != other_speed_x or self_speed_y != other_speed_y:
+            return (self_speed_x - other_speed_x, self_speed_y - other_speed_y)
+        else:
+            return None
+
+    def move(self, base_x, base_y, speed=None):
+        if speed is not None:
+            self.speed = speed
+        else:
+            self.speed = (0, 0)
         self.left = base_x + self._offset_left
         self.bottom = base_y + self._offset_bottom
         self.right = base_x + self._offset_right
