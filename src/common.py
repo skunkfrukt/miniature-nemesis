@@ -30,8 +30,6 @@ class GameObject(pyglet.event.EventDispatcher):
 
     def __init__(self):
         self.kill()
-        self.x = -1337  #!! Magic number
-        self.y = -1337
         self.behavior = None
         self.width = 1
         self.height = 1
@@ -40,6 +38,8 @@ class GameObject(pyglet.event.EventDispatcher):
         self.collider = None
 
     def kill(self):
+        self.x = 0
+        self.y = WIN_HEIGHT
         self.dead = True
 
     def reset(self, x, y):
