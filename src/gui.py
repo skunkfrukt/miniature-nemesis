@@ -155,7 +155,10 @@ class MainWindow(pyglet.window.Window):
         super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE, fullscreen=fs)
         self.state = MenuState()
         self.push_handlers(keys)
-        self.set_icon(*self.icons)
+        try:
+			self.set_icon(*self.icons)
+        except AttributeError:
+			pass  # If the icon refuses to work, that's no big deal for now.
         pyglet.clock.schedule_interval(self.update,0.02)
 
     def on_key_press(self, symbol, modifiers):
