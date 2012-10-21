@@ -154,6 +154,7 @@ class Stage(pyglet.event.EventDispatcher):
             if self.hero.x > self.width:
                 self.finished = True
                 print("Finished!")
+                self.dispatch_event("on_stage_end", self.id)
 
     def snap_to_right_edge(self):
         self.offset = self.width - WIN_WIDTH
@@ -194,10 +195,15 @@ class Stage(pyglet.event.EventDispatcher):
         assert despawned_object in self.active_objects
         self.graveyard[type(despawned_object)].append(despawned_object)
         self.active_objects.remove(despawned_object)
+        if despawned_object is self.hero:
+            self.dispatch_event("on_hero_death")
 
     @property
     def visible_rect(self):
         return (self.offset, 0, self.offset + WIN_WIDTH, 0 + WIN_HEIGHT)
+
+Stage.register_event_type('on_stage_end')
+Stage.register_event_type('on_hero_death')
 
 
 class SpawnPoint(Point):
