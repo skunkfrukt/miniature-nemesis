@@ -3,12 +3,13 @@ def bitrange(n):
         yield 2 ** exponent
 
 
-GAME_TITLE = "Miniature Nemesis"
-GAME_VERSION = "0.0"
+GAME_TITLE = (
+        "O accursed hunger of gold, to what dost thou not compel human hearts!")
+GAME_VERSION = "0.0.1"
 
 WIN_WIDTH = 640
 WIN_HEIGHT = 360
-WIN_TITLE = "%s v%s" % (GAME_TITLE, GAME_VERSION)
+WIN_TITLE = GAME_TITLE
 SCREEN_MARGIN = 100
 
 RENDERING_GROUPS = (R_GROUP_BG, R_GROUP_PROPS, R_GROUP_ACTORS_BACK,
