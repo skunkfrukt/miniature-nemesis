@@ -150,10 +150,9 @@ class MainWindow(pyglet.window.Window):
             pyglet.resource.image('img/icons/72x72.png'),
             pyglet.resource.image('img/icons/128x128.png'))
 
-    def __init__(self):
-        fs = '-fs' in sys.argv
+    def __init__(self, fullscreen=False):
         super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT,
-                WIN_TITLE, fullscreen=fs)
+                WIN_TITLE, fullscreen=fullscreen)
         self.state = MenuState()
         self.push_handlers(keys)
         try:
