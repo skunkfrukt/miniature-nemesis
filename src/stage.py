@@ -5,8 +5,6 @@ import actor
 from common import GameObject, Point
 from constants import *
 
-import random
-
 
 class Graveyard(dict):
     def allocate(self, *classes):
@@ -265,19 +263,27 @@ class House(Prop):
 
 village_props = []
 
+houses = [
+        (395, 266), (600, 289), (981, 297), (1251, 272), (1617, 288),
+        (1849, 281), (2137, 260), (2413, 299), (2771, 275), (3060, 283),
+        (3316, 290), (3634, 278), (3931, 286), (4248, 268), (4581, 267),
+        (4834, 268), (5144, 272), (5469, 292), (5722, 290), (6095, 281),
+        (6405, 280)
+        ]
 
+rocks = [
+        (657, 97), (1168, 128), (1462, 81), (2125, 83), (2452, 119),
+        (2856, 158), (3541, 116), (4006, 54), (4368, 151), (4841, 208),
+        (5388, 158), (5987, 168), (6564, 144)
+        ]
 
-prop_classes = [Rock, Stone, actor.Peasant, None, None, None]
+for i, h in enumerate(houses):
+    village_props.append(SpawnPoint(h[0], h[1], House))
+    if i % 3 == 1:
+        village_props.append(SpawnPoint(h[0] + 95, h[1] - 20,
+                actor.Peasant))
 
-for x in range(180, 6320, 30):
-    prop_index = random.randint(0,5)
-    if prop_classes[prop_index]:
-        village_props.append(SpawnPoint(x, random.randint(0,300),
-                prop_classes[prop_index]))
-    if x % 180 == 0:
-        village_props.append(SpawnPoint(x + random.randint(-5, 5),
-                random.randint(275,325), House))
-    if x % 60 == 0:
-        village_props.append(SpawnPoint(x + random.randint(-3, 3),
-                random.randint(-15,10), Rock))
+for r in rocks:
+    village_props.append(SpawnPoint(r[0], r[1], Rock))
 
+village_props.sort(lambda a, b: a.x - b.x)
