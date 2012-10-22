@@ -241,8 +241,8 @@ class Peasant(Actor):
     required_classes = [Pebble]
     animations = Actor.make_animations(_image, 9, _frame_data)
 
-    max_speed = 60.0
-    acceleration = (150, 300)
+    max_speed = 90.0
+    acceleration = (100, 100)
     collision_effect = ('trip', 0.5)
 
     def __init__(self):
@@ -251,17 +251,56 @@ class Peasant(Actor):
         self.add_collider(collider.Collider(0,0,30,20, layer=HASH_GROUND))
         self.add_collider(collider.Detector(60))
         self.speed = (0, 0)
+        self.target = None
+        self.next_action_delay = 0.0
 
     def update_speed(self, dt):
-        x, y = self.speed
-        if x > 0:
-            self.sprite.play('run')
-        else:
-            self.sprite.play('idle')
+        pass
+
+    def move(self, dt, stage_offset):
+        self.behave(dt)
+        Actor.move(self, dt, stage_offset)
+
+    def behave(self, dt):
+        self.next_action_delay -= dt
+        self.behavior(dt)
 
     def reset(self, x, y):
         Actor.reset(self, x, y)
         self.behavior = self.behave_idle
 
     def behave_idle(self, time):
-        pass
+        self.play('idle')
+        if self.target is not None:
+            self.play('notice')
+            self.next_action_delay = 0.5
+            self.behavior = self.behave_notice
+
+    def behave_notice(self, dt):
+        self.play('notice')
+        if self.next_action_delay <= 0:
+            self.behavior = self.behave_pursue
+
+    def behave_pursue(self, dt):
+        self.pursue(self.target, dt)
+
+    def pursue(self, target, dt):
+        self.play('run')
+        dist_x = target.x - 60 - self.x
+        dist_y = target.y - self.y
+        if dist_x <= 0:
+            self.direction = (0,0)
+        else:
+            if dist_y < -100:
+                self.direction = (1, -1)
+            elif dist_y > 100:
+                self.direction = (1, 1)
+            elif abs(dist_y) < 10:
+                self.direction = (1, 0)
+        dirx, diry = self.direction
+        tx, ty = dirx * self.max_speed, diry * self.max_speed
+        self.approach_target_speed(dt, (tx, ty))
+
+    def on_detection(self, target):
+        if self.target is None and type(target) is Hero:
+            self.target = target
