@@ -36,7 +36,14 @@ class Stage(pyglet.event.EventDispatcher):
         self.graveyard.allocate(actor.Hero)
         self.checkpoints = [CheckPoint(320, 180)]
         self.width = 6640  #!! Magic number
-        self.spatial_hash = collider.SpatialHash(self.width, 360, 40)
+        self.height = 360
+        self.spatial_hashes = {}
+        self.spatial_hashes[HASH_GROUND] = collider.SpatialHash(
+                self.width, self.height, 60, 60, layer=HASH_GROUND)
+        self.spatial_hashes[HASH_AIR] = collider.SpatialHash(
+                self.width, self.height, 60, 60, layer=HASH_AIR)
+        self.spatial_hashes[HASH_TRIGGER] = collider.SpatialHash(
+                self.width, self.height, 60, self.height, layer=HASH_TRIGGER)
         self.setup()
 
     def setup(self, difficulty=NORMAL, checkpoint_index=0):
@@ -173,8 +180,11 @@ class Stage(pyglet.event.EventDispatcher):
 
     def check_collisions(self):
         self.hero.colliding = False
-        colliders = [thing.collider for thing in self.active_objects]
-        self.spatial_hash.collide(self.visible_rect, colliders)
+        colliders = reduce(
+                lambda ary, obj: ary + obj.colliders,
+                self.active_objects, [])
+        for hash_key in self.spatial_hashes:
+            self.spatial_hashes[hash_key].collide(self.visible_rect, colliders)
 
     def send_keys_to_hero(self, keys, pressed=None, released=None):
         if self.hero is not None:
@@ -241,8 +251,8 @@ class Rock(Prop):
     def __init__(self):
         Prop.__init__(self)
         self.set_sprite(pyglet.sprite.Sprite(self._image))
-        self.collider = collider.Collider(5, 10, 25, 30,
-                effect=self.collision_effect)
+        self.add_collider(collider.Collider(5, 10, 25, 30,
+                effect=self.collision_effect, layer=HASH_GROUND))
 
 
 class Stone(Prop):
@@ -252,8 +262,8 @@ class Stone(Prop):
     def __init__(self):
         Prop.__init__(self)
         self.set_sprite(pyglet.sprite.Sprite(self._image))
-        self.collider = collider.Collider(0, 0, 10, 10,
-                effect=self.collision_effect)
+        self.add_collider(collider.Collider(0, 0, 10, 10,
+                effect=self.collision_effect, layer=HASH_GROUND))
 
 
 class House(Prop):
@@ -263,8 +273,8 @@ class House(Prop):
     def __init__(self):
         Prop.__init__(self)
         self.set_sprite(pyglet.sprite.Sprite(self._image))
-        self.collider = collider.Collider(0, 0, 180, 180,
-                effect=self.collision_effect)
+        self.add_collider(collider.Collider(0, 0, 180, 180,
+                effect=self.collision_effect, layer=HASH_GROUND))
 
 
 village_props = []

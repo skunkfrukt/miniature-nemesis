@@ -1,10 +1,13 @@
 import pyglet
+from constants import *
 
 class Collider(pyglet.event.EventDispatcher):
     def __init__(self, left=0, bottom=0, right=None, top=None,
-            width=None, height=None, effect=None):
+            width=None, height=None, effect=None, layer=None, parent=None):
         self.left, self.bottom, self.right, self.top = None, None, None, None
         self._offset_left, self._offset_bottom = left, bottom
+        self.layer = layer
+        self.parent = parent
         if width is not None:
             assert right is None, "Collider has both width and right"
             self._offset_right = left + width
@@ -32,9 +35,14 @@ class Collider(pyglet.event.EventDispatcher):
         else:
             collision_rect = None
         if collision_rect is not None:
-            self.dispatch_event('on_collision', other, collision_rect,
+            self.dispatch_collision_event(other, collision_rect,
                     collision_speed, other.effect)
         return collision_rect
+
+    def dispatch_collision_event(self, other, collision_rect,
+            collision_speed, effect):
+        self.dispatch_event('on_collision', other, collision_rect,
+                    collision_speed, effect)
 
     def get_collision_rect(self, other):
         rect_left = max(self.left, other.left)
@@ -64,6 +72,9 @@ class Collider(pyglet.event.EventDispatcher):
         self.right = base_x + self._offset_right
         self.top = base_y + self._offset_top
 
+    def get_preferred_layer(self):
+        return self.layer
+
     @property
     def rect(self):
         return (self.left, self.bottom, self.right, self.top)
@@ -71,11 +82,23 @@ class Collider(pyglet.event.EventDispatcher):
 Collider.register_event_type('on_collision')
 
 
-def collide(*colliders):
-    if len(colliders) == 0:
-        return None
-    elif len(colliders) == 1:
-        return collide(colliders[0], colliders[0])
+class Detector(Collider):
+    def __init__(self, left=0):
+        Collider.__init__(self, left=left, bottom=-LOTS, top=LOTS,
+            width=1, effect=None, layer=HASH_TRIGGER)
+        self.top = LOTS
+        self.bottom = -LOTS
+        self.speed = (0,0)
+
+    def dispatch_collision_event(self, other, collision_rect,
+            collision_speed, effect):
+        self.dispatch_event('on_detection', other.parent)
+
+    def move(self, base_x, base_y, speed=None):
+        self.left = base_x + self._offset_left
+        self.right = base_x + self._offset_right
+
+Detector.register_event_type('on_detection')
 
 
 def pairs(items):
@@ -85,12 +108,14 @@ def pairs(items):
 
 
 class SpatialHash():
-    def __init__(self, width, height, cell_size):
+    def __init__(self, width, height, cell_width, cell_height, layer=None):
+        self.layer = layer
         self.width = width
         self.height = height
-        self.rows = int(height / cell_size + 0.5)
-        self.cols = int(width / cell_size + 0.5)
-        self.cell_size = cell_size
+        self.rows = int(height / cell_height + 0.5)
+        self.cols = int(width / cell_width + 0.5)
+        self.cell_width = cell_width
+        self.cell_height = cell_height
         self.grid = [[]] * self.rows * self.cols
 
     def get_cell_indices(self, rect):
@@ -99,10 +124,10 @@ class SpatialHash():
         bottom = max(0, bottom)
         right = min(right, self.width- 1)
         top = min(top, self.height - 1)
-        left_cell = int(left / self.cell_size)
-        right_cell = int(right / self.cell_size) + 1
-        bottom_cell = int(bottom / self.cell_size)
-        top_cell = int(top / self.cell_size) + 1
+        left_cell = int(left / self.cell_width)
+        right_cell = int(right / self.cell_width) + 1
+        bottom_cell = int(bottom / self.cell_height)
+        top_cell = int(top / self.cell_height) + 1
         col_span = range(left_cell, right_cell)
         row_span = range(bottom_cell, top_cell)
         for x in col_span:
@@ -115,8 +140,9 @@ class SpatialHash():
             self.grid[cell_index] = []
 
     def put(self, obj):
-        for cell_index in self.get_cell_indices(obj.rect):
-            self.grid[cell_index].append(obj)
+        if obj.get_preferred_layer() == self.layer:
+            for cell_index in self.get_cell_indices(obj.rect):
+                self.grid[cell_index].append(obj)
 
     def collide(self, rect, *collider_groups):
         self.clear(rect)

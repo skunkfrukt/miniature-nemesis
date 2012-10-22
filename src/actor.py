@@ -144,6 +144,10 @@ class Actor(GameObject):
         GameObject.reset(self, x, y)
         self.dispatch_event('on_spawn', self, x, y)
 
+    def add_collider(self, collider):
+        collider.parent = self
+        GameObject.add_collider(self, collider)
+
 Actor.register_event_type('on_projectile_fired')
 Actor.register_event_type('on_spawn')
 
@@ -169,7 +173,9 @@ class Hero(Actor):
     def __init__(self):
         Actor.__init__(self)
         self.set_sprite(AnimatedSprite(self.animations, default='run'))
-        self.collider = collider.Collider(0,0,30,20)
+        self.add_collider(collider.Collider(0, 0, 30, 20, layer=HASH_GROUND))
+        self.add_collider(collider.Collider(10,10,30,30, layer=HASH_AIR))
+        self.add_collider(collider.Collider(10,10,30,30, layer=HASH_TRIGGER))
 
     def fixSpeed(self, keys):
         dirx = 0
@@ -220,7 +226,7 @@ class Pebble(Projectile):
     def __init__(self):
         Projectile.__init__(self)
         self.set_sprite(AnimatedSprite(self.animations, default='thrown'))
-        self.collider = collider.Collider(0,0,1,1)
+        self.add_collider(collider.Collider(0,0,1,1, layer=HASH_AIR))
 
 
 class Peasant(Actor):
@@ -242,7 +248,8 @@ class Peasant(Actor):
     def __init__(self):
         Actor.__init__(self)
         self.set_sprite(AnimatedSprite(self.animations, default='idle'))
-        self.collider = collider.Collider(0,0,30,20)
+        self.add_collider(collider.Collider(0,0,30,20, layer=HASH_GROUND))
+        self.add_collider(collider.Detector(60))
         self.speed = (0, 0)
 
     def update_speed(self, dt):

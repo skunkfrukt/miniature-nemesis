@@ -36,6 +36,7 @@ class GameObject(pyglet.event.EventDispatcher):
         self.speed = None
         self.sprite = None
         self.collider = None
+        self.colliders = None
 
     def kill(self):
         self.x = 0
@@ -75,8 +76,9 @@ class GameObject(pyglet.event.EventDispatcher):
             self.y += dy
         else:
             dx, dy = 0, 0
-        if self.collider:
-            self.collider.move(self.x, self.y, (dx, dy))
+        if self.colliders is not None:
+            for collider in self.colliders:
+                collider.move(self.x, self.y, (dx, dy))
         if self.sprite is not None:
             self.update_sprite(stage_offset)
         if self.check_despawn(stage_offset):
@@ -85,6 +87,15 @@ class GameObject(pyglet.event.EventDispatcher):
     def behave(self, time):
         if self.behavior is not None:
             self.behavior(time)
+
+    def add_collider(self, collider):
+        if collider is None:
+            return
+        if self.colliders is None:
+            self.colliders = []
+        self.colliders.append(collider)
+        collider.move(self.x, self.y)
+        collider.push_handlers(self)
 
     @property
     def left(self):
@@ -121,17 +132,6 @@ class GameObject(pyglet.event.EventDispatcher):
     @property
     def rect(self):
         return (self.left, self.bottom, self.right, self.top)
-
-    @property
-    def collider(self):
-        return self._collider
-
-    @collider.setter
-    def collider(self, value):
-        self._collider = value
-        if self._collider is not None:
-            self._collider.move(self.x, self.y)
-            self._collider.push_handlers(self)
 
     def on_collision(self, other, rect, speed, effect):
         pass
