@@ -84,9 +84,9 @@ class GameObject(pyglet.event.EventDispatcher):
         if self.check_despawn(stage_offset):
             self.despawn()
 
-    def behave(self, time):
+    def behave(self, dt):
         if self.behavior is not None:
-            self.behavior(time)
+            self.behavior(dt)
 
     def add_collider(self, collider):
         if collider is None:

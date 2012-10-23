@@ -175,7 +175,7 @@ class Stage(pyglet.event.EventDispatcher):
 
     def move_active_objects(self, dt):
         for obj in self.active_objects:
-            obj.behave(self.time)
+            obj.behave(dt)
             obj.move(dt, self.offset)
 
     def check_collisions(self):

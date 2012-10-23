@@ -1,7 +1,6 @@
 import pyglet
 import math
 import collider
-import random
 from common import AnimatedSprite, GameObject, Projectile
 from pyglet.window import key
 from constants import *
@@ -125,12 +124,13 @@ class Actor(GameObject):
                 self.sprite.group = group
 
     def reset(self, x, y):
+        self.speed = (0,0)
         GameObject.reset(self, x, y)
         self.apply_status('ok')
 
     def fire_projectile(self, projectile_cls, speed, target=None):
-        origin_x = self.x - 320
-        origin_y = random.randint(0, 360)
+        origin_x = self.x
+        origin_y = self.y
         if target is not None:
             target_x, target_y = target.x, target.y
         else:
@@ -235,8 +235,8 @@ class Peasant(Actor):
             'idle': ((0, 2), 1.1, True),
             'run': ((2, 4), 0.2, True),
             'notice': ((4, 6), 1.2, True),
-            'aim': ((6, 8), 1.2, False),
-            'throw': ((8, 9), 1.2, False)
+            'aim': ((6, 8), 0.2, True),
+            'throw': ((8, 9), 1.2, True)
             }
     required_classes = [Pebble]
     animations = Actor.make_animations(_image, 9, _frame_data)
@@ -258,7 +258,7 @@ class Peasant(Actor):
         pass
 
     def move(self, dt, stage_offset):
-        self.behave(dt)
+        # self.behave(dt)
         Actor.move(self, dt, stage_offset)
 
     def behave(self, dt):
@@ -267,13 +267,15 @@ class Peasant(Actor):
 
     def reset(self, x, y):
         Actor.reset(self, x, y)
+        self.target = None
+        self.frustration = 0
         self.behavior = self.behave_idle
 
-    def behave_idle(self, time):
+    def behave_idle(self, dt):
         self.play('idle')
         if self.target is not None:
             self.play('notice')
-            self.next_action_delay = 0.5
+            self.next_action_delay = 0.4
             self.behavior = self.behave_notice
 
     def behave_notice(self, dt):
@@ -282,10 +284,40 @@ class Peasant(Actor):
             self.behavior = self.behave_pursue
 
     def behave_pursue(self, dt):
+        self.play('run')
         self.pursue(self.target, dt)
+        dist_x = self.target.x - 60 - self.x
+        if dist_x > 300:
+            self.frustration += dt + dt
+        else:
+            self.frustration += dt
+        if self.frustration >= 7:
+            self.throwing = False
+            self.aiming = False
+            self.behavior = self.behave_throw
+
+    def behave_throw(self, dt):
+        if self.aiming:
+            self.play('aim')
+            self.approach_target_speed(dt, (0, 0))
+            if self.next_action_delay <= 0:
+                self.throwing = True
+                self.fire_projectile(Pebble, 200, target=self.target)
+                self.aiming = False
+                self.next_action_delay = 0.5
+        elif self.throwing:
+            self.play('throw')
+            self.speed = (0, 0)
+            if self.next_action_delay <= 0:
+                self.throwing = False
+                self.frustration = 0
+                self.behavior = self.behave_pursue
+        else:
+            self.aiming = True
+            self.next_action_delay = 1.2
+
 
     def pursue(self, target, dt):
-        self.play('run')
         dist_x = target.x - 60 - self.x
         dist_y = target.y - self.y
         if dist_x <= 0:
@@ -301,6 +333,8 @@ class Peasant(Actor):
         tx, ty = dirx * self.max_speed, diry * self.max_speed
         self.approach_target_speed(dt, (tx, ty))
 
+
     def on_detection(self, target):
         if self.target is None and type(target) is Hero:
-            self.target = target
+            if abs(self.y - target.y) < 200:
+                self.target = target
