@@ -174,8 +174,8 @@ class Hero(Actor):
         Actor.__init__(self)
         self.set_sprite(AnimatedSprite(self.animations, default='run'))
         self.add_collider(collider.Collider(0, 0, 30, 20, layer=HASH_GROUND))
-        self.add_collider(collider.Collider(10,10,30,30, layer=HASH_AIR))
-        self.add_collider(collider.Collider(10,10,30,30, layer=HASH_TRIGGER))
+        self.add_collider(collider.Collider(10, 10, 30, 30, layer=HASH_AIR))
+        self.add_collider(collider.Collider(10, 10, 30, 30, layer=HASH_TRIGGER))
 
     def fixSpeed(self, keys):
         dirx = 0
@@ -226,7 +226,7 @@ class Pebble(Projectile):
     def __init__(self):
         Projectile.__init__(self)
         self.set_sprite(AnimatedSprite(self.animations, default='thrown'))
-        self.add_collider(collider.Collider(0,0,1,1, layer=HASH_AIR))
+        self.add_collider(collider.Collider(0, 0, 1, 1, layer=HASH_AIR))
 
 
 class Peasant(Actor):
