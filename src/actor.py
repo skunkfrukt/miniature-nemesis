@@ -129,10 +129,10 @@ class Actor(GameObject):
         self.apply_status('ok')
 
     def fire_projectile(self, projectile_cls, speed, target=None):
-        origin_x = self.x
-        origin_y = self.y
+        origin_x = self.x + 30
+        origin_y = self.y + 30
         if target is not None:
-            target_x, target_y = target.x, target.y
+            target_x, target_y = target.x + 100, target.y + 25
         else:
             target_x = self.x  # origin_x + 1
             target_y = self.y  # origin_y
@@ -226,7 +226,11 @@ class Pebble(Projectile):
     def __init__(self):
         Projectile.__init__(self)
         self.set_sprite(AnimatedSprite(self.animations, default='thrown'))
-        self.add_collider(collider.Collider(0, 0, 1, 1, layer=HASH_AIR))
+        self.add_collider(collider.Collider(3, 3, width=1, height=1,
+                layer=HASH_AIR, effect=('trip', 1.0)))
+
+    def on_collision(self, other, rect, speed, effect):
+        pass  # self.kill()
 
 
 class Peasant(Actor):
