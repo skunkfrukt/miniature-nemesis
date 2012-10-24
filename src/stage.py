@@ -302,4 +302,7 @@ for i, h in enumerate(houses):
 for r in rocks:
     village_props.append(SpawnPoint(r[0], r[1], Rock))
 
+for p in [(400, 200), (450, 110), (500, 40), (550, 300)]:
+    village_props.append(SpawnPoint(p[0], p[1], actor.Peasant))
+
 village_props.sort(lambda a, b: a.x - b.x)

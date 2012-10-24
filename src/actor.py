@@ -245,7 +245,7 @@ class Peasant(Actor):
     required_classes = [Pebble]
     animations = Actor.make_animations(_image, 9, _frame_data)
 
-    max_speed = 90.0
+    max_speed = 40.0
     acceleration = (100, 100)
     collision_effect = ('trip', 0.5)
 
@@ -295,7 +295,7 @@ class Peasant(Actor):
             self.frustration += dt + dt
         else:
             self.frustration += dt
-        if self.frustration >= 7:
+        if self.frustration >= 5:
             self.throwing = False
             self.aiming = False
             self.behavior = self.behave_throw
@@ -303,10 +303,11 @@ class Peasant(Actor):
     def behave_throw(self, dt):
         if self.aiming:
             self.play('aim')
-            self.approach_target_speed(dt, (0, 0))
+            self.approach_target_speed(dt,
+                    ((100 + self.max_speed) * 0.6, 0))
             if self.next_action_delay <= 0:
                 self.throwing = True
-                self.fire_projectile(Pebble, 200, target=self.target)
+                self.fire_projectile(Pebble, 300, target=self.target)
                 self.aiming = False
                 self.next_action_delay = 0.5
         elif self.throwing:
@@ -314,8 +315,10 @@ class Peasant(Actor):
             self.speed = (0, 0)
             if self.next_action_delay <= 0:
                 self.throwing = False
-                self.frustration = 0
-                self.behavior = self.behave_pursue
+                self.aiming = True
+                self.next_action_delay = 1.0
+                # self.frustration = 0
+                # self.behavior = self.behave_pursue
         else:
             self.aiming = True
             self.next_action_delay = 1.2
@@ -334,7 +337,7 @@ class Peasant(Actor):
             elif abs(dist_y) < 10:
                 self.direction = (1, 0)
         dirx, diry = self.direction
-        tx, ty = dirx * self.max_speed, diry * self.max_speed
+        tx, ty = dirx * (100 + self.max_speed), diry * (100 + self.max_speed)
         self.approach_target_speed(dt, (tx, ty))
 
 
