@@ -20,8 +20,8 @@ class Collider(pyglet.event.EventDispatcher):
         else:
             assert top is not None, "Collider lacks both width and top"
             self._offset_top = top
-        assert self._offset_left < self._offset_right, "Collider's left >= right"
-        assert self._offset_bottom < self._offset_top, "Collider's bottom >= top"
+        assert self._offset_left < self._offset_right, "left >= right"
+        assert self._offset_bottom < self._offset_top, "bottom >= top"
         self.effect = effect
 
     def collide(self, other):
@@ -112,8 +112,8 @@ class SpatialHash():
         self.layer = layer
         self.width = width
         self.height = height
-        self.rows = int(height / cell_height + 0.5)
-        self.cols = int(width / cell_width + 0.5)
+        self.rows = int((height - 1) / cell_height) + 1
+        self.cols = int((width - 1) / cell_width) + 1
         self.cell_width = cell_width
         self.cell_height = cell_height
         self.grid = [[]] * self.rows * self.cols
