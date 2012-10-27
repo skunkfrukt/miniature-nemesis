@@ -173,9 +173,12 @@ class Hero(Actor):
     def __init__(self):
         Actor.__init__(self)
         self.set_sprite(AnimatedSprite(self.animations, default='run'))
-        self.add_collider(collider.Collider(0, 0, 30, 20, layer=HASH_GROUND))
-        self.add_collider(collider.Collider(10, 10, 30, 30, layer=HASH_AIR))
-        self.add_collider(collider.Collider(10, 10, 30, 30, layer=HASH_TRIGGER))
+        self.add_collider(collider.Collider(11, 0, width=20, height=10,
+                layer=HASH_GROUND))
+        self.add_collider(collider.Collider(13, 14, width=18, height=26,
+                layer=HASH_AIR))
+        self.add_collider(collider.Collider(0, 0,
+                width=self.width, height=self.height, layer=HASH_TRIGGER))
 
     def fixSpeed(self, keys):
         dirx = 0
