@@ -40,7 +40,7 @@ class GameMenu:
     def selected_option_name(self):
         return self.options[self.selected_option()]
 
-class GameState:
+class GameState(pyglet.event.EventDispatcher):
     def __init__(self):
         self.batch = pyglet.graphics.Batch()
 
@@ -50,11 +50,16 @@ class GameState:
     def update(self, dt):
         pass
 
+    def switch_state(self, state):
+        self.dispatch_event('on_switch_state', state)
+
+GameState.register_event_type('on_switch_state')
+GameState.register_event_type('on_quit_game')
+
 
 class MenuState(GameState):
     def __init__(self):
         GameState.__init__(self)
-        self.switch_to = None
         if '--skipmenu' in sys.argv:
             self.switch_state(PlayState())
         self.bg_group = pyglet.graphics.OrderedGroup(0)
@@ -99,30 +104,28 @@ class MenuState(GameState):
         self.menu.labels[index].color = (255,0,0,255)
 
     def quit(self):
-        pyglet.app.exit()
-        #self.switch_to = 'QUIT'
-
-    def switch_state(self, state):
-        self.switch_to = state
+        self.dispatch_event('on_quit_game')
 
 
 class PlayState(GameState):
     def __init__(self):
         GameState.__init__(self)
         self.gui_group = pyglet.graphics.OrderedGroup(1)
-        self.switch_to = None
         self.level = stage.Stage('Derpington Abbey', (0,127,0,255),
                 stage.village_props)
+        self.level.push_handlers(self)
         self.game_over_label = None
         self.paused = False
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ESCAPE:
-            self.switch_to = MenuState()  # pyglet.app.exit()
+            self.switch_state(MenuState())
         elif symbol == key.O:
             print("%s active game objects." % len(self.level.active_objects))
         elif symbol == key.P:
             self.paused = not self.paused
+        elif symbol == key.C:
+            pass
         self.level.send_keys_to_hero(keys, pressed=symbol)
 
     def on_key_release(self, symbol, modifiers):
@@ -139,6 +142,54 @@ class PlayState(GameState):
             self.level.batch.draw()
         self.batch.draw()
 
+    def on_hero_death(self):
+        bm = pyglet.image.get_buffer_manager()
+        id = bm.get_color_buffer().get_image_data()
+        # id.format = 'L'
+        self.switch_state(GameOverState(id))
+
+    def on_stage_end(self, stage_id):
+        bm = pyglet.image.get_buffer_manager()
+        id = bm.get_color_buffer().get_image_data()
+        # id.format = 'L'
+        self.switch_state(WinState(id))
+
+
+class GameOverState(GameState):
+    def __init__(self, image):
+        GameState.__init__(self)
+        self.bg_group = pyglet.graphics.OrderedGroup(0)
+        self.gui_group = pyglet.graphics.OrderedGroup(1)
+        self.snapshot = pyglet.sprite.Sprite(image,
+                batch=self.batch, group=self.bg_group)
+        self.snapshot.color = (127,0,0)
+        self.game_over_label = pyglet.text.Label(
+                text='Thou diest!', color=(255, 0, 0, 255),
+                font_name='Papyrus', font_size=80,
+                x=320, y=180, anchor_x='center', anchor_y='center',
+                batch=self.batch, group=self.gui_group)
+
+    def on_key_press(self, symbol, modifiers):
+        self.switch_state(MenuState())
+
+
+class WinState(GameState):
+    def __init__(self, image):
+        GameState.__init__(self)
+        self.bg_group = pyglet.graphics.OrderedGroup(0)
+        self.gui_group = pyglet.graphics.OrderedGroup(1)
+        self.snapshot = pyglet.sprite.Sprite(image,
+                batch=self.batch, group=self.bg_group)
+        self.snapshot.color = (191,127,0)
+        self.game_over_label = pyglet.text.Label(
+                text='Yay!', color=(255, 255, 0, 255),
+                font_name='Comic Sans MS', font_size=80,
+                x=320, y=180, anchor_x='center', anchor_y='center',
+                batch=self.batch, group=self.gui_group)
+
+    def on_key_press(self, symbol, modifiers):
+        self.switch_state(MenuState())
+
 
 fps_display = pyglet.clock.ClockDisplay()
 
@@ -153,13 +204,20 @@ class MainWindow(pyglet.window.Window):
     def __init__(self, fullscreen=False):
         super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT,
                 WIN_TITLE, fullscreen=fullscreen)
-        self.state = MenuState()
+        self.state = None
+        self.set_state(MenuState())
         self.push_handlers(keys)
         try:
             self.set_icon(*self.icons)
         except AttributeError:
             pass  # If the icon refuses to work, that's no big deal for now.
         pyglet.clock.schedule_interval(self.update,0.02)
+
+    def set_state(self, new_state):
+        if self.state is not None:
+            self.state.pop_handlers()
+        self.state = new_state
+        self.state.push_handlers(self)
 
     def on_key_press(self, symbol, modifiers):
         self.state.on_key_press(symbol, modifiers)
@@ -168,12 +226,13 @@ class MainWindow(pyglet.window.Window):
         self.state.on_key_release(symbol, modifiers)
 
     def on_draw(self):
-        self.clear()
-        if self.state.switch_to is None:
-            self.state.draw()
-        else:
-            self.state = self.state.switch_to
-        # fps_display.draw()
+        self.state.draw()
+
+    def on_switch_state(self, new_state):
+        self.set_state(new_state)
+
+    def on_quit_game(self):
+        pyglet.app.exit()
 
     def update(self,dt):
         self.state.update(dt)
