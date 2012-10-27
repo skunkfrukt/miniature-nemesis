@@ -39,6 +39,37 @@ $(document).ready(function() {
 			$('#ruler').append(div);
 		}
 	};
+	var gameCoordsToEditorCoords = function(el) {
+		var height = el.height();
+		var x = $.data(el, 'x') + 'px';
+		var y = (360 - $.data(el, 'y') - height) + 'px';
+		el.css({'top': y, 'left': x});
+	};
+	var editorCoordsToGameCoords = function(el) {
+		var height = el.height();
+		var x = el.position().left;
+		var y = 360 - el.position().top - el.height();
+		$.data($(el), 'x', x);
+		$.data($(el), 'y', y);
+	};
+	var mapDataToJSON = function() {
+		var mapData = {};
+		mapData['stageID'] = $('#stageID').val();
+		mapData['width'] = parseInt($('#stageWidth').val());
+		mapData['height'] = parseInt($('#stageHeight').val());
+		var spawns = [];
+		$('#stageFrame').children().each(function(i, el) {
+			var pos = $(el).position();
+			var spawn = {};
+			spawn['x'] = pos.left;
+			spawn['y'] = 360 - pos.top - $(el).height();
+			spawn['type'] = $(el).text();
+			spawns.push(spawn);
+		});
+		spawns.sort(function(a, b) {return a.x - b.x;});
+		mapData['spawns'] = spawns;
+		console.log(JSON.stringify(mapData, null, 4));
+	};
 	$('#stageDuration').hide();
 	$('#stageLengthType').change(function(el) {
 		var lengthType = $('#stageLengthType option:selected').text();
@@ -63,5 +94,28 @@ $(document).ready(function() {
 		var stageWidth = $('#stageWidth').val();
 		$('#stageFrame').css('width', stageWidth + 'px');
 		updateRuler();
+		mapDataToJSON();
+	});
+	$('#addHouse').click(function(el) {
+		var div = $('<div class="gameObject propHouse" />');
+		div.text('House');
+		$.data(div, 'x', $(document).scrollLeft());
+		$.data(div, 'y', 0)
+		$('#stageFrame').append(div);
+		gameCoordsToEditorCoords(div);
+		div.draggable({stop: function(ev, ui) {editorCoordsToGameCoords(ui.helper)}});
+	});
+	$('#addRock').click(function(el) {
+		var div = $('<div class="gameObject propRock" />');
+		div.text('Rock');
+		$.data(div, 'x', $(document).scrollLeft());
+		$.data(div, 'y', 0)
+		$('#stageFrame').append(div);
+		gameCoordsToEditorCoords(div);
+		div.draggable({
+			stop: function(ev, ui) {
+				editorCoordsToGameCoords(ui.helper);
+			}
+		});
 	});
 });
