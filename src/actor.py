@@ -61,7 +61,7 @@ class Actor(GameObject):
                 self.apply_status('tumble', force=True)
         elif self.status == 'stun':
             if self.stun_time <= 0:
-                self.speed = (100, 0)
+                self.speed = (0, 0)
                 self.apply_status('ok', force=True)
         self.stun_time -= dt
 
@@ -245,9 +245,13 @@ class Peasant(Actor):
     required_classes = [Pebble]
     animations = Actor.make_animations(_image, 9, _frame_data)
 
-    max_speed = 40.0
+    max_speed = 60.0
     acceleration = (100, 100)
     collision_effect = ('trip', 0.5)
+
+    FIRST_AIM_DELAY = 1.2
+    AIM_DELAY = 0.6
+    THROW_DELAY = 0.3
 
     def __init__(self):
         Actor.__init__(self)
@@ -307,21 +311,19 @@ class Peasant(Actor):
                     ((100 + self.max_speed) * 0.6, 0))
             if self.next_action_delay <= 0:
                 self.throwing = True
-                self.fire_projectile(Pebble, 300, target=self.target)
+                self.fire_projectile(Pebble, 250, target=self.target)
                 self.aiming = False
-                self.next_action_delay = 0.5
+                self.next_action_delay = self.THROW_DELAY
         elif self.throwing:
             self.play('throw')
             self.speed = (0, 0)
             if self.next_action_delay <= 0:
                 self.throwing = False
                 self.aiming = True
-                self.next_action_delay = 1.0
-                # self.frustration = 0
-                # self.behavior = self.behave_pursue
+                self.next_action_delay = self.AIM_DELAY
         else:
             self.aiming = True
-            self.next_action_delay = 1.2
+            self.next_action_delay = self.FIRST_AIM_DELAY
 
 
     def pursue(self, target, dt):
@@ -359,9 +361,13 @@ class PeasantB(Peasant):
     required_classes = [Pebble]
     animations = Actor.make_animations(_image, 9, _frame_data)
 
-    max_speed = 40.0
+    max_speed = 60.0
     acceleration = (100, 100)
     # collision_effect = ('trip', 0.5)
+
+    FIRST_AIM_DELAY = 0.6
+    AIM_DELAY = 0.3
+    NUMBER_OF_THROWS = 4
 
     def update_speed(self, dt):
         pass
@@ -409,22 +415,22 @@ class PeasantB(Peasant):
                 self.fire_projectile(Pebble, 300, target=self.target)
                 self.frustration += 1
                 self.aiming = False
-                self.next_action_delay = 0.5
+                self.next_action_delay = self.THROW_DELAY
         elif self.throwing:
             self.play('throw')
             self.speed = (0, 0)
             if self.next_action_delay <= 0:
-                if self.frustration < 3:
+                if self.frustration < self.NUMBER_OF_THROWS:
                     self.throwing = False
                     self.aiming = True
-                    self.next_action_delay = 0.8
+                    self.next_action_delay = self.AIM_DELAY
                 else:
                     self.throwing = False
                     self.frustration = 0
                     self.behavior = self.behave_pursue
         else:
             self.aiming = True
-            self.next_action_delay = 1.2
+            self.next_action_delay = self.FIRST_AIM_DELAY
 
 
     def pursue(self, target, dt):
@@ -456,3 +462,20 @@ class PeasantB(Peasant):
         if effect:
             self.apply_status(*effect)
 
+
+class PeasantC(PeasantB):
+    FIRST_AIM_DELAY = 0.6
+    AIM_DELAY = 0.1
+    THROW_DELAY = 0.1
+    NUMBER_OF_THROWS = 8
+
+    max_speed = 300
+
+    def reset(self, x, y):
+        Actor.reset(self, x, y)
+        self.target = None
+        self.frustration = 0
+        self.behavior = self.behave_idle
+        self.aiming = False
+        self.throwing = False
+        self.sprite.color = (63, 0, 0)
