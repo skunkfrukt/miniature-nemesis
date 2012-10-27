@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Oh accursed level editor, version 0.0</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
+		<script src="editor.js"></script>
+		<link rel="stylesheet" href="editor.css">
+	</head>
+	<body>
+		<div id="topBar">
+			<label>Stage ID:</label>
+			<input type="text" id="stageID">
+			<div id="stageDimensions" class="optionalFormSection">
+				<label>Dimensions:</label>
+				<input type="text" id="stageWidth" value="640"> x 
+				<input type="text" id="stageHeight" value="360" disabled>
+			</div>
+			<div id="stageDuration" class="optionalFormSection">
+				<label>Duration</label>
+				<input type="text" id="stageMinutes" value="0">
+			</div>
+			<select id="stageLengthType">
+				<option value="px" selected>Pixels</option>
+				<option value="min">Minutes</option>
+			</select>
+			<button id="updateStageLength">Update</button>
+		</div>
+		<div id="stageFrame"></div>
+		<div id="ruler"></div>
+		<div id="bottomBar"></div>
+	</body>
+</html>
