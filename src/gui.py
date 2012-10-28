@@ -58,6 +58,8 @@ GameState.register_event_type('on_quit_game')
 
 
 class MenuState(GameState):
+    _logo = pyglet.resource.image('img/gui/pict_logo_gold.png')
+
     def __init__(self):
         GameState.__init__(self)
         if '--skipmenu' in sys.argv:
@@ -65,13 +67,17 @@ class MenuState(GameState):
         self.bg_group = pyglet.graphics.OrderedGroup(0)
         self.button_group = pyglet.graphics.OrderedGroup(1)
         self.title_bg = pyglet.sprite.Sprite(pyglet.resource.image(
-                'img/gui/title.png'), batch=self.batch, group=self.bg_group)
+                'img/gui/title_bg.png'), batch=self.batch, group=self.bg_group)
+        self.logo = pyglet.sprite.Sprite(self._logo,
+                batch=self.batch, group=self.button_group)
         self.menu = GameMenu(['Run','Quit'])
         self.menu.labels = []
+        menu_item_center = (self.logo.width + WIN_WIDTH) // 2
         for o in self.menu.options:
             ly = 60 - len(self.menu.labels) * 20
             l = pyglet.text.Label(o, font_size=16, color=(0, 0, 0, 255),
-                    anchor_x='center', batch=self.batch, x=320, y=ly,
+                    anchor_x='center', batch=self.batch,
+                    x=menu_item_center, y=ly,
                     group=self.button_group)
             self.menu.labels.append(l)
         self.select_menu_item(self.menu.selected_option())
