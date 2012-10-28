@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Oh accursed level editor, version 0.0</title>
+		<title>O accursed level editor, version 0.0!</title>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
 		<script src="editor.js"></script>
 		<link rel="stylesheet" href="editor.css">
 	</head>
 	<body>
-		<div id="topBar">
+		<div class="logo"></div>
+		<div id="topBar" class="guiDiv">
 			<label>Stage ID:</label>
 			<input type="text" id="stageID">
 			<div id="stageDimensions" class="optionalFormSection">
@@ -26,11 +27,16 @@
 			</select>
 			<button id="updateStageLength">Update</button>
 		</div>
-		<div id="stageFrame"></div>
-		<div id="ruler"></div>
-		<div id="bottomBar">
+		<div id="stageWrapper" class="guiDiv">
+			<div id="stageFrame"></div>
+			<div id="ruler"></div>
+		</div>
+		<div id="bottomBar" class="guiDiv">
 			<button id="addHouse">+House</button>
 			<button id="addRock">+Rock</button>
+		</div>
+		<div class="guiDiv">
+			<textarea id="outputArea"></textarea>
 		</div>
 	</body>
 </html>

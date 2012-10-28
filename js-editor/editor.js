@@ -68,7 +68,7 @@ $(document).ready(function() {
 		});
 		spawns.sort(function(a, b) {return a.x - b.x;});
 		mapData['spawns'] = spawns;
-		console.log(JSON.stringify(mapData, null, 4));
+		$('#outputArea').text(JSON.stringify(mapData, null, 4));
 	};
 	$('#stageDuration').hide();
 	$('#stageLengthType').change(function(el) {
@@ -118,4 +118,6 @@ $(document).ready(function() {
 			}
 		});
 	});
+	updateRuler();
+	mapDataToJSON();
 });
