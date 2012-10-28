@@ -12,7 +12,7 @@ h1 {
 	border-radius: 6px;
 	background: -webkit-linear-gradient(yellow, gold);
 	padding: 6px;
-	margin-bottom: 3px;
+	margin: 0px 0px 3px 0px;
 	box-shadow: 1px 1px goldenrod;
 }
 
@@ -63,8 +63,8 @@ div.logo {
 
 .propHouse {
 	width: 180px;
-	height: 180px;
-	background: url('../img/sprites/pict_house_temp.png');
+	height: 181px;
+	background: url('../img/sprites/pict_houses.png');
 }
 
 .propRock {

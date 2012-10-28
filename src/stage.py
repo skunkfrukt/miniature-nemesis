@@ -267,14 +267,18 @@ class Stone(Prop):
 
 
 class House(Prop):
+    num = 0
     collision_effect = ('stun', 0.5)
-    _image = pyglet.resource.image('img/sprites/pict_house_temp.png')
+    _images = pyglet.image.ImageGrid(
+            pyglet.resource.image('img/sprites/pict_houses.png'),
+            1, 3)
 
     def __init__(self):
         Prop.__init__(self)
-        self.set_sprite(pyglet.sprite.Sprite(self._image))
+        self.set_sprite(pyglet.sprite.Sprite(self._images[House.num % 3]))
         self.add_collider(collider.Collider(0, 0, 180, 180,
                 effect=self.collision_effect, layer=HASH_GROUND))
+        House.num += 1
 
 
 village_props = []
