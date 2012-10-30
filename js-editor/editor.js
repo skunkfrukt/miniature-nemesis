@@ -57,6 +57,7 @@ $(document).ready(function() {
 		mapData['stageID'] = $('#stageID').val();
 		mapData['width'] = parseInt($('#stageWidth').val());
 		mapData['height'] = parseInt($('#stageHeight').val());
+		mapData['groundColor'] = $('#stageBGColor').val();
 		var spawns = [];
 		$('#stageFrame').children().each(function(i, el) {
 			var pos = $(el).position();
@@ -117,6 +118,10 @@ $(document).ready(function() {
 				editorCoordsToGameCoords(ui.helper);
 			}
 		});
+	});
+	$('#stageBGColor').change(function(el) {
+		var bgColorHex = $('#stageBGColor').val();
+		$('#stageFrame').css('background-color', bgColorHex);
 	});
 	updateRuler();
 	mapDataToJSON();
