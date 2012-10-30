@@ -217,15 +217,17 @@ Stage.register_event_type('on_hero_death')
 
 
 class SpawnPoint(Point):
-    def __init__(self, x, y, cls, offset_x=0, offset_y=0):
-        Point.__init__(self, x, y)
+    def __init__(self, x, y, cls, from_left=False, **kwargs):
+        self.x = x
+        self.y = y
         self.spawned_class = cls
-        self.offset_x, self.offset_y = offset_x, offset_y
+        self.from_left = from_left
+        self.parameters = kwargs
 
 
 class CheckPoint(SpawnPoint):
     def __init__(self, x, y):
-        SpawnPoint.__init__(self, x, y, actor.Hero, 0, 0)
+        super(CheckPoint, self).__init__(x, y, actor.Hero)
 
 
 class Prop(GameObject):
@@ -233,7 +235,7 @@ class Prop(GameObject):
     preferred_rendering_group_index = R_GROUP_PROPS
 
     def __init__(self):
-        GameObject.__init__(self)
+        super(Prop, self).__init__()
         self.collider = None
 
     def setup_sprite(self, batch, group):
@@ -249,7 +251,7 @@ class Rock(Prop):
     _image = pyglet.resource.image('img/sprites/rock__sprite.png')
 
     def __init__(self):
-        Prop.__init__(self)
+        super(Rock, self).__init__()
         self.set_sprite(pyglet.sprite.Sprite(self._image))
         self.add_collider(collider.Collider(5, 10, 25, 30,
                 effect=self.collision_effect, layer=HASH_GROUND))
@@ -260,7 +262,7 @@ class Stone(Prop):
     _image = pyglet.resource.image('img/sprites/pict_stone_temp.png')
 
     def __init__(self):
-        Prop.__init__(self)
+        super(Stone, self).__init__()
         self.set_sprite(pyglet.sprite.Sprite(self._image))
         self.add_collider(collider.Collider(0, 0, 10, 10,
                 effect=self.collision_effect, layer=HASH_GROUND))
@@ -274,7 +276,7 @@ class House(Prop):
             1, 3)
 
     def __init__(self):
-        Prop.__init__(self)
+        super(House, self).__init__()
         self.set_sprite(pyglet.sprite.Sprite(self._images[House.num % 3]))
         self.add_collider(collider.Collider(0, 0, 180, 180,
                 effect=self.collision_effect, layer=HASH_GROUND))

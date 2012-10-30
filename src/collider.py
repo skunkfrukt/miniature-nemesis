@@ -84,7 +84,7 @@ Collider.register_event_type('on_collision')
 
 class Detector(Collider):
     def __init__(self, left=0):
-        Collider.__init__(self, left=left, bottom=-LOTS, top=LOTS,
+        super(Detector, self).__init__(left=left, bottom=-LOTS, top=LOTS,
             width=1, effect=None, layer=HASH_TRIGGER)
         self.top = LOTS
         self.bottom = -LOTS
@@ -107,7 +107,7 @@ def pairs(items):
             yield (first_item, second_item)
 
 
-class SpatialHash():
+class SpatialHash(object):
     def __init__(self, width, height, cell_width, cell_height, layer=None):
         self.layer = layer
         self.width = width

@@ -9,7 +9,7 @@ class AnimatedSprite(pyglet.sprite.Sprite):
         if default is None:
             default = self.animations.keys()[0]
             print("No default anim; using %s" % default)
-        pyglet.sprite.Sprite.__init__(self, self.animations[default])
+        super(AnimatedSprite, self).__init__(self.animations[default])
         self.current_animation = default
 
     def play(self, animation):

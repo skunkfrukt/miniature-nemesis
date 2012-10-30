@@ -33,7 +33,7 @@ class Actor(GameObject):
         return animations
 
     def __init__(self):
-        GameObject.__init__(self)
+        super(Actor, self).__init__()
         self.collider = None
         self.direction = (0, 0)
         self.speed = (0.0, 0.0)
@@ -171,7 +171,7 @@ class Hero(Actor):
     acceleration = (200, 400)
 
     def __init__(self):
-        Actor.__init__(self)
+        super(Hero, self).__init__()
         self.set_sprite(AnimatedSprite(self.animations, default='run'))
         self.add_collider(collider.Collider(11, 0, width=20, height=10,
                 layer=HASH_GROUND))
@@ -227,7 +227,7 @@ class Pebble(Projectile):
     collision_effect = ('trip', 1.0)
 
     def __init__(self):
-        Projectile.__init__(self)
+        super(Pebble, self).__init__()
         self.set_sprite(AnimatedSprite(self.animations, default='thrown'))
         self.add_collider(collider.Collider(3, 3, width=1, height=1,
                 layer=HASH_AIR, effect=('trip', 1.0)))
@@ -257,7 +257,7 @@ class Peasant(Actor):
     THROW_DELAY = 0.3
 
     def __init__(self):
-        Actor.__init__(self)
+        super(Peasant, self).__init__()
         self.set_sprite(AnimatedSprite(self.animations, default='idle'))
         self.add_collider(collider.Collider(0,0,30,20, layer=HASH_GROUND))
         self.add_collider(collider.Detector(60))

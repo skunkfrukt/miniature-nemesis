@@ -61,7 +61,7 @@ class MenuState(GameState):
     _logo = pyglet.resource.image('img/gui/pict_logo_gold.png')
 
     def __init__(self):
-        GameState.__init__(self)
+        super(MenuState, self).__init__()
         if '--skipmenu' in sys.argv:
             self.switch_state(PlayState())
         self.bg_group = pyglet.graphics.OrderedGroup(0)
@@ -115,7 +115,7 @@ class MenuState(GameState):
 
 class PlayState(GameState):
     def __init__(self):
-        GameState.__init__(self)
+        super(PlayState, self).__init__()
         self.gui_group = pyglet.graphics.OrderedGroup(1)
         self.level = stage.Stage('Derpington Abbey', (0,127,0,255),
                 stage.village_props)
@@ -163,7 +163,7 @@ class PlayState(GameState):
 
 class GameOverState(GameState):
     def __init__(self, image):
-        GameState.__init__(self)
+        super(GameOverState, self).__init__()
         self.bg_group = pyglet.graphics.OrderedGroup(0)
         self.gui_group = pyglet.graphics.OrderedGroup(1)
         self.snapshot = pyglet.sprite.Sprite(image,
@@ -181,7 +181,7 @@ class GameOverState(GameState):
 
 class WinState(GameState):
     def __init__(self, image):
-        GameState.__init__(self)
+        super(WinState, self).__init__()
         self.bg_group = pyglet.graphics.OrderedGroup(0)
         self.gui_group = pyglet.graphics.OrderedGroup(1)
         self.snapshot = pyglet.sprite.Sprite(image,
