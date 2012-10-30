@@ -5,6 +5,9 @@ import actor
 from common import GameObject, Point
 from constants import *
 
+import logging
+log = logging.getLogger(__name__)
+
 
 class Graveyard(dict):
     def allocate(self, *classes):

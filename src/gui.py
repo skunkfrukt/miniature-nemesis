@@ -4,6 +4,9 @@ import sys
 from .constants import *
 from pyglet.window import key
 
+import logging
+log = logging.getLogger(__name__)
+
 
 keys = key.KeyStateHandler()
 import actor

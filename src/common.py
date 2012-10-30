@@ -2,6 +2,8 @@ import math
 import pyglet
 from constants import *
 
+import logging
+log = logging.getLogger(__name__)
 
 class AnimatedSprite(pyglet.sprite.Sprite):
     def __init__(self, animations=None, default=None):
