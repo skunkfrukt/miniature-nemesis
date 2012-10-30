@@ -40,11 +40,17 @@ class Actor(GameObject):
         self.collider = None
         self.direction = (0, 0)
         self.speed = (0.0, 0.0)
-        self.stun_time = 0.0
+        self.next_action_delay = 0.0
+        self.current_action_priority = 0
         self.status = 'ok'
+        self.apply_status('ok')
 
     def play(self, animation):
         self.sprite.play(animation)
+
+    def wait(self, duration, priority=0):
+        self.current_action_priority = priority
+        self.next_action_delay = duration
 
     def update_speed(self, dt):
         if self.status == 'ok':
@@ -52,7 +58,7 @@ class Actor(GameObject):
             tx, ty = 100 + dirx * self.max_speed, diry * self.max_speed
             self.approach_target_speed(dt, (tx, ty))
         elif self.status == 'rise':
-            if self.stun_time <= 0:
+            if self.next_action_delay <= 0:
                 self.apply_status('ok', force=True)
         elif self.status == 'tumble':
             if self.speed[0] < 1:
@@ -60,13 +66,13 @@ class Actor(GameObject):
             else:
                 self.approach_target_speed(dt, (0,0))
         elif self.status == 'trip':
-            if self.stun_time <= 0:
+            if self.next_action_delay <= 0:
                 self.apply_status('tumble', force=True)
         elif self.status == 'stun':
-            if self.stun_time <= 0:
+            if self.next_action_delay <= 0:
                 self.speed = (0, 0)
                 self.apply_status('ok', force=True)
-        self.stun_time -= dt
+        self.next_action_delay -= dt
 
     def approach_target_speed(self, dt, target=(0, 0)):
         dx, dy = self.speed
@@ -94,30 +100,57 @@ class Actor(GameObject):
     def animate(self):
         pass
 
-    def apply_status(self, effect, strength=0, force=False):
+    def apply_status(self, effect_type=None, priority=0, force=False,
+            **kwargs):
         if not force:
-            if status_severity[effect] <= status_severity[self.status]:
+            # temp:
+            if effect_type in status_severity:
+                priority = status_severity[effect_type]
+            # end temp
+            if priority <= self.current_action_priority:
                 return False
-        if effect == 'ok':
-            self.stun_time = 0.0
-        elif effect == 'rise':
-            self.stun_time = 0.3
-            self.speed = (0, 0)
-        elif effect == 'tumble':
-            self.stun_time = 1
-            self.speed = (self.max_speed * 2, 0)
-        elif effect == 'trip':
-            self.stun_time = 0.2
-            # self.speed = (0,0)
-        elif effect == 'stun':
-            self.stun_time = strength
-            self.speed = (-100, 0)
-        elif effect == 'dead':
-            self.speed = (0, 0)
+        try:
+            effect_method = getattr(self, effect_type)
+        except AttributeError:
+            log.debug('{} has no method {}'.format(self, effect_type))
         else:
-            return False
-        self.status = effect
-        return True
+            effect_method(**kwargs)
+            self.status = effect_type
+
+    def stun(self, duration=0.5, **kwargs):
+        self.speed = (-100, 0)
+        self.wait(duration, priority=4)
+
+    def stop(self, directions='nesw', **kwargs):
+        dx, dy = self.speed
+        dir_x, dir_y = cmp(dx, 0), cmp(dy, 0)
+        if dir_x < 0 and 'w' in directions:
+            dx = 0
+        elif dir_x > 0 and 'e' in directions:
+            dx = 0
+        if dir_y < 0 and 's' in directions:
+            dy = 0
+        elif dir_y > 0 and 'n' in directions:
+            dy = 0
+        self.speed = (dx, dy)
+        self.status = 'ok'
+
+    def trip(self, duration=0.2, **kwargs):
+        self.wait(duration, priority=1)
+
+    def ok(self, **kwargs):  # temp
+        self.wait(0)
+
+    def rise(self, **kwargs):  # temp
+        self.speed = (0, 0)
+        self.wait(0.3, priority=3)
+
+    def tumble(self, **kwargs):  # temp
+        self.speed = (self.max_speed * 2, 0)
+        self.wait(1.0, priority=2)
+
+    def dead(self, **kwargs):  # temp
+        self.speed = (0, 0)
 
     def setup_sprite(self, batch, group):
         if self.sprite is not None:
@@ -128,7 +161,7 @@ class Actor(GameObject):
 
     def reset(self, x, y):
         self.speed = (0,0)
-        GameObject.reset(self, x, y)
+        super(Actor, self).reset(x, y)
         self.apply_status('ok')
 
     def fire_projectile(self, projectile_cls, speed, target=None):
@@ -213,27 +246,27 @@ class Hero(Actor):
         elif self.status == 'ok':
             if dirx > 0:
                 self.play('sprint')
-            elif dirx < 0 and self.speed[0] > -self.max_speed:
+            elif dirx < 0 and self.speed[0] > 0:
                 self.play('stop')
             else:
                 self.play('run')
 
     def on_collision(self, other, rect, speed, effect):
         if effect:
-            self.apply_status(*effect)
+            self.apply_status(**effect)
 
 
 class Pebble(Projectile):
     _image = pyglet.resource.image('img/sprites/missile_pebble_minimal.png')
     _frame_data = {'thrown': ((0, 3), 0.2, True)}
     animations = Actor.make_animations(_image, 3, _frame_data)
-    collision_effect = ('trip', 1.0)
+    collision_effect = {'effect_type': 'trip', 'duration': 1.0}
 
     def __init__(self):
         super(Pebble, self).__init__()
         self.set_sprite(AnimatedSprite(self.animations, default='thrown'))
         self.add_collider(collider.Collider(3, 3, width=1, height=1,
-                layer=HASH_AIR, effect=('trip', 1.0)))
+                layer=HASH_AIR, effect=self.collision_effect))
 
     def on_collision(self, other, rect, speed, effect):
         pass  # self.kill()
@@ -466,7 +499,7 @@ class PeasantB(Peasant):
 
     def on_collision(self, other, rect, speed, effect):
         if effect:
-            self.apply_status(*effect)
+            self.apply_status(**effect)
 
 
 class PeasantC(PeasantB):

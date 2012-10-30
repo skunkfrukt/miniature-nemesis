@@ -105,8 +105,10 @@ class Stage(pyglet.event.EventDispatcher):
 
     def spawn(self, spawnpoint):
         cls = spawnpoint.spawned_class
-        x = spawnpoint.x + spawnpoint.offset_x
-        y = spawnpoint.y + spawnpoint.offset_y
+        x = spawnpoint.x
+        if spawnpoint.from_left:
+            x -= WIN_WIDTH
+        y = spawnpoint.y
         spawned_object = self.get_game_object_instance(cls)
         spawned_object.reset(x, y)
         self.active_objects.append(spawned_object)
@@ -250,7 +252,7 @@ class Prop(GameObject):
 
 
 class Rock(Prop):
-    collision_effect = ('stun', 0.5)
+    collision_effect = {'effect_type': 'stun', 'duration': 0.5}
     _image = pyglet.resource.image('img/sprites/rock__sprite.png')
 
     def __init__(self):
@@ -261,7 +263,7 @@ class Rock(Prop):
 
 
 class Stone(Prop):
-    collision_effect = ('trip', 0.75)
+    collision_effect = {'effect_type': 'trip', 'duration': 0.75}
     _image = pyglet.resource.image('img/sprites/pict_stone_temp.png')
 
     def __init__(self):
@@ -273,7 +275,7 @@ class Stone(Prop):
 
 class House(Prop):
     num = 0
-    collision_effect = ('stun', 0.5)
+    collision_effect = {'effect_type': 'stun', 'duration': 0.5}
     _images = pyglet.image.ImageGrid(
             pyglet.resource.image('img/sprites/pict_houses.png'),
             1, 3)
@@ -281,8 +283,14 @@ class House(Prop):
     def __init__(self):
         super(House, self).__init__()
         self.set_sprite(pyglet.sprite.Sprite(self._images[House.num % 3]))
-        self.add_collider(collider.Collider(0, 0, 180, 180,
-                effect=self.collision_effect, layer=HASH_GROUND))
+        self.add_collider(collider.Collider(
+                left=0, right=20, bottom=20, top=180,
+                effect={'effect_type': 'stun', 'duration': 0.5},
+                layer=HASH_GROUND))
+        self.add_collider(collider.Collider(
+                left=20, right=180, bottom=0, top=20,
+                effect={'effect_type': 'stop', 'directions': 'n'},
+                layer=HASH_GROUND))
         House.num += 1
 
 
