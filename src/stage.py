@@ -314,7 +314,7 @@ for i, h in enumerate(houses):
     village_props.append(SpawnPoint(h[0], h[1], House))
     if i % 3 == 1:
         village_props.append(SpawnPoint(h[0] + 95, h[1] - 20,
-                actor.PeasantC))
+                actor.Peasant))
 
 for r in rocks:
     village_props.append(SpawnPoint(r[0], r[1], Rock))
