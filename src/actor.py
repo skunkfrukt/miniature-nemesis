@@ -392,16 +392,6 @@ class Peasant(Actor):
 
 
 class PeasantB(Peasant):
-    _image = pyglet.resource.image('img/sprites/anim_peasant-a_minimal.png')
-    _frame_data = {
-            'idle': ((0, 2), 1.1, True),
-            'run': ((2, 4), 0.2, True),
-            'notice': ((4, 6), 1.2, True),
-            'aim': ((6, 8), 0.2, True),
-            'throw': ((8, 9), 1.2, True)
-            }
-    required_classes = [Pebble]
-    animations = Actor.make_animations(_image, 9, _frame_data)
 
     max_speed = 60.0
     acceleration = (100, 100)
