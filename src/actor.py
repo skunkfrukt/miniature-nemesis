@@ -511,3 +511,23 @@ class PeasantC(PeasantB):
         self.aiming = False
         self.throwing = False
         self.sprite.color = (63, 0, 0)
+
+
+class Preacher(Actor):
+    _image = pyglet.resource.image('img/sprites/anim_priest.png')
+    _frame_data = {
+            'run': ((0, 2), 0.2, True),
+            }
+    animations = Actor.make_animations(_image, 2, _frame_data)
+
+    max_speed = 120.0
+    acceleration = (100, 100)
+    collision_effect = ('trip', 0.5)
+
+    def __init__(self):
+        super(Preacher, self).__init__()
+        self.set_sprite(AnimatedSprite(self.animations, default='run'))
+        self.add_collider(collider.Collider(0,0,30,20, layer=HASH_GROUND))
+        self.speed = (120, 0)
+        self.target = None
+        self.next_action_delay = 0.0

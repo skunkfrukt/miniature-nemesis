@@ -322,4 +322,6 @@ for r in rocks:
 for p in [(400, 200), (450, 110), (500, 40), (550, 300)]:
     village_props.append(SpawnPoint(p[0], p[1], actor.Peasant))
 
+village_props.append(SpawnPoint(100, 200, actor.Preacher))
+
 village_props.sort(lambda a, b: a.x - b.x)
