@@ -294,6 +294,8 @@ class Peasant(Actor):
     FIRST_AIM_DELAY = 1.2
     AIM_DELAY = 0.6
     THROW_DELAY = 0.3
+    LEAP_SPEED = (300, 0)
+    LEAP_TIME = 0.4
 
     def __init__(self):
         super(Peasant, self).__init__()
@@ -340,10 +342,11 @@ class Peasant(Actor):
         dist_x = self.target.x - 60 - self.x
         if dist_x > 300:
             self.frustration += dt + dt
-        elif dist_x < 100:
+        elif dist_x < 70:
             dist_y = abs(self.target.y - self.y)
             if dist_y < 10:
-                self.speed = (200, 0)
+                self.speed = self.LEAP_SPEED
+                self.next_action_delay = self.LEAP_TIME
                 self.behavior = self.behave_leap
         else:
             self.frustration += dt
@@ -377,8 +380,8 @@ class Peasant(Actor):
     def behave_leap(self, dt):
         self.play('leap')
         self.approach_target_speed(dt, (0, 0))
-        if self.speed[0] < 20:
-            self.speed = (50, 0)
+        if self.next_action_delay <= 0:
+            self.speed = (0, 0)
             self.behavior = self.behave_down
 
 
