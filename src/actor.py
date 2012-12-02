@@ -323,6 +323,7 @@ class Peasant(Actor):
 
     def behave_idle(self, dt):
         self.play('idle')
+        self.speed = (0, 0)
         if self.target is not None:
             self.play('notice')
             self.next_action_delay = 0.4
@@ -339,6 +340,11 @@ class Peasant(Actor):
         dist_x = self.target.x - 60 - self.x
         if dist_x > 300:
             self.frustration += dt + dt
+        elif dist_x < 100:
+            dist_y = abs(self.target.y - self.y)
+            if dist_y < 10:
+                self.speed = (200, 0)
+                self.behavior = self.behave_leap
         else:
             self.frustration += dt
         if self.frustration >= 5:
@@ -368,7 +374,27 @@ class Peasant(Actor):
             self.next_action_delay = self.FIRST_AIM_DELAY
 
 
-    def pursue(self, target, dt):
+    def behave_leap(self, dt):
+        self.play('leap')
+        self.approach_target_speed(dt, (0, 0))
+        if self.speed[0] < 20:
+            self.speed = (50, 0)
+            self.behavior = self.behave_down
+
+
+    def behave_trip(self, dt):
+        self.play('trip')
+        self.approach_target_speed(dt, (0, 0))
+        if self.speed[0] < 20:
+            self.speed = (0, 0)
+            self.behavior = self.behave_down
+
+
+    def behave_down(self, dt):
+        self.play('down')
+
+
+    def pursue(self, target, dt, speed=60):
         dist_x = target.x - 60 - self.x
         dist_y = target.y - self.y
         if dist_x <= 0:
@@ -381,7 +407,7 @@ class Peasant(Actor):
             elif abs(dist_y) < 10:
                 self.direction = (1, 0)
         dirx, diry = self.direction
-        tx, ty = dirx * (100 + self.max_speed), diry * (100 + self.max_speed)
+        tx, ty = dirx * (100 + speed), diry * (100 + speed)
         self.approach_target_speed(dt, (tx, ty))
 
 
