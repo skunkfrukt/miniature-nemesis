@@ -180,9 +180,9 @@ class Actor(GameObject):
         GameObject.reset(self, x, y)
         self.dispatch_event('on_spawn', self, x, y)
 
-    def add_collider(self, collider):
+    '''def add_collider(self, collider):
         collider.parent = self
-        GameObject.add_collider(self, collider)
+        GameObject.add_collider(self, collider)'''
 
 Actor.register_event_type('on_projectile_fired')
 Actor.register_event_type('on_spawn')
@@ -294,7 +294,7 @@ class Peasant(Actor):
     FIRST_AIM_DELAY = 1.2
     AIM_DELAY = 0.6
     THROW_DELAY = 0.3
-    LEAP_SPEED = (300, 0)
+    LEAP_SPEED = (220, 0)
     LEAP_TIME = 0.4
 
     def __init__(self):
@@ -334,7 +334,8 @@ class Peasant(Actor):
     def behave_notice(self, dt):
         self.play('notice')
         if self.next_action_delay <= 0:
-            self.behavior = self.behave_pursue
+            self.next_action_delay = 5.0
+            self.behavior = self.behave_charge_ahead  # self.behave_pursue
 
     def behave_pursue(self, dt):
         self.play('run')
@@ -396,6 +397,24 @@ class Peasant(Actor):
     def behave_down(self, dt):
         self.play('down')
 
+    def behave_charge_ahead(self, dt, speed=110):  #TODO magic number
+        if self.next_action_delay <= 0:
+            self.throwing = False
+            self.aiming = False
+            self.behavior = self.behave_throw
+        self.play('run')
+        final_speed = speed
+        if self.target is not None:
+            dist_x = self.target.x - self.x
+            dist_y = self.target.y - self.y
+            if abs(dist_y) < 15:
+                if 0 < dist_x < 70:
+                    self.speed = self.LEAP_SPEED
+                    self.next_action_delay = self.LEAP_TIME
+                    self.behavior = self.behave_leap
+                else:
+                    final_speed = self.LEAP_SPEED
+        self.approach_target_speed(dt, (final_speed, 0))
 
     def pursue(self, target, dt, speed=60):
         dist_x = target.x - 60 - self.x
@@ -413,11 +432,14 @@ class Peasant(Actor):
         tx, ty = dirx * (100 + speed), diry * (100 + speed)
         self.approach_target_speed(dt, (tx, ty))
 
-
     def on_detection(self, target):
         if self.target is None and type(target) is Hero:
             if abs(self.y - target.y) < 200:
                 self.target = target
+
+    def on_collision(self, other, rect, speed, effect):
+        if effect is not None and effect['effect_type'] in ['stun', 'trip']:
+            self.behavior = self.behave_trip
 
 
 class PeasantB(Peasant):

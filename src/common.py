@@ -95,6 +95,7 @@ class GameObject(pyglet.event.EventDispatcher):
             return
         if self.colliders is None:
             self.colliders = []
+        collider.parent = self
         self.colliders.append(collider)
         collider.move(self.x, self.y)
         collider.push_handlers(self)
