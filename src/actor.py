@@ -421,6 +421,7 @@ class Peasant(Actor):
 
 
 class PeasantB(Peasant):
+    _image = pyglet.resource.image('img/sprites/anim_peasant-a_rc0.png')
 
     max_speed = 60.0
     acceleration = (100, 100)
@@ -525,6 +526,7 @@ class PeasantB(Peasant):
 
 
 class PeasantC(PeasantB):
+    _image = pyglet.resource.image('img/sprites/anim_peasant-a_rc1.png')
     FIRST_AIM_DELAY = 0.6
     AIM_DELAY = 0.1
     THROW_DELAY = 0.1
