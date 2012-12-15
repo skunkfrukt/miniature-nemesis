@@ -191,7 +191,7 @@ class WinState(GameState):
                 batch=self.batch, group=self.bg_group)
         self.snapshot.color = (191,127,0)
         self.game_over_label = pyglet.text.Label(
-                text='Yay!', color=(255, 255, 0, 255),
+                text='Hurrah!', color=(255, 255, 0, 255),
                 font_name='Comic Sans MS', font_size=80,
                 x=320, y=180, anchor_x='center', anchor_y='center',
                 batch=self.batch, group=self.gui_group)

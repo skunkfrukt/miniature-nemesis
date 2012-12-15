@@ -260,7 +260,7 @@ class Pebble(Projectile):
     _image = pyglet.resource.image('img/sprites/missile_pebble_minimal.png')
     _frame_data = {'thrown': ((0, 3), 0.2, True)}
     animations = Actor.make_animations(_image, 3, _frame_data)
-    collision_effect = {'effect_type': 'trip', 'duration': 1.0}
+    collision_effect = {'effect_type': 'trip', 'duration': 0.2}
 
     def __init__(self):
         super(Pebble, self).__init__()
