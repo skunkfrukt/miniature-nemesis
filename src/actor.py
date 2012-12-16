@@ -569,9 +569,13 @@ class PeasantC(PeasantB):
 class Preacher(Actor):
     _image = pyglet.resource.image('img/sprites/anim_priest.png')
     _frame_data = {
-            'run': ((0, 2), 0.2, True),
+            'idle': ((0, 2), 1.1, True),
+            'run': ((2, 4), 0.2, True),
+            'notice': ((4, 6), 1.2, True),
+            'aim': ((6, 8), 0.2, True),
+            'strike': ((8, 9), 0.4, True)
             }
-    animations = Actor.make_animations(_image, 2, _frame_data)
+    animations = Actor.make_animations(_image, 9, _frame_data)
 
     max_speed = 120.0
     acceleration = (100, 100)
@@ -579,7 +583,7 @@ class Preacher(Actor):
 
     def __init__(self):
         super(Preacher, self).__init__()
-        self.set_sprite(AnimatedSprite(self.animations, default='run'))
+        self.set_sprite(AnimatedSprite(self.animations, default='idle'))
         self.add_collider(collider.Collider(0,0,30,20, layer=HASH_GROUND))
         self.speed = (120, 0)
         self.target = None
