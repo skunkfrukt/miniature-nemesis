@@ -38,7 +38,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.build_stage(obstacles)
         self.graveyard.allocate(actor.Hero)
         self.checkpoints = [CheckPoint(320, 180)]
-        self.width = 6640  #!! Magic number
+        self.width = 30640  #!! Magic number
         self.height = 360
         self.spatial_hashes = {}
         self.spatial_hashes[HASH_GROUND] = collider.SpatialHash(
@@ -310,18 +310,20 @@ rocks = [
         (5388, 158), (5987, 168), (6564, 144)
         ]
 
-for i, h in enumerate(houses):
-    village_props.append(SpawnPoint(h[0], h[1], House))
-    if i % 2 == 1:
-        village_props.append(SpawnPoint(h[0] + 95, 250,
-                actor.Peasant))
+for it in range(5):
 
-for r in rocks:
-    village_props.append(SpawnPoint(r[0], r[1], Rock))
+    for i, h in enumerate(houses):
+        village_props.append(SpawnPoint(h[0] + (6000*it), h[1], House))
+        if i % 2 == 1:
+            village_props.append(SpawnPoint(h[0] + 95 + (6000*it), 250,
+                    actor.Peasant))
 
-for p in [(400, 200), (450, 110), (500, 40), (550, 300)]:
-    village_props.append(SpawnPoint(p[0], p[1], actor.Peasant))
+    for r in rocks:
+        village_props.append(SpawnPoint(r[0] + (6000*it), r[1], Rock))
 
-village_props.append(SpawnPoint(100, 200, actor.Preacher))
+    for p in [(400, 200), (450, 110), (500, 40), (550, 300)]:
+        village_props.append(SpawnPoint(p[0] + (6000*it), p[1], actor.Peasant))
+
+    village_props.append(SpawnPoint(100 + (6000*it), 200, actor.Preacher))
 
 village_props.sort(lambda a, b: a.x - b.x)
