@@ -110,3 +110,18 @@ class Span(object):
             return self.width
         else:
             return x
+
+
+class Stage(object):
+    """
+    A playable level of the game, consisting of a number of Span objects.
+    """
+    
+    def __init__(self):
+        self.spans = []
+        self.width = 0
+        self.offset = 0
+    
+    def add_span(self, span):
+        self.spans.append(span)
+        self.width += span.width
