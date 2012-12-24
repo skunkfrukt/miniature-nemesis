@@ -17,10 +17,10 @@ args = parser.parse_args()
 import pyglet
 from src import gui
 
-log.info('Starting')
+log.info('Launching game.')
 
 gui.MainWindow(fullscreen=args.fullscreen)
 
 pyglet.app.run()
 
-log.info('Exiting')
+log.info('Exiting game.')
