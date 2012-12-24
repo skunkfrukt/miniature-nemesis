@@ -5,7 +5,6 @@ def bitrange(n):
 
 GAME_TITLE = (
         "O accursed hunger of gold, to what dost thou not compel human hearts!")
-GAME_VERSION = "0.0.1"
 
 WIN_WIDTH = 640
 WIN_HEIGHT = 360

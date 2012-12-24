@@ -1,10 +1,11 @@
 import argparse
-from src.constants import GAME_VERSION
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger()
 # log.setLevel(logging.DEBUG)
+
+GAME_VERSION = "0.0.2"
 
 parser = argparse.ArgumentParser(description="A danmaku runner.")
 parser.add_argument('-v', '--version', action='version', version=GAME_VERSION)
