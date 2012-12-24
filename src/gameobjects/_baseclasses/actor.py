@@ -508,9 +508,12 @@ class Preacher(Actor):
             'run': ((2, 4), 0.2, True),
             'notice': ((4, 6), 1.2, True),
             'aim': ((6, 8), 0.2, True),
-            'strike': ((8, 9), 0.4, True)
+            'strike': ((8, 9), 0.4, True),
+            'command': ((9, 11), 0.2, True),
+            'crouch': ((11, 13), 0.2, True),
+            'charge': ((13, 15), 0.2, True)
             }
-    animations = Actor.make_animations(_image, 9, _frame_data)
+    animations = Actor.make_animations(_image, 15, _frame_data)
 
     max_speed = 120.0
     acceleration = (100, 100)
