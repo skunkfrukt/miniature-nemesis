@@ -1,7 +1,7 @@
 import math
 import pyglet
 import sys
-from .constants import *
+from constants import *
 from pyglet.window import key
 
 import logging
@@ -9,9 +9,11 @@ log = logging.getLogger(__name__)
 
 
 keys = key.KeyStateHandler()
-import actor
-import stage
+import gameobjects._baseclasses.actor
+import stage_new as stage
+import stagebuilder
 
+TEST_STAGE = stagebuilder.json_to_stage('data/village.json')
 
 class GameMenu:
     def __init__(self,options, initial_option = 0, wrap = True):
