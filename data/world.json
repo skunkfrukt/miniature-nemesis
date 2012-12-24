@@ -1,0 +1,5 @@
+{
+	"worldName": "Miniature Nemesis",
+	"stages": ["data/stages/stage_village.json"],
+	"animations": []
+}

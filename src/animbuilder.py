@@ -1,7 +1,12 @@
 import json
 
-import sprites.AnimSet
+import graphics.AnimSet
 
 
-def json_to_animation_set(filename):
-    pass
+def json_to_animset_set(filename):
+    json_data = json.load(open(filename))
+    return parse_animset_set(json_data)
+
+
+def parse_animset_set(data):
+    parsed_animset =

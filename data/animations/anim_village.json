@@ -1,0 +1,119 @@
+{
+    "ANIMSET_PEASANT": {
+        "source": {
+            "image": "img/sprites/anim_peasant-a.png"
+            "rows": 1,
+            "cols": 12
+        },
+        "animations": [
+            {
+                "name": "idle",
+                "frames": [0, 1],
+                "period": 1.1,
+                "loop": true
+            },
+            {
+                "name": "run",
+                "frames": [2, 3],
+                "period": 0.2,
+                "loop": true
+            },
+            {
+                "name": "notice",
+                "frames": [4, 5],
+                "period": 1.2,
+                "loop": false
+            },
+            {
+                "name": "aim",
+                "frames": [6, 7],
+                "period": 0.2,
+                "loop": true
+            },
+            {
+                "name": "throw",
+                "frames": [8],
+                "period": 1.2,
+                "loop": false
+            },
+            {
+                "name": "leap",
+                "frames": [9],
+                "period": 1.0,
+                "loop": false
+            },
+            {
+                "name": "trip",
+                "frames": [10],
+                "period": 1.0,
+                "loop": false
+            },
+            {
+                "name": "down",
+                "frames": [11],
+                "period": 1.0,
+                "loop": false
+            }
+        ]
+    },
+
+
+    "ANIMSET_PREACHER": {
+        "source": {
+            "image": "img/sprites/anim_priest.png"
+            "rows": 1,
+            "cols": 15
+        },
+        "animations": [
+            {
+                "name": "idle",
+                "frames": [0, 1],
+                "period": 1.1,
+                "loop": true
+            },
+            {
+                "name": "run",
+                "frames": [2, 3],
+                "period": 0.2,
+                "loop": true
+            },
+            {
+                "name": "notice",
+                "frames": [4, 5],
+                "period": 1.2,
+                "loop": false
+            },
+            {
+                "name": "aim",
+                "frames": [6, 7],
+                "period": 0.2,
+                "loop": true
+            },
+            {
+                "name": "strike",
+                "frames": [8],
+                "period": 0.4,
+                "loop": false
+            },
+            {
+                "name": "order",
+                "frames": [9, 10],
+                "period": 0.2,
+                "loop": true
+            },
+            {
+                "name": "crouch",
+                "frames": [11, 12],
+                "period": 0.2,
+                "loop": true
+            },
+            {
+                "name": "charge",
+                "frames": [13, 14],
+                "period": 0.2,
+                "loop": true
+            }
+        ]
+    }
+}
+
