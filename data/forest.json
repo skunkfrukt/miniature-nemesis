@@ -1,0 +1,33 @@
+{
+    "stageName": "ProtoForest",
+    "sections": [
+        {
+            "sectionName": "Aurous Acquisition",
+            "isProcedural": false,
+            "isFirstSection": true,
+            "heroSpawnPoint": {
+                "end_x": 300,
+                "end_y": 100,
+                "isRunningSpawnPoint": true,
+                "start_x": -100,
+                "start_y": 150
+            },
+            "staticData": {
+                "propList": [
+                    {
+                        "propClass": "PROP_TREE",
+                        "x": 200,
+                        "y": 150
+                    }
+                ],
+                "encounterList": [
+                    {
+                        "encounterClass": "PeasantMob",
+                        "population": 3
+                    }
+                ],
+                "exitY": 4
+            }
+        }
+    ]
+}
