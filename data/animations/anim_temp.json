@@ -63,7 +63,7 @@ Preacher
     "source": {
         "image": "img/sprites/anim_priest.png"
         "rows": 1,
-        "cols": 9
+        "cols": 15
     },
     "animations": [
         {
@@ -95,6 +95,24 @@ Preacher
             "frames": [8],
             "period": 0.4,
             "loop": false
+        },
+        {
+            "name": "order",
+            "frames": [9, 10],
+            "period": 0.2,
+            "loop": true
+        },
+        {
+            "name": "crouch",
+            "frames": [11, 12],
+            "period": 0.2,
+            "loop": true
+        },
+        {
+            "name": "charge",
+            "frames": [13, 14],
+            "period": 0.2,
+            "loop": true
         }
     ]
 }
