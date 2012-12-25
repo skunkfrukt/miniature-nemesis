@@ -1,0 +1,121 @@
+{
+    "multiple": true,
+    "animSets": [
+        {
+            "animSetName": "ANIMSET_PEASANT",
+            "source": {
+                "image": "img/sprites/peasant.png",
+                "rows": 1,
+                "cols": 12
+            },
+            "anims": [
+                {   "key": "idle",
+                    "frames": [0, 1],
+                    "period": 1.1,
+                    "loop": true
+                },
+                {
+                    "key": "run",
+                    "frames": [2, 3],
+                    "period": 0.2,
+                    "loop": true
+                },
+                {
+                    "key": "notice",
+                    "frames": [4, 5],
+                    "period": 1.2,
+                    "loop": false
+                },
+                {
+                    "key": "aim",
+                    "frames": [6, 7],
+                    "period": 0.2,
+                    "loop": true
+                },
+                {
+                    "key": "throw",
+                    "frames": [8],
+                    "period": 1.2,
+                    "loop": false
+                },
+                {
+                    "key": "leap",
+                    "frames": [9],
+                    "period": 1.0,
+                    "loop": false
+                },
+                {
+                    "key": "trip",
+                    "frames": [10],
+                    "period": 1.0,
+                    "loop": false
+                },
+                {
+                    "key": "down",
+                    "frames": [11],
+                    "period": 1.0,
+                    "loop": false
+                }
+            ]
+        },
+        {
+            "animSetName": "ANIMSET_PREACHER",
+            "source": {
+                "image": "img/sprites/preacher.png",
+                "rows": 1,
+                "cols": 15
+            },
+            "anims": [
+                {
+                    "key": "idle",
+                    "frames": [0, 1],
+                    "period": 1.1,
+                    "loop": true
+                },
+                {
+                    "key": "run",
+                    "frames": [2, 3],
+                    "period": 0.2,
+                    "loop": true
+                },
+                {
+                    "key": "notice",
+                    "frames": [4, 5],
+                    "period": 1.2,
+                    "loop": false
+                },
+                {
+                    "key": "aim",
+                    "frames": [6, 7],
+                    "period": 0.2,
+                    "loop": true
+                },
+                {
+                    "key": "strike",
+                    "frames": [8],
+                    "period": 0.4,
+                    "loop": false
+                },
+                {
+                    "key": "order",
+                    "frames": [9, 10],
+                    "period": 0.2,
+                    "loop": true
+                },
+                {
+                    "key": "crouch",
+                    "frames": [11, 12],
+                    "period": 0.2,
+                    "loop": true
+                },
+                {
+                    "key": "charge",
+                    "frames": [13, 14],
+                    "period": 0.2,
+                    "loop": true
+                }
+            ]
+        }
+    ]
+}
+

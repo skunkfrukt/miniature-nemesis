@@ -1,5 +1,6 @@
 {
     "stageName": "ProtoVillage",
+    "backgroundColor": [0, 127, 63, 255],
     "sections": [
         {
             "sectionName": "Aurous Acquisition",

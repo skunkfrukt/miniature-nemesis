@@ -1,0 +1,58 @@
+{
+    "animSetName": "ANIM_HERO",
+    "source": {
+        "image": "img/sprites/hero.png",
+        "rows": 1,
+        "cols": 14
+    },
+    "anims": [
+        {
+            "key": "idle",
+            "frames": [0, 1],
+            "period": 0.12,
+            "loop": true
+        },
+        {
+            "key": "run",
+            "frames": [2, 3],
+            "period": 0.12,
+            "loop": true
+        },
+        {
+            "key": "sprint",
+            "frames": [4, 5],
+            "period": 0.12,
+            "loop": true
+        },
+        {
+            "key": "stop",
+            "frames": [6, 7],
+            "period": 0.12,
+            "loop": true
+        },
+        {
+            "key": "hurt",
+            "frames": [8, 9],
+            "period": 0.12,
+            "loop": false
+        },
+        {
+            "key": "trip",
+            "frames": [10],
+            "period": 0.12,
+            "loop": false
+        },
+        {
+            "key": "tumble",
+            "frames": [11, 12],
+            "period": 0.12,
+            "loop": true
+        },
+        {
+            "key": "rise",
+            "frames": [13],
+            "period": 0.12,
+            "loop": false
+        }
+    ]
+}

@@ -1,5 +1,9 @@
 {
 	"worldName": "Miniature Nemesis",
-	"stages": ["data/stages/stage_village.json"],
-	"animations": []
+	"stageFiles": ["data/stages/stage_village.json"],
+	"animSetFiles": ["data/animsets/*.json"],
+	"constants": {
+	    "WIN_WIDTH": 640,
+	    "WIN_HEIGHT": 360
+	}
 }
