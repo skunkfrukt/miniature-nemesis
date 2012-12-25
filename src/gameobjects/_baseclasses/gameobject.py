@@ -1,3 +1,6 @@
+import logging
+log = logging.getLogger(__name__)
+
 import pyglet
 
 class GameObject(pyglet.event.EventDispatcher):
@@ -5,8 +8,11 @@ class GameObject(pyglet.event.EventDispatcher):
     preferred_rendering_group_index = None
     required_classes = []
 
-    def __init__(self):
-        self.kill()
+    def __init__(self, x, y, **kwargs):
+        if len(kwargs) > 0:
+            log.warning(W_EXTRA_KWARGS.format(kwargs=kwargs))
+        self.x, self.y = x, y
+        # self.kill()
         self.behavior = None
         self.width = 1
         self.height = 1
@@ -16,8 +22,9 @@ class GameObject(pyglet.event.EventDispatcher):
         self.colliders = None
 
     def kill(self):
+        pass
         self.x = 0
-        self.y = WIN_HEIGHT
+        self.y = 360
         self.dead = True
 
     def reset(self, x, y):
@@ -35,7 +42,7 @@ class GameObject(pyglet.event.EventDispatcher):
         self.sprite.group = group
 
     def update_sprite(self, stage_offset):
-        self.sprite.set_position(self.x - stage_offset, self.y)
+        self.sprite.set_position(int(self.x - stage_offset), int(self.y))
 
     def check_despawn(self, stage_offset):
         if self.right <= stage_offset:
@@ -56,10 +63,10 @@ class GameObject(pyglet.event.EventDispatcher):
         if self.colliders is not None:
             for collider in self.colliders:
                 collider.move(self.x, self.y, (dx, dy))
-        if self.sprite is not None:
+        '''if self.sprite is not None:
             self.update_sprite(stage_offset)
         if self.check_despawn(stage_offset):
-            self.despawn()
+            self.despawn()'''
 
     def behave(self, dt):
         if self.behavior is not None:
@@ -115,3 +122,6 @@ class GameObject(pyglet.event.EventDispatcher):
         pass
 
 GameObject.register_event_type('on_despawn')
+
+
+W_EXTRA_KWARGS = 'GameObject received extra kwargs: {kwargs}.'

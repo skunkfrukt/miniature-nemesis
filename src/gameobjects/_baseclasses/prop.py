@@ -4,9 +4,9 @@ class Prop(GameObject):
     collision_effect = None
     preferred_rendering_group_index = 1  # R_GROUP_PROPS
 
-    def __init__(self):
-        super(Prop, self).__init__()
-        self.collider = None
+    def __init__(self, x, y, **kwargs):
+        super(Prop, self).__init__(x, y, **kwargs)
+        # self.collider = None
 
     def setup_sprite(self, batch, group):
         if self.sprite is not None:

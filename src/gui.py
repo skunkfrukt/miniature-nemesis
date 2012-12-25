@@ -137,10 +137,10 @@ class PlayState(GameState):
             self.paused = not self.paused
         elif symbol == key.C:
             pass
-        self.level.send_keys_to_hero(keys, pressed=symbol)
+        # self.level.send_keys_to_hero(keys, pressed=symbol)
 
     def on_key_release(self, symbol, modifiers):
-        self.level.send_keys_to_hero(keys, released=symbol)
+        pass  # self.level.send_keys_to_hero(keys, released=symbol)
 
     def update(self, dt):
         if not self.paused:
@@ -150,7 +150,7 @@ class PlayState(GameState):
 
     def draw(self):
         self.level.batch.draw()
-        self.batch.draw()
+        # self.batch.draw()
 
     def on_hero_death(self):
         bm = pyglet.image.get_buffer_manager()

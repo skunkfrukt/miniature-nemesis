@@ -5,6 +5,9 @@ import pyglet
 
 import world
 
+SCROLL_SPEED = 100
+SECTION_WIDTH = 640
+
 _section_num = 0
 def generate_section_name():
     global _section_num
@@ -21,13 +24,14 @@ class Stage(pyglet.event.EventDispatcher):
         self.all_actors = set()
 
         self.batch = pyglet.graphics.Batch()
+        self.root_group = pyglet.graphics.OrderedGroup(0)
         self.groups = {}
         for group_name in [
             'STATIC_BG', 'DYNAMIC_BG',
             'PROPS', 'ACTORS', 'HERO',
             'PROJECTILES', 'FG']:
             self.groups[group_name] = pyglet.graphics.OrderedGroup(
-                len(self.groups))
+                len(self.groups), parent=self.root_group)
 
         self.is_scrolling = False
 
@@ -36,28 +40,18 @@ class Stage(pyglet.event.EventDispatcher):
 
         log.debug('Initialised Stage {}.'.format(self.name))
 
-    def setup_deprecated_shit(self):
-        self.setup_background(color)
-        self.spatial_hashes = {}
-        self.spatial_hashes[HASH_GROUND] = collider.SpatialHash(
-                self.width, self.height, 60, 60, layer=HASH_GROUND)
-        self.spatial_hashes[HASH_AIR] = collider.SpatialHash(
-                self.width, self.height, 60, 60, layer=HASH_AIR)
-        self.spatial_hashes[HASH_TRIGGER] = collider.SpatialHash(
-                self.width, self.height, 60, self.height, layer=HASH_TRIGGER)
-        self.scroll_speed = 100
-
     def setup(self):
-        '''bg_pattern = pyglet.image.SolidColorImagePattern(
-            self.backgroundColor)
-        bg_image = bg_pattern.create_image(
-            world.constants['WIN_WIDTH'], world.constants['WIN_HEIGHT'])
-        pyglet.sprite.Sprite(
-            background_image, batch=self.batch,
-            group=self.groups['STATIC_BG'])'''
+        self.reset()
+        bg_pattern = pyglet.image.SolidColorImagePattern(
+            self.background_color)
+        bg_image = bg_pattern.create_image(640, 360)
+        self.background = pyglet.sprite.Sprite(
+            bg_image, batch=self.batch,
+            group=self.groups['STATIC_BG'])
 
         self.section_iter = iter(self.sections)
         self.advance_section()
+        self.is_scrolling = True
 
     def reset(self):
         self.despawn_props(self.all_props)
@@ -71,15 +65,21 @@ class Stage(pyglet.event.EventDispatcher):
 
     def update(self, dt):
         if self.is_scrolling:
-            new_offset = self.offset + SCROLL_SPEED * dt
-            if (new_offset % SECTION_WIDTH) < (self.offset % SECTION_WIDTH):
+            self.offset += SCROLL_SPEED * dt
+            if self.offset >= self.active_section.offset:
                 self.advance_section()
-            self.offset = new_offset
-        self.update_actors(dt)
+        # self.update_actors(dt)
+        self.update_sprites()
 
     def update_actors(self, dt):
         for actor in self.active_actors:
             actor.update(dt)
+
+    def update_sprites(self):
+        '''for actor in self.all_actors:
+            actor.update_sprite(self.offset)'''
+        for prop in self.all_props:
+            prop.update_sprite(self.offset)
 
     def advance_section(self):
         if self.active_section is not None:
@@ -89,12 +89,12 @@ class Stage(pyglet.event.EventDispatcher):
             self.enter_section(new_section)
         except StopIteration:
             self.is_scrolling = False
-            self.dispatch_event('on_enter_final_section')
+            # self.dispatch_event('on_enter_final_section')
 
     def exit_section(self, old_section):
         self.despawn_props(self.old_props)
         if old_section is not None:
-            self.spawn_actors(old_section.ambush_actors)
+            # self.spawn_actors(old_section.ambush_actors)
             old_section.reset()
         self.active_section = None
         self.dispatch_event('on_exit_section', old_section.name)
@@ -103,9 +103,9 @@ class Stage(pyglet.event.EventDispatcher):
 
     def enter_section(self, new_section):
         if new_section is not None:
-            new_section.setup(self.offset)
+            new_section.setup()
             self.spawn_props(new_section.props)
-            self.spawn_actors(new_section.initial_actors)
+            # self.spawn_actors(new_section.initial_actors)
         self.active_section = new_section
         self.dispatch_event('on_enter_section', new_section.name)
 
@@ -119,6 +119,8 @@ class Stage(pyglet.event.EventDispatcher):
                 section.name, self.name))
 
     def spawn_props(self, props):
+        for prop in props:
+            prop.setup_sprite(self.batch, self.groups['PROPS'])
         self.all_props |= props
 
     def despawn_props(self, props):
@@ -164,25 +166,42 @@ Stage.register_event_type('on_exit_section')
 class StageSection(pyglet.event.EventDispatcher):
     def __init__(self, name):
         self.name = name
+        self.prop_list = []
+        self.offset = None
+
         self.props = None
 
         log.debug('Initialised StageSection {}.'.format(self.name))
 
-    def setup(self, offset):
-        self.setup_props(offset)
-        self.setup_actors(offset)
+    def setup(self):
+        self.setup_props()
+        # self.setup_actors(offset)
 
-    def setup_props(self, offset):
-        pass
+    def setup_props(self):
+        self.props = set()
+        for placeholder in self.prop_list:
+            self.props.add(placeholder.spawn(self.offset))
 
     def setup_actors(self, offset):
         pass
 
     def reset(self):
         self.props = None
+        # self.actors = None
 
 StageSection.register_event_type('on_enter_section')
 StageSection.register_event_type('on_display_section')
+
+
+class Placeholder(object):
+    def __init__(self, Cls, x, y, **kwargs):
+        self.Cls = Cls
+        self.x = x
+        self.y = y
+        self.kwargs = kwargs
+
+    def spawn(self, offset):
+        return self.Cls(self.x + offset, self.y, **self.kwargs)
 
 
 class ProceduralStageSection(StageSection):
