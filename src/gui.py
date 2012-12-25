@@ -10,10 +10,9 @@ log = logging.getLogger(__name__)
 
 keys = key.KeyStateHandler()
 import gameobjects._baseclasses.actor
-import stage_new as stage
 import stagebuilder
 
-TEST_STAGE = stagebuilder.json_to_stage('data/village.json')
+import world
 
 class GameMenu:
     def __init__(self,options, initial_option = 0, wrap = True):
@@ -122,8 +121,9 @@ class PlayState(GameState):
     def __init__(self):
         super(PlayState, self).__init__()
         self.gui_group = pyglet.graphics.OrderedGroup(1)
-        self.level = stage.Stage('Derpington Abbey', (0,127,0,255),
-                stage.village_props)
+        stg = world.stages['ProtoVillage']
+        stg.setup()
+        self.level = stg
         self.level.push_handlers(self)
         self.game_over_label = None
         self.paused = False
@@ -149,8 +149,7 @@ class PlayState(GameState):
             self.level.update(0)
 
     def draw(self):
-        if self.level.ready:
-            self.level.batch.draw()
+        self.level.batch.draw()
         self.batch.draw()
 
     def on_hero_death(self):

@@ -1,35 +1,49 @@
-import json
-import stage_new as stage
-
 import logging
 log = logging.getLogger(__name__)
+
+import world
+
+import json
+import stage
 
 from gameobjects.names import CLASSES as CLASS_KEYS
 
 def json_to_stage(json_filename):
     log.info('Parsing JSON file {}'.format(json_filename))
-    return parse_stage(json.load(open(json_filename)))
+    parse_stage_file(json.load(open(json_filename)))
 
-def parse_stage(data):
-    stage_name = data['stageName']
-    log.info('Parsing stage {}'.format(stage_name))
+def parse_stage_file(data):
+    if data.get('multiple', False):
+        parse_multiple_stages(data)
+    else:
+        parse_single_stage(data)
 
+def parse_multiple_stages(data):
+    for single_stage_data in data['stages']:
+        parse_single_stage(single_stage_data)
+
+def parse_single_stage(data):
+    stage_name = str(data['stageName'])
     parsed_stage = stage.Stage(stage_name)
+
+    parsed_stage.backgroundColor = [int(c) for c in data['backgroundColor']]
+
     for section_data in data['sections']:
-        parsed_stage.append_section(parse_section(section_data, parsed_stage))
+        parsed_section = parse_section(section_data)
+        parsed_stage.add_section(parsed_section)
 
-    return parsed_stage
+    if stage_name in world.stages:
+        log.warning("!!! stage key already exists")
+    world.stages[stage_name] = parsed_stage
+    print world.stages
 
-def parse_section(data, parent_stage):
-    parent_name = parent_stage.name
+def parse_section(data):
     if 'sectionName' in data:
         section_name = data['sectionName']
     else:
-        section_index = len(parent_stage.sections)
-        section_name = '{}#{}'.format(parent_name, section_index)
-    log.info('Parsing section {}.{}'.format(parent_name, section_name))
+        section_name = stage.generate_section_name()
 
-    if 'isProcedural' in data and data['isProcedural']:
+    if data.get('isProcedural', False):
         parsed_section = stage.ProceduralStageSection(section_name)
         if 'proceduralData' in data:
             procedural_data = data['proceduralData']

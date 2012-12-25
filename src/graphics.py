@@ -1,45 +1,54 @@
+import pyglet
+
+afis = pyglet.image.Animation.from_image_sequence
+
 import logging
 log = logging.getLogger(__name__)
 
+
 class AnimSet(object):
-    def __init__(self, name):
+    def __init__(self, name, image, rows, cols):
         self.name = name
-        self.animations = {}
-        self.default_animation = None
+        self.anims = {}
+        self.grid = None
+        self.set_image_grid(image, rows, cols)
 
-        log.debug('Initialised AnimSet {}.'.format(self.name))
+        log.debug(D_INIT.format(obj=self))
 
-    def get(self, animation_name):
+    def set_image_grid(self, image, rows, cols):
+        self.grid = pyglet.image.ImageGrid(image, rows, cols)
+
+    def add_anim(self, key, frames, period, loop):
+        if key in self.anims:
+            log.warning(W_DUPLICATE_ANIM.format(key=key, animset=self.name))
+        anim = afis([self.grid[f] for f in frames], period, loop)
+        self.anims[key] = anim
+
+        log.debug(D_ADD_ANIM.format(key=key, animset=self.name))
+
+    def get_anim(self, key):
         try:
-            return self.animations[animation_name]
+            return self.anims[key]
         except KeyError:
-            log.warning('No Animation {} in AnimSet {}.'.format(
-                    animation_name, self.name))
-            try:  ##TODO## Remove this.
-                return self.animations[self.default_animation]
-            except KeyError:
-                log.error('AnimSet {} has no default animation.'.format(
-                        self.name))
-
-    def get_default(self):
-        pass  ##TODO## Add code for default anim.
-
-    def add(self, key, animation):
-        if key in self.animations:
-            log.warning(
-                    'Animation {} already exists in AnimSet {}.'.format(
-                    key, self.name))
-        self.animations[key] = animation
-        if self.default_animation is None:
-            self.default_animation = key
-
-        log.debug('Added Animation {} to AnimSet {}.'.format(
-                key, self.name))
+            log.error(E_NO_SUCH_ANIM.format(key=key, animset=self.name))
 
 
 class AnimSprite(pyglet.sprite.Sprite):
-    def __init__(self, anim_set):
-        self.anim_set = anim_set
-        super(AnimSprite, self).__init__(self.anim_set.get(None)) ##TODO## None
+    def __init__(self, animset, default_anim):
+        self.animset = animset
+        super(AnimSprite, self).__init__(self.animset.get(default_anim))
+        self.current_anim = default_anim
 
-    def play(self,
+    def play(self, key, force_restart = False):
+        if key == current_anim and not force_restart:
+            return
+        else:
+            anim = self.animset.get_anim(key)
+            self.image = anim
+            self.current_anim = key
+
+
+E_NO_SUCH_ANIM = 'No Anim {key} in AnimSet {animset}.'
+W_DUPLICATE_ANIM = 'Anim {key} already exists in AnimSet {animset}.'
+D_ADD_ANIM = 'Added Anim {key} to AnimSet {animset}.'
+D_INIT = 'Initialised {obj.__class__.__name__} {obj.name}.'

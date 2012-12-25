@@ -1,45 +1,43 @@
-import pyglet
-import gui
-import collider
-import actor
-from common import GameObject, Point
-from constants import *
-
 import logging
 log = logging.getLogger(__name__)
 
+import pyglet
 
-class Graveyard(dict):
-    def allocate(self, *classes):
-        for cls in classes:
-            if not cls in self:
-                self[cls] = []
-                self.allocate(*cls.required_classes)
+import world
 
-    def get(self, cls):
-        assert cls in self, "%s not in %s." % (cls, self)
-        return self[cls].pop()
-
-    def put(self, game_object):
-        cls = type(game_object)
-        allocate(cls)
-        self[cls].append(game_object)
+_section_num = 0
+def generate_section_name():
+    global _section_num
+    section_name = 'Section #{}'.format(_section_num)
+    _section_num += 1
+    return section_name
 
 
 class Stage(pyglet.event.EventDispatcher):
-    def __init__(self, id, color=(0,0,0,0), obstacles=[]):
-        self.id = id
+    def __init__(self, name):
+        self.name = name
+        self.sections = []
+        self.all_props = set()
+        self.all_actors = set()
+
         self.batch = pyglet.graphics.Batch()
-        self.root_rendering_group = pyglet.graphics.OrderedGroup(0)
-        self.rendering_groups = []
+        self.groups = {}
+        for group_name in [
+            'STATIC_BG', 'DYNAMIC_BG',
+            'PROPS', 'ACTORS', 'HERO',
+            'PROJECTILES', 'FG']:
+            self.groups[group_name] = pyglet.graphics.OrderedGroup(
+                len(self.groups))
+
+        self.is_scrolling = False
+
+        self.offset = 0
+        self.active_section = None
+
+        log.debug('Initialised Stage {}.'.format(self.name))
+
+    def setup_deprecated_shit(self):
         self.setup_background(color)
-        self.graveyard = Graveyard()
-        self.active_objects = []
-        self.build_stage(obstacles)
-        self.graveyard.allocate(actor.Hero)
-        self.checkpoints = [CheckPoint(320, 180)]
-        self.width = 30640  #!! Magic number
-        self.height = 360
         self.spatial_hashes = {}
         self.spatial_hashes[HASH_GROUND] = collider.SpatialHash(
                 self.width, self.height, 60, 60, layer=HASH_GROUND)
@@ -47,283 +45,146 @@ class Stage(pyglet.event.EventDispatcher):
                 self.width, self.height, 60, 60, layer=HASH_AIR)
         self.spatial_hashes[HASH_TRIGGER] = collider.SpatialHash(
                 self.width, self.height, 60, self.height, layer=HASH_TRIGGER)
-        self.setup()
+        self.scroll_speed = 100
 
-    def setup(self, difficulty=NORMAL, checkpoint_index=0):
-        '''Resets the stage to a pristine state, ready to be played.'''
-        self.ready = False
-        self.clear()
-        self.time = 0.0
-        self.finished = False
-        self.at_end = False
-        self.scroll_speed = SPEEDS[difficulty]
-        if checkpoint_index in range(len(self.checkpoints)):
-            checkpoint = self.checkpoints[checkpoint_index]
-        else:
-            print("WARNING: Stage %s has no checkpoint %d. Using 0." %
-                    (self.id, checkpoint_index))
-            checkpoint = self.checkpoints[0]
-        self.snap_to_checkpoint(checkpoint)
-        self.find_initial_spawn_index()
-        self.check_spawns()
-        self.hero = self.spawn(checkpoint)
-        self.ready = True
+    def setup(self):
+        '''bg_pattern = pyglet.image.SolidColorImagePattern(
+            self.backgroundColor)
+        bg_image = bg_pattern.create_image(
+            world.constants['WIN_WIDTH'], world.constants['WIN_HEIGHT'])
+        pyglet.sprite.Sprite(
+            background_image, batch=self.batch,
+            group=self.groups['STATIC_BG'])'''
 
-    def setup_background(self, color):
-        background_pattern = pyglet.image.SolidColorImagePattern(color)
-        background_image = background_pattern.create_image(
-                WIN_WIDTH, WIN_HEIGHT)
-        self.background = pyglet.sprite.Sprite(
-                background_image, batch=self.batch,
-                group=self.get_rendering_group(R_GROUP_BG))
+        self.section_iter = iter(self.sections)
+        self.advance_section()
 
-    def get_rendering_group(self, group_index):
-        assert group_index is not None, "Preferred group index is None."
-        while group_index >= len(self.rendering_groups):
-            new_index = len(self.rendering_groups)
-            new_group = pyglet.graphics.OrderedGroup(new_index,
-                    parent=self.root_rendering_group)
-            self.rendering_groups.append(new_group)
-        return self.rendering_groups[group_index]
+    def reset(self):
+        self.despawn_props(self.all_props)
+        self.despawn_actors(self.all_actors)
 
-    def build_stage(self, spawnpoints):
-        self.spawns = spawnpoints
-        classes = set([spawnpoint.spawned_class for spawnpoint in self.spawns])
-        self.graveyard.allocate(*classes)
+        self.is_scrolling = False
+        self.offset = 0
+        self.active_section = None
 
-    def clear(self):
-        '''Kills all active objects.'''
-        while len(self.active_objects) > 0:
-            item = self.active_objects.pop()
-            item.kill()
-            cls = type(item)
-            self.graveyard[cls].append(item)
-
-    def add_checkpoint(self, x, y):
-        self.checkpoints.append(Checkpoint(x, y))
-        self.checkpoints.sort(key=lambda ckpt: ckpt.x)
-
-    def spawn(self, spawnpoint):
-        cls = spawnpoint.spawned_class
-        x = spawnpoint.x
-        if spawnpoint.from_left:
-            x -= WIN_WIDTH
-        y = spawnpoint.y
-        spawned_object = self.get_game_object_instance(cls)
-        spawned_object.reset(x, y)
-        self.active_objects.append(spawned_object)
-        return spawned_object
-
-    def get_game_object_instance(self, game_object_cls):
-        assert game_object_cls in self.graveyard, (
-                "%s not in %s graveyard." % (game_object_cls, self.id))
-        if len(self.graveyard[game_object_cls]) > 0:
-            obj = self.graveyard[game_object_cls].pop()
-        else:
-            obj = game_object_cls()
-            rendering_group = self.get_rendering_group(
-                    obj.preferred_rendering_group_index)
-            obj.setup_sprite(self.batch, rendering_group)
-            if hasattr(obj, 'event_types'):
-                obj.push_handlers(self)
-        return obj
-
-    def find_initial_spawn_index(self):
-        spawn_index = 0
-        num_spawns = len(self.spawns)
-        left_edge = self.offset - SCREEN_MARGIN
-        while self.spawns[spawn_index].x <= left_edge:  # .right
-            spawn_index += 1
-        self.next_spawn_index = spawn_index
-
-    def check_spawns(self):
-        spawn_index = self.next_spawn_index
-        num_spawns = len(self.spawns)
-        right_edge = self.offset + WIN_WIDTH + SCREEN_MARGIN
-        while (spawn_index < num_spawns) and (
-                self.spawns[spawn_index].x < right_edge):  # .left
-            spawnpoint = self.spawns[spawn_index]
-            assert spawnpoint.x > self.offset  # .right
-            self.spawn(spawnpoint)
-            spawn_index += 1
-        self.next_spawn_index = spawn_index
+        log.info('Reset Stage {}.'.format(self.name))
 
     def update(self, dt):
-        self.time += dt
-        self.update_stage_offset(dt)
-        self.check_spawns()
-        self.move_active_objects(dt)
-        self.check_collisions()
+        if self.is_scrolling:
+            new_offset = self.offset + SCROLL_SPEED * dt
+            if (new_offset % SECTION_WIDTH) < (self.offset % SECTION_WIDTH):
+                self.advance_section()
+            self.offset = new_offset
+        self.update_actors(dt)
 
-    def update_stage_offset(self, dt):
-        if not self.at_end:
-            self.offset += self.scroll_speed * dt
-            if self.offset + WIN_WIDTH >= self.width:
-                self.snap_to_right_edge()
-                self.at_end = True
-                print("End of stage...")
-        elif not self.finished:
-            if self.hero.x > self.width:
-                self.finished = True
-                print("Finished!")
-                self.dispatch_event("on_stage_end", self.id)
+    def update_actors(self, dt):
+        for actor in self.active_actors:
+            actor.update(dt)
 
-    def snap_to_right_edge(self):
-        self.offset = self.width - WIN_WIDTH
+    def advance_section(self):
+        if self.active_section is not None:
+            self.exit_section(self.active_section)
+        try:
+            new_section = self.section_iter.next()
+            self.enter_section(new_section)
+        except StopIteration:
+            self.is_scrolling = False
+            self.dispatch_event('on_enter_final_section')
 
-    def snap_to_left_edge(self):
-        self.offset = 0
+    def exit_section(self, old_section):
+        self.despawn_props(self.old_props)
+        if old_section is not None:
+            self.spawn_actors(old_section.ambush_actors)
+            old_section.reset()
+        self.active_section = None
+        self.dispatch_event('on_exit_section', old_section.name)
 
-    def snap_to_checkpoint(self, checkpoint):
-        self.offset = min(max(0, checkpoint.x - WIN_WIDTH // 2),
-                self.width - WIN_WIDTH)
+        log.info('Exited Section {}.'.format(old_section.name))
 
-    def move_active_objects(self, dt):
-        for obj in self.active_objects:
-            obj.behave(dt)
-            obj.move(dt, self.offset)
+    def enter_section(self, new_section):
+        if new_section is not None:
+            new_section.setup(self.offset)
+            self.spawn_props(new_section.props)
+            self.spawn_actors(new_section.initial_actors)
+        self.active_section = new_section
+        self.dispatch_event('on_enter_section', new_section.name)
 
-    def check_collisions(self):
-        self.hero.colliding = False
-        colliders = reduce(
-                lambda ary, obj: ary + obj.colliders,
-                self.active_objects, [])
-        for hash_key in self.spatial_hashes:
-            self.spatial_hashes[hash_key].collide(self.visible_rect, colliders)
+        log.info('Entered Section {}.'.format(new_section.name))
 
-    def send_keys_to_hero(self, keys, pressed=None, released=None):
-        if self.hero is not None:
-            self.hero.fixSpeed(keys)
-            if pressed == pyglet.window.key.X:
-                self.hero.fire_projectile(actor.Pebble, 300)
+    def add_section(self, section):
+        section.offset = self.stage_width
+        self.sections.append(section)
 
-    def on_projectile_fired(self, projectile_cls, origin_x, origin_y,
-            target_x, target_y, speed,
-            source=None, valid_targets=None):
-        fired_projectile = self.get_game_object_instance(projectile_cls)
-        # fired_projectile.set_source(source)
-        # fired_projectile.set_valid_targets(valid_targets)
-        fired_projectile.launch(origin_x, origin_y, target_x, target_y, speed)
-        self.active_objects.append(fired_projectile)
+        log.debug('Appended Section {} to Stage {}.'.format(
+                section.name, self.name))
 
-    def on_despawn(self, despawned_object):
-        assert despawned_object in self.active_objects
-        self.graveyard[type(despawned_object)].append(despawned_object)
-        self.active_objects.remove(despawned_object)
-        if despawned_object is self.hero:
-            self.dispatch_event("on_hero_death")
+    def spawn_props(self, props):
+        self.all_props |= props
+
+    def despawn_props(self, props):
+        for prop in props:
+            prop.despawn()
+        self.all_props -= props
+
+    def spawn_actors(self, actors):
+        self.all_actors |= actors
+
+    def despawn_actors(self, actors):
+        for actor in actors:
+            actor.despawn()
+        self.all_actors -= actors
 
     @property
-    def visible_rect(self):
-        return (self.offset, 0, self.offset + WIN_WIDTH, 0 + WIN_HEIGHT)
+    def current_props(self):
+        if self.active_section is not None:
+            return self.active_section.props
+        else:
+            return set()
 
-Stage.register_event_type('on_stage_end')
-Stage.register_event_type('on_hero_death')
+    @property
+    def old_props(self):
+        return self.all_props - self.current_props
 
+    @property
+    def stage_width(self):
+        return 640 * len(self.sections)
+        return world.constants['WIN_WIDTH'] * len(self.sections)
 
-class SpawnPoint(Point):
-    def __init__(self, x, y, cls, from_left=False, **kwargs):
-        self.x = x
-        self.y = y
-        self.spawned_class = cls
-        self.from_left = from_left
-        self.parameters = kwargs
+    @property
+    def stage_height(self):
+        return 360
+        return world.constants['WIN_HEIGHT']
 
-
-class CheckPoint(SpawnPoint):
-    def __init__(self, x, y):
-        super(CheckPoint, self).__init__(x, y, actor.Hero)
-
-
-class Prop(GameObject):
-    collision_effect = None
-    preferred_rendering_group_index = R_GROUP_PROPS
-
-    def __init__(self):
-        super(Prop, self).__init__()
-        self.collider = None
-
-    def setup_sprite(self, batch, group):
-        if self.sprite is not None:
-            if batch is not None:
-                self.sprite.batch = batch
-            if group is not None:
-                self.sprite.group = group
+Stage.register_event_type('on_begin_stage')
+Stage.register_event_type('on_end_stage')
+Stage.register_event_type('on_enter_section')
+Stage.register_event_type('on_exit_section')
 
 
-class Rock(Prop):
-    collision_effect = {'effect_type': 'stun', 'duration': 0.5}
-    _image = pyglet.resource.image('img/sprites/rock__sprite.png')
+class StageSection(pyglet.event.EventDispatcher):
+    def __init__(self, name):
+        self.name = name
+        self.props = None
 
-    def __init__(self):
-        super(Rock, self).__init__()
-        self.set_sprite(pyglet.sprite.Sprite(self._image))
-        self.add_collider(collider.Collider(5, 10, 25, 30,
-                effect=self.collision_effect, layer=HASH_GROUND))
+        log.debug('Initialised StageSection {}.'.format(self.name))
 
-'''
-class Stone(Prop):
-    collision_effect = {'effect_type': 'trip', 'duration': 0.75}
-    _image = pyglet.resource.image('REMOVED')
+    def setup(self, offset):
+        self.setup_props(offset)
+        self.setup_actors(offset)
 
-    def __init__(self):
-        super(Stone, self).__init__()
-        self.set_sprite(pyglet.sprite.Sprite(self._image))
-        self.add_collider(collider.Collider(0, 0, 10, 10,
-                effect=self.collision_effect, layer=HASH_GROUND))
-'''
+    def setup_props(self, offset):
+        pass
 
-class House(Prop):
-    num = 0
-    collision_effect = {'effect_type': 'stun', 'duration': 0.5}
-    _images = pyglet.image.ImageGrid(
-            pyglet.resource.image('img/sprites/pict_houses.png'),
-            1, 3)
+    def setup_actors(self, offset):
+        pass
 
-    def __init__(self):
-        super(House, self).__init__()
-        self.set_sprite(pyglet.sprite.Sprite(self._images[House.num % 3]))
-        self.add_collider(collider.Collider(
-                left=0, right=20, bottom=20, top=180,
-                effect={'effect_type': 'stun', 'duration': 0.5},
-                layer=HASH_GROUND))
-        self.add_collider(collider.Collider(
-                left=20, right=180, bottom=0, top=20,
-                effect={'effect_type': 'stop', 'directions': 'n'},
-                layer=HASH_GROUND))
-        House.num += 1
+    def reset(self):
+        self.props = None
+
+StageSection.register_event_type('on_enter_section')
+StageSection.register_event_type('on_display_section')
 
 
-village_props = []
-
-houses = [
-        (395, 266), (600, 289), (981, 297), (1251, 272), (1617, 288),
-        (1849, 281), (2137, 260), (2413, 299), (2771, 275), (3060, 283),
-        (3316, 290), (3634, 278), (3931, 286), (4248, 268), (4581, 267),
-        (4834, 268), (5144, 272), (5469, 292), (5722, 290), (6095, 281),
-        (6405, 280)
-        ]
-
-rocks = [
-        (657, 97), (1168, 128), (1462, 81), (2125, 83), (2452, 119),
-        (2856, 158), (3541, 116), (4006, 54), (4368, 151), (4841, 208),
-        (5388, 158), (5987, 168), (6564, 144)
-        ]
-
-for it in range(5):
-
-    for i, h in enumerate(houses):
-        village_props.append(SpawnPoint(h[0] + (6000*it), h[1], House))
-        if i % 2 == 1:
-            village_props.append(SpawnPoint(h[0] + 95 + (6000*it), 250,
-                    actor.Peasant))
-
-    for r in rocks:
-        village_props.append(SpawnPoint(r[0] + (6000*it), r[1], Rock))
-
-    for p in [(400, 200), (450, 110), (500, 40), (550, 300)]:
-        village_props.append(SpawnPoint(p[0] + (6000*it), p[1], actor.Peasant))
-
-    village_props.append(SpawnPoint(100 + (6000*it), 200, actor.Preacher))
-
-village_props.sort(lambda a, b: a.x - b.x)
+class ProceduralStageSection(StageSection):
+    def __init__(self, name):
+        super(ProceduralStageSection, self).__init__(name)

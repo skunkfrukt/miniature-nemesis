@@ -192,7 +192,7 @@ Actor.register_event_type('on_spawn')
 
 
 class Pebble(Projectile):
-    _image = pyglet.resource.image('img/sprites/missile_pebble_minimal.png')
+    _image = pyglet.resource.image('img/sprites/pebble.png')
     _frame_data = {'thrown': ((0, 3), 0.2, True)}
     animations = Actor.make_animations(_image, 3, _frame_data)
     collision_effect = {'effect_type': 'trip', 'duration': 0.2}
@@ -208,7 +208,7 @@ class Pebble(Projectile):
 
 
 class Peasant(Actor):
-    _image = pyglet.resource.image('img/sprites/anim_peasant-a.png')
+    _image = pyglet.resource.image('img/sprites/peasant.png')
     _frame_data = {
             'idle': ((0, 2), 1.1, True),
             'run': ((2, 4), 0.2, True),
@@ -378,7 +378,7 @@ class Peasant(Actor):
 
 
 class PeasantB(Peasant):
-    _image = pyglet.resource.image('img/sprites/anim_peasant-a_rc0.png')
+    _image = pyglet.resource.image('img/sprites/peasant_rc0.png')
 
     max_speed = 60.0
     acceleration = (100, 100)
@@ -483,7 +483,7 @@ class PeasantB(Peasant):
 
 
 class PeasantC(PeasantB):
-    _image = pyglet.resource.image('img/sprites/anim_peasant-a_rc1.png')
+    _image = pyglet.resource.image('img/sprites/peasant_rc1.png')
     FIRST_AIM_DELAY = 0.6
     AIM_DELAY = 0.1
     THROW_DELAY = 0.1
@@ -502,7 +502,7 @@ class PeasantC(PeasantB):
 
 
 class Preacher(Actor):
-    _image = pyglet.resource.image('img/sprites/anim_priest.png')
+    _image = pyglet.resource.image('img/sprites/preacher.png')
     _frame_data = {
             'idle': ((0, 2), 1.1, True),
             'run': ((2, 4), 0.2, True),

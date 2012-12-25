@@ -4,7 +4,7 @@ from _baseclasses.prop import *
 
 class Rock(Prop):
     collision_effect = {'effect_type': 'stun', 'duration': 0.5}
-    _image = pyglet.resource.image('img/sprites/rock__sprite.png')
+    _image = pyglet.resource.image('img/sprites/rock.png')
 
     def __init__(self):
         super(Rock, self).__init__()
@@ -13,27 +13,23 @@ class Rock(Prop):
                 effect=self.collision_effect, layer=HASH_GROUND))
 
 
-class DummyStone(Rock):
-    pass
-
-'''
 class Stone(Prop):
     BUILDER_NAME = 'PROP_STONE'
     collision_effect = {'effect_type': 'trip', 'duration': 0.75}
-    _image = pyglet.resource.image('REMOVED')
+    _image = pyglet.resource.image('img/sprites/stone.png')
 
     def __init__(self):
         super(Stone, self).__init__()
         self.set_sprite(pyglet.sprite.Sprite(self._image))
         self.add_collider(collider.Collider(0, 0, 10, 10,
                 effect=self.collision_effect, layer=HASH_GROUND))
-'''
+
 
 class House(Prop):
     num = 0
     collision_effect = {'effect_type': 'stun', 'duration': 0.5}
     _images = pyglet.image.ImageGrid(
-            pyglet.resource.image('img/sprites/pict_houses.png'),
+            pyglet.resource.image('img/sprites/house.png'),
             1, 3)
 
     def __init__(self):
@@ -51,7 +47,8 @@ class House(Prop):
 
 
 BUILDER_NAMES = {
+    'PROP_CREEK': None,
     'PROP_HOUSE': House,
     'PROP_ROCK': Rock,
-    'PROP_STONE': DummyStone
+    'PROP_STONE': Stone
 }
