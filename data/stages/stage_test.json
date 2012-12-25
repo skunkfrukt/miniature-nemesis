@@ -1,0 +1,117 @@
+{
+    "stageName": "ProtoVillage",
+    "backgroundColor": [63, 127, 0, 255],
+    "sections": [
+        {
+            "sectionName": "StaticTestSection",
+            "isProcedural": false,
+            "isFirstSection": true,
+            "heroSpawnPoint": {
+                "x": 300,
+                "y": 100,
+                "isRunningSpawnPoint": false
+            },
+            "staticData": {
+                "propList": [
+                    {
+                        "propClass": "PROP_HOUSE",
+                        "x": 200,
+                        "y": 150
+                    }
+                ],
+                "encounterList": [
+                    {
+                        "encounterClass": "PeasantMob",
+                        "population": 3
+                    }
+                ]
+            }
+        },
+        {
+            "sectionName": "StaticTestSectionTwo",
+            "staticData": {
+                "propList": [
+                    {
+                        "propClass": "PROP_ROCK",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "propClass": "PROP_ROCK",
+                        "x": 80,
+                        "y": 40
+                    },
+                    {
+                        "propClass": "PROP_ROCK",
+                        "x": 160,
+                        "y": 80
+                    },
+                    {
+                        "propClass": "PROP_ROCK",
+                        "x": 240,
+                        "y": 120
+                    },
+                    {
+                        "propClass": "PROP_ROCK",
+                        "x": 320,
+                        "y": 160
+                    }
+                ]
+            }
+        },
+        {
+            "sectionName": "StaticTestSectionThree",
+            "staticData": {
+                "propList": [
+                    {
+                        "propClass": "PROP_STONE",
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "propClass": "PROP_STONE",
+                        "x": 80,
+                        "y": 40
+                    },
+                    {
+                        "propClass": "PROP_ROCK",
+                        "x": 160,
+                        "y": 80
+                    },
+                    {
+                        "propClass": "PROP_ROCK",
+                        "x": 240,
+                        "y": 120
+                    },
+                    {
+                        "propClass": "PROP_HOUSE",
+                        "x": 320,
+                        "y": 160
+                    }
+                ]
+            }
+        },
+        {
+            "sectionName": "ProceduralTestSection",
+            "isProcedural": true,
+            "proceduralData": {
+                "seed": "TEST",
+                "pathAlgorithm": "KnightPath",
+                "propPool": [
+                    {
+                        "propClass": "PROP_HOUSE",
+                        "poolSize": 2
+                    },
+                    {
+                        "propClass": "PROP_ROCK",
+                        "poolSize": 3
+                    },
+                    {
+                        "propClass": "PROP_STONE",
+                        "poolSize": 2
+                    }
+                ]
+            }
+        }
+    ]
+}
