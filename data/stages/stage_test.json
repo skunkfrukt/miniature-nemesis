@@ -15,18 +15,13 @@
                 "propList": [
                     {
                         "propClass": "PROP_HEROHOUSE",
-                        "x": 200,
-                        "y": 150
+                        "x": 315,
+                        "y": 138
                     },
                     {
                         "propClass": "PROP_SKELETON",
-                        "x": 220,
-                        "y": 140
-                    },
-                    {
-                        "propClass": "PROP_HOUSE",
-                        "x": 420,
-                        "y": 180
+                        "x": 370,
+                        "y": 123
                     }
                 ],
                 "encounterList": [
