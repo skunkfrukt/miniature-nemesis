@@ -49,10 +49,49 @@ class House(Prop):
         House.num += 1
 
 
+class HeroHouse(House):
+    collision_effect = {'effect-type': 'stun', 'duration': 0.5}
+    _image = pyglet.resource.image('img/sprites/herohouse.png')
+
+    def __init__(self, x, y, **kwargs):
+        super(HeroHouse, self).__init__(x, y, **kwargs)
+        self.set_sprite(pyglet.sprite.Sprite(self._image))
+
+
+class Church(Prop):
+    collision_effect = {'effect-type': 'stun', 'duration': 0.5}
+    _image = pyglet.resource.image('img/sprites/church.png')
+
+    def __init__(self, x, y, **kwargs):
+        super(Church, self).__init__(x, y, **kwargs)
+        self.set_sprite(pyglet.sprite.Sprite(self._image))
+
+
+class Creek(Prop):
+    collision_effect = None
+    _image = pyglet.resource.image('img/sprites/creek.png')
+    _grid = pyglet.image.ImageGrid(_image, 1, 2)
+    _anim = _grid.get_animation(1.0, True)
+
+    def __init__(self, x, y, **kwargs):
+        super(Creek, self).__init__(x, y, **kwargs)
+        self.set_sprite(pyglet.sprite.Sprite(self._anim))
+
+class Skeleton(Prop):
+    collision_effect = None
+    _image = pyglet.resource.image('img/sprites/skeleton.png')
+
+    def __init__(self, x, y, **kwargs):
+        super(Skeleton, self).__init__(x, y, **kwargs)
+        self.set_sprite(pyglet.sprite.Sprite(self._image))
+
+
 BUILDER_NAMES = {
-    'PROP_CREEK': None,
-    'PROP_HEROHOUSE': None,
+    'PROP_CHURCH': Church,
+    'PROP_CREEK': Creek,
+    'PROP_HEROHOUSE': HeroHouse,
     'PROP_HOUSE': House,
     'PROP_ROCK': Rock,
+    'PROP_SKELETON': Skeleton,
     'PROP_STONE': Stone
 }

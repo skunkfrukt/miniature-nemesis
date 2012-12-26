@@ -1,5 +1,6 @@
 import village
-modules = [village]
+import forest
+modules = [village, forest]
 
 CLASSES = {}
 
