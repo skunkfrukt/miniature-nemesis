@@ -221,7 +221,7 @@ class MainWindow(pyglet.window.Window):
             self.set_icon(*self.icons)
         except AttributeError:
             pass  # If the icon refuses to work, that's no big deal for now.
-        pyglet.clock.schedule_interval(self.update,0.02)
+        pyglet.clock.schedule(self.update)  # _interval(self.update, 0.02)
 
     def set_state(self, new_state):
         if self.state is not None:
