@@ -3,7 +3,7 @@
     "backgroundColor": [63, 127, 0, 255],
     "sections": [
         {
-            "sectionName": "StaticTestSection",
+            "sectionName": "Hero's Home",
             "isProcedural": false,
             "isFirstSection": true,
             "heroSpawnPoint": {
@@ -14,9 +14,19 @@
             "staticData": {
                 "propList": [
                     {
-                        "propClass": "PROP_HOUSE",
+                        "propClass": "PROP_HEROHOUSE",
                         "x": 200,
                         "y": 150
+                    },
+                    {
+                        "propClass": "PROP_SKELETON",
+                        "x": 220,
+                        "y": 140
+                    },
+                    {
+                        "propClass": "PROP_HOUSE",
+                        "x": 420,
+                        "y": 180
                     }
                 ],
                 "encounterList": [
@@ -28,65 +38,40 @@
             }
         },
         {
-            "sectionName": "StaticTestSectionTwo",
+            "sectionName": "First Creek",
             "staticData": {
                 "propList": [
                     {
-                        "propClass": "PROP_ROCK",
-                        "x": 0,
+                        "propClass": "PROP_HOUSE",
+                        "x": 50,
+                        "y": 300
+                    },
+                    {
+                        "propClass": "PROP_CREEK",
+                        "x": 220,
                         "y": 0
                     },
                     {
-                        "propClass": "PROP_ROCK",
-                        "x": 80,
-                        "y": 40
+                        "propClass": "PROP_HOUSE",
+                        "x": 430,
+                        "y": 200
                     },
                     {
                         "propClass": "PROP_ROCK",
-                        "x": 160,
-                        "y": 80
-                    },
-                    {
-                        "propClass": "PROP_ROCK",
-                        "x": 240,
+                        "x": 440,
                         "y": 120
-                    },
-                    {
-                        "propClass": "PROP_ROCK",
-                        "x": 320,
-                        "y": 160
                     }
                 ]
             }
         },
         {
-            "sectionName": "StaticTestSectionThree",
+            "sectionName": "Church",
             "staticData": {
                 "propList": [
                     {
-                        "propClass": "PROP_STONE",
-                        "x": 0,
-                        "y": 0
-                    },
-                    {
-                        "propClass": "PROP_STONE",
-                        "x": 80,
-                        "y": 40
-                    },
-                    {
-                        "propClass": "PROP_ROCK",
-                        "x": 160,
-                        "y": 80
-                    },
-                    {
-                        "propClass": "PROP_ROCK",
-                        "x": 240,
-                        "y": 120
-                    },
-                    {
-                        "propClass": "PROP_HOUSE",
-                        "x": 320,
-                        "y": 160
+                        "propClass": "PROP_CHURCH",
+                        "x": 42,
+                        "y": 123
                     }
                 ]
             }
@@ -109,6 +94,45 @@
                     {
                         "propClass": "PROP_STONE",
                         "poolSize": 2
+                    }
+                ]
+            }
+        },
+        {
+            "sectionName": "Second Creek",
+            "staticData": {
+                "propList": [
+                    {
+                        "propClass": "PROP_HOUSE",
+                        "x": 50,
+                        "y": 300
+                    },
+                    {
+                        "propClass": "PROP_CREEK",
+                        "x": 220,
+                        "y": 0
+                    },
+                    {
+                        "propClass": "PROP_HOUSE",
+                        "x": 430,
+                        "y": 200
+                    },
+                    {
+                        "propClass": "PROP_ROCK",
+                        "x": 440,
+                        "y": 120
+                    }
+                ]
+            }
+        },
+        {
+            "sectionName": "Forest's Edge",
+            "staticData": {
+                "propList": [
+                    {
+                        "propClass": "PROP_TREE",
+                        "x": 550,
+                        "y": 200
                     }
                 ]
             }
