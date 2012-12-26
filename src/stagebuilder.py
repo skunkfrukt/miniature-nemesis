@@ -67,10 +67,11 @@ def parse_prop_pool(data):
 def parse_prop_list(data):
     parsed_prop_list = []
     for list_item in data:
-        prop_class = parse_class(str(list_item.get('propClass', '')))
-        x = list_item['x']
-        y = list_item['y']
-        parsed_prop_list.append(parse_placeholder(prop_class, x, y))
+        prop_class = parse_class(str(list_item.pop('propClass')))
+        x = int(list_item.pop('x'))
+        y = int(list_item.pop('y'))
+        kwargs = list_item
+        parsed_prop_list.append(parse_placeholder(prop_class, x, y, **kwargs))
     return parsed_prop_list
 
 def parse_class(class_key):

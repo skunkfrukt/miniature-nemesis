@@ -12,6 +12,7 @@ class GameObject(pyglet.event.EventDispatcher):
         if len(kwargs) > 0:
             log.warning(W_EXTRA_KWARGS.format(kwargs=kwargs))
         self.x, self.y = x, y
+        self.relative_layer = kwargs.pop('layer', 0)
         # self.kill()
         self.behavior = None
         self.width = 1
@@ -63,10 +64,6 @@ class GameObject(pyglet.event.EventDispatcher):
         if self.colliders is not None:
             for collider in self.colliders:
                 collider.move(self.x, self.y, (dx, dy))
-        '''if self.sprite is not None:
-            self.update_sprite(stage_offset)
-        if self.check_despawn(stage_offset):
-            self.despawn()'''
 
     def behave(self, dt):
         if self.behavior is not None:
