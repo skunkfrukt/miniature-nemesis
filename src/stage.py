@@ -49,6 +49,9 @@ class Stage(pyglet.event.EventDispatcher):
             bg_image, batch=self.batch,
             group=self.groups['STATIC_BG'])
 
+        for sect in self.sections:
+            sect.setup()
+
         self.section_iter = iter(self.sections)
         self.advance_section()
         self.is_scrolling = True
@@ -76,8 +79,8 @@ class Stage(pyglet.event.EventDispatcher):
             actor.update(dt)
 
     def update_sprites(self):
-        '''for actor in self.all_actors:
-            actor.update_sprite(self.offset)'''
+        for actor in self.all_actors:
+            actor.update_sprite(self.offset)
         for prop in self.all_props:
             prop.update_sprite(self.offset)
 
@@ -103,9 +106,9 @@ class Stage(pyglet.event.EventDispatcher):
 
     def enter_section(self, new_section):
         if new_section is not None:
-            new_section.setup()
+            # new_section.setup()
             self.spawn_props(new_section.props)
-            # self.spawn_actors(new_section.initial_actors)
+            self.spawn_actors(new_section.actors)
         self.active_section = new_section
         self.dispatch_event('on_enter_section', new_section.name)
 
@@ -129,6 +132,8 @@ class Stage(pyglet.event.EventDispatcher):
         self.all_props -= props
 
     def spawn_actors(self, actors):
+        for actor in actors:
+            actor.setup_sprite(self.batch, self.groups['ACTORS'])
         self.all_actors |= actors
 
     def despawn_actors(self, actors):
@@ -167,6 +172,8 @@ class StageSection(pyglet.event.EventDispatcher):
     def __init__(self, name):
         self.name = name
         self.prop_list = []
+        self.actor_list = []
+        self.second_actor_list = []
         self.offset = None
 
         self.props = None
@@ -175,19 +182,24 @@ class StageSection(pyglet.event.EventDispatcher):
 
     def setup(self):
         self.setup_props()
-        # self.setup_actors(offset)
+        self.setup_actors()
 
     def setup_props(self):
         self.props = set()
         for placeholder in self.prop_list:
             self.props.add(placeholder.spawn(self.offset))
 
-    def setup_actors(self, offset):
-        pass
+    def setup_actors(self):
+        self.actors = set()
+        self.second_actors = set()
+        for placeholder in self.actor_list:
+            self.actors.add(placeholder.spawn(self.offset))
+        for placeholder in self.second_actor_list:
+            self.second_actors.add(placeholder.spawn(self.offset))
 
     def reset(self):
         self.props = None
-        # self.actors = None
+        self.actors = None
 
 StageSection.register_event_type('on_enter_section')
 StageSection.register_event_type('on_display_section')

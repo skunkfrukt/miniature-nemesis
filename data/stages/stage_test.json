@@ -29,6 +29,13 @@
                         "encounterClass": "PeasantMob",
                         "population": 3
                     }
+                ],
+                "actorList": [
+                    {
+                        "actorClass": "ACTOR_PEASANT",
+                        "x": 400,
+                        "y": 100
+                    }
                 ]
             }
         },
@@ -67,6 +74,13 @@
                         "propClass": "PROP_CHURCH",
                         "x": 42,
                         "y": 123
+                    }
+                ],
+                "actorList": [
+                    {
+                        "actorClass": "ACTOR_PREACHER",
+                        "x": 360,
+                        "y": 90
                     }
                 ]
             }

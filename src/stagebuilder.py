@@ -36,10 +36,7 @@ def parse_single_stage(data):
     world.stages[stage_name] = parsed_stage
 
 def parse_section(data):
-    if 'sectionName' in data:
-        section_name = data['sectionName']
-    else:
-        section_name = stage.generate_section_name()
+    section_name = data.get('sectionName', 'UNNAMED SECTION')
 
     if data.get('isProcedural', False):
         parsed_section = stage.ProceduralStageSection(section_name)
@@ -51,11 +48,11 @@ def parse_section(data):
                 parsed_section.prop_pool = parse_prop_pool(prop_pool)
     else:
         parsed_section = stage.StageSection(section_name)
-    if 'staticData' in data:
-        static_data = data['staticData']
-        if 'propList' in static_data:
-            prop_list = static_data['propList']
-            parsed_section.prop_list = parse_prop_list(prop_list)
+    static_data = data.get('staticData', {})
+    prop_list = static_data.get('propList', [])
+    parsed_section.prop_list = parse_prop_list(prop_list)
+    actor_list = static_data.get('actorList', [])
+    parsed_section.actor_list = parse_actor_list(actor_list)
     return parsed_section
 
 def parse_prop_pool(data):
@@ -73,6 +70,17 @@ def parse_prop_list(data):
         kwargs = list_item
         parsed_prop_list.append(parse_placeholder(prop_class, x, y, **kwargs))
     return parsed_prop_list
+
+def parse_actor_list(data):
+    parsed_actor_list = []
+    for list_item in data:
+        prop_class = parse_class(str(list_item.pop('actorClass')))
+        x = int(list_item.pop('x'))
+        y = int(list_item.pop('y'))
+        is_ambusher = (x < 0)
+        kwargs = list_item
+        parsed_actor_list.append(parse_placeholder(prop_class, x, y, **kwargs))
+    return parsed_actor_list
 
 def parse_class(class_key):
     return CLASS_KEYS[class_key]

@@ -84,11 +84,12 @@ class Collider(pyglet.event.EventDispatcher):
 
 Collider.register_event_type('on_collision')
 
+LOTS = 360
 
 class Detector(Collider):
     def __init__(self, left=0):
         super(Detector, self).__init__(left=left, bottom=-LOTS, top=LOTS,
-            width=1, effect=None, layer=HASH_TRIGGER)
+            width=1, effect=None, layer=4)
         self.top = LOTS
         self.bottom = -LOTS
         self.speed = (0,0)
