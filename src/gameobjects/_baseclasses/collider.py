@@ -3,6 +3,7 @@ import pyglet
 import logging
 log = logging.getLogger(__name__)
 
+
 class Collider(pyglet.event.EventDispatcher):
     def __init__(self, left=0, bottom=0, right=None, top=None,
             width=None, height=None, effect=None, layer=None, parent=None):

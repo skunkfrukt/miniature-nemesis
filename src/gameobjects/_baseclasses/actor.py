@@ -1,3 +1,6 @@
+import logging
+log = logging.getLogger(__name__)
+
 import pyglet
 import math
 import collider
@@ -5,9 +8,6 @@ from gameobject import GameObject
 from animatedsprite import AnimatedSprite
 from projectile import Projectile
 from pyglet.window import key
-
-import logging
-log = logging.getLogger(__name__)
 
 MIN_Y, MAX_Y = 0, 275
 
