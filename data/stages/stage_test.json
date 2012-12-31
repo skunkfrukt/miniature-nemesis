@@ -1,150 +1,931 @@
 {
-    "stageName": "ProtoVillage",
-    "backgroundColor": [63, 127, 0, 255],
-    "sections": [
+    "name": "Proto Village",
+    "seed": "Miniature Nemesis",
+    "background_color": [63, 127, 0, 255],
+    "layers": {
+        "background": 1,
+        "props": 2,
+        "actors": 1,
+        "projectiles": 0,
+        "foreground": 0
+    },
+    "section_list": [
         {
-            "sectionName": "Hero's Home",
-            "isProcedural": false,
-            "isFirstSection": true,
-            "heroSpawnPoint": {
+            "name": "Hero's Home",
+            "is_procedural": false,
+            "is_first_section": true,
+            "hero_spawn_point": {
                 "x": 300,
                 "y": 100,
-                "isRunningSpawnPoint": false
+                "is_running_spawn_point": false
             },
-            "staticData": {
-                "propList": [
-                    {
-                        "propClass": "PROP_HEROHOUSE",
-                        "x": 315,
-                        "y": 138
-                    },
-                    {
-                        "propClass": "PROP_SKELETON",
-                        "x": 370,
-                        "y": 123
-                    }
-                ],
-                "encounterList": [
-                    {
-                        "encounterClass": "PeasantMob",
-                        "population": 3
-                    }
-                ],
-                "actorList": [
-                    {
-                        "actorClass": "ACTOR_PEASANT",
-                        "x": 400,
-                        "y": 100
-                    }
-                ]
-            }
+            "prop_list": [
+                {
+                    "cls": "PROP_HEROHOUSE",
+                    "x": 315,
+                    "y": 138
+                },
+                {
+                    "cls": "PROP_SKELETON",
+                    "x": 370,
+                    "y": 123,
+                    "layer": 1
+                }
+            ],
+            "encounter_list": [
+                {
+                    "origin": "LEFT",
+                    "members": [
+
+                    ]
+                }
+            ],
+            "actor_list": [
+                {
+                    "cls": "ACTOR_PEASANT",
+                    "x": -200,
+                    "y": 100
+                },
+                {
+                    "cls": "ACTOR_PEASANT",
+                    "x": -100,
+                    "y": 200
+                },
+                {
+                    "cls": "ACTOR_PEASANT",
+                    "x": -150,
+                    "y": 50
+                }
+            ]
         },
         {
-            "sectionName": "First Creek",
-            "staticData": {
-                "propList": [
-                    {
-                        "propClass": "PROP_HOUSE",
-                        "x": 50,
-                        "y": 300
-                    },
-                    {
-                        "propClass": "PROP_CREEK",
-                        "x": 220,
-                        "y": 0
-                    },
-                    {
-                        "propClass": "PROP_HOUSE",
-                        "x": 430,
-                        "y": 200
-                    },
-                    {
-                        "propClass": "PROP_ROCK",
-                        "x": 440,
-                        "y": 120
-                    }
-                ]
-            }
+            "name": "Proc Single House",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 1
+                }
+            ]
         },
         {
-            "sectionName": "Church",
-            "staticData": {
-                "propList": [
-                    {
-                        "propClass": "PROP_CHURCH",
-                        "x": 42,
-                        "y": 123
-                    }
-                ],
-                "actorList": [
-                    {
-                        "actorClass": "ACTOR_PREACHER",
-                        "x": 360,
-                        "y": 90
-                    }
-                ]
-            }
+            "name": "Proc House and a Rock",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 1
+                }
+            ]
         },
         {
-            "sectionName": "ProceduralTestSection",
-            "isProcedural": true,
-            "proceduralData": {
-                "seed": "TEST",
-                "pathAlgorithm": "KnightPath",
-                "propPool": [
-                    {
-                        "propClass": "PROP_HOUSE",
-                        "poolSize": 2
-                    },
-                    {
-                        "propClass": "PROP_ROCK",
-                        "poolSize": 3
-                    },
-                    {
-                        "propClass": "PROP_STONE",
-                        "poolSize": 2
-                    }
-                ]
-            }
+            "name": "Proc Some Houses",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 1
+                }
+            ]
         },
         {
-            "sectionName": "Second Creek",
-            "staticData": {
-                "propList": [
-                    {
-                        "propClass": "PROP_HOUSE",
-                        "x": 50,
-                        "y": 300
-                    },
-                    {
-                        "propClass": "PROP_CREEK",
-                        "x": 220,
-                        "y": 0
-                    },
-                    {
-                        "propClass": "PROP_HOUSE",
-                        "x": 430,
-                        "y": 200
-                    },
-                    {
-                        "propClass": "PROP_ROCK",
-                        "x": 440,
-                        "y": 120
-                    }
-                ]
-            }
+            "name": "Proc One House and an Ambush",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 3
+                }
+            ]
         },
         {
-            "sectionName": "Forest's Edge",
-            "staticData": {
-                "propList": [
-                    {
-                        "propClass": "PROP_TREE",
-                        "x": 550,
-                        "y": 200
-                    }
-                ]
-            }
+            "name": "Proc Many Houses",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 1
+                }
+            ]
+        },
+        {
+            "name": "Proc Some Houses and a Rock",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 1
+                }
+            ]
+        },
+        {
+            "name": "Proc A House and Many Rocks",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 5
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 3
+                }
+            ]
+        },
+        {
+            "name": "Proc Breather by a House",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 3
+                }
+            ]
+        },
+        {
+            "name": "Proc Many Houses",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 4
+                }
+            ]
+        },
+        {
+            "name": "First Creek",
+            "prop_list": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "x": 50,
+                    "y": 300
+                },
+                {
+                    "cls": "PROP_CREEK",
+                    "x": 220,
+                    "y": 0
+                },
+                {
+                    "cls": "PROP_HOUSE",
+                    "x": 430,
+                    "y": 200
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "x": 440,
+                    "y": 120
+                }
+            ]
+        },
+        {
+            "name": "Proc A House by the River",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Calm Before the Storm",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 4
+                }
+            ]
+        },
+        {
+            "name": "Proc Some Houses and an Ambush",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Some Houses and a Rock",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 1
+                }
+            ]
+        },
+        {
+            "name": "Proc Some Houses and Some Rocks",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 4
+                }
+            ]
+        },
+        {
+            "name": "Proc Some Houses and Many Rocks",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 12
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 6
+                }
+            ]
+        },
+        {
+            "name": "Proc Many Houses",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 5
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 1
+                }
+            ]
+        },
+        {
+            "name": "Proc More Houses",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 5
+                }
+            ]
+        },
+        {
+            "name": "Proc Breather by Some Houses",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Church",
+            "prop_list": [
+                {
+                    "cls": "PROP_CHURCH",
+                    "x": 42,
+                    "y": 83
+                }
+            ],
+            "actor_list": [
+                {
+                    "cls": "ACTOR_PREACHER",
+                    "x": 360,
+                    "y": 50
+                }
+            ]
+        },
+        {
+            "name": "Proc Reverent Silence by Some Houses",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 1
+                }
+            ]
+        },
+        {
+            "name": "Proc Houses Growing Sparse",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc All Heaven Breaks Loose",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 1
+                }
+            ]
+        },
+        {
+            "name": "Proc The Field of Death",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc A House in the Cemetary",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Not Even a House",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Hard Rock",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc A Rock and a Hard Place",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 6
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 4
+                }
+            ]
+        },
+        {
+            "name": "Proc Rock and Roll",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 12
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 8
+                }
+            ]
+        },
+        {
+            "name": "Proc Freedom From Religion",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc House M.D.",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 1
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Slums on the Horizon",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 6
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 3
+                }
+            ]
+        },
+        {
+            "name": "Proc In the Slums",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 5
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 5
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 5
+                }
+            ]
+        },
+        {
+            "name": "Proc Eins",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Zwei",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Drei",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Vier",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Fuenf",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 4
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 5
+                }
+            ]
+        },
+        {
+            "name": "Proc Sechs",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Clerical Clusterfuck",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Crusade by a Lonely Abode",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 1
+                }
+            ]
+        },
+        {
+            "name": "Proc Stone the Infidel",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Stone Thy Children",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Cramped",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc The Part Where He Kills You",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Proc Rocky Horror Picture Show",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Second Creek",
+            "prop_list": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "x": 50,
+                    "y": 300
+                },
+                {
+                    "cls": "PROP_CREEK",
+                    "x": 220,
+                    "y": 0
+                },
+                {
+                    "cls": "PROP_HOUSE",
+                    "x": 430,
+                    "y": 200
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "x": 440,
+                    "y": 120
+                }
+            ]
+        },
+        {
+            "name": "Proc Baptised",
+            "is_procedural": true,
+            "seed": "TEST",
+            "path_algorithm": "PATH_KNIGHT",
+            "prop_pool": [
+                {
+                    "cls": "PROP_HOUSE",
+                    "pool_size": 2
+                },
+                {
+                    "cls": "PROP_ROCK",
+                    "pool_size": 3
+                },
+                {
+                    "cls": "PROP_STONE",
+                    "pool_size": 2
+                }
+            ]
+        },
+        {
+            "name": "Forest's Edge",
+            "prop_list": [
+                {
+                    "cls": "PROP_TREE",
+                    "x": 550,
+                    "y": 200
+                }
+            ]
         }
     ]
 }

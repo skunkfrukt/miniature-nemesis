@@ -121,7 +121,7 @@ class PlayState(GameState):
     def __init__(self):
         super(PlayState, self).__init__()
         self.gui_group = pyglet.graphics.OrderedGroup(1)
-        stg = world.stages['ProtoVillage']
+        stg = world.stages['Proto Village']
         stg.setup()
         self.level = stg
         self.level.push_handlers(self)
