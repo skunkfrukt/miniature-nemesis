@@ -83,7 +83,7 @@ class Creek(Prop):
     collision_effect = None
     _image = pyglet.resource.image('img/sprites/creek.png')
     _grid = pyglet.image.ImageGrid(_image, 1, 2)
-    _anim = _grid.get_animation(1.0, True)
+    _anim = _grid.get_animation(0.5, True)
     builder_data = {'width':5, 'height':9,
             'x_variance': 20}
 
@@ -419,7 +419,7 @@ class PeasantC(PeasantB):
 class Preacher(Actor):
     _image = pyglet.resource.image('img/sprites/preacher.png')
     _frame_data = {
-            'idle': ((0, 2), 1.1, True),
+            'idle': ((0, 2), 0.3, True),
             'run': ((2, 4), 0.2, True),
             'notice': ((4, 6), 1.2, True),
             'aim': ((6, 8), 0.2, True),
@@ -438,7 +438,7 @@ class Preacher(Actor):
         super(Preacher, self).__init__(x, y, **kwargs)
         self.set_sprite(AnimatedSprite(self.animations, default='idle'))
         self.add_collider(collider.Collider(0,0,30,20, layer=1))
-        self.speed = (120, 0)
+        self.speed = (0, 0)
         self.target = None
         self.next_action_delay = 0.0
 
