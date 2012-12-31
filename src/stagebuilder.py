@@ -28,6 +28,7 @@ def parse_single_stage(data):
     parsed_stage.background_color = tuple([int(c) for c in bg_color])
 
     for section_data in data.get('sections', []):
+    parsed_stage.setup_layers(**data.get('layers'))
         parsed_section = parse_section(section_data)
         parsed_stage.add_section(parsed_section)
 

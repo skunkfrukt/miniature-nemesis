@@ -8,7 +8,7 @@ class GameObject(pyglet.event.EventDispatcher):
     preferred_rendering_group_index = None
     required_classes = []
 
-    def __init__(self, x, y, **kwargs):
+    def __init__(self, x, y, layer=0, **kwargs):
         if len(kwargs) > 0:
             log.warning(W_EXTRA_KWARGS.format(kwargs=kwargs))
         self.x, self.y = x, y
@@ -21,6 +21,7 @@ class GameObject(pyglet.event.EventDispatcher):
         self.sprite = None
         self.collider = None
         self.colliders = None
+        self.layer = layer
 
     def kill(self):
         pass
