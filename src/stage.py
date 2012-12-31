@@ -83,11 +83,12 @@ class Stage(pyglet.event.EventDispatcher):
             self.offset += SCROLL_SPEED * dt
             if self.offset >= self.active_section.offset:
                 self.advance_section()
-        # self.update_actors(dt)
+        self.update_actors(dt)
         self.update_sprites()
 
+
     def update_actors(self, dt):
-        for actor in self.active_actors:
+        for actor in self.all_actors:
             actor.update(dt)
 
     def update_sprites(self):
@@ -109,7 +110,7 @@ class Stage(pyglet.event.EventDispatcher):
     def exit_section(self, old_section):
         self.despawn_props(self.old_props)
         if old_section is not None:
-            # self.spawn_actors(old_section.ambush_actors)
+            self.spawn_actors(old_section.second_actors)
             old_section.reset()
         self.active_section = None
         self.dispatch_event('on_exit_section', old_section.name)
@@ -148,6 +149,7 @@ class Stage(pyglet.event.EventDispatcher):
         for actor in actors:
             layer = self.layers[self.actor_layer + actor.layer]
             actor.setup_sprite(self.batch, layer)
+            log.debug('Spawned actor {}'.format(type(actor).__name__))
         self.all_actors |= actors
 
     def despawn_actors(self, actors):
@@ -209,11 +211,14 @@ class StageSection(pyglet.event.EventDispatcher):
         for placeholder in self.actor_list:
             self.actors.add(placeholder.spawn(self.offset))
         for placeholder in self.second_actor_list:
-            self.second_actors.add(placeholder.spawn(self.offset))
+            ambusher = placeholder.spawn(self.offset)
+            ambusher.behavior = ambusher.behave_charge_ahead
+            self.second_actors.add(ambusher)
 
     def reset(self):
         self.props = None
         self.actors = None
+        self.second_actors = None
 
 StageSection.register_event_type('on_enter_section')
 StageSection.register_event_type('on_display_section')

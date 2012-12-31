@@ -93,9 +93,10 @@ class Actor(GameObject):
             dy = min(dy, ty)
         self.speed = (dx, dy)
 
-    def move(self, dt, stage_offset):
+    def update(self, dt):
+        self.behave(dt)
         self.update_speed(dt)
-        GameObject.move(self, dt, stage_offset)
+        super(Actor, self).update(dt)
         self.animate()
 
     def animate(self):

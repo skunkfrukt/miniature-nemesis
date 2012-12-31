@@ -44,7 +44,7 @@ class GameObject(pyglet.event.EventDispatcher):
         self.sprite.group = group
 
     def update_sprite(self, stage_offset):
-        self.sprite.set_position(int(self.x - stage_offset), int(self.y))
+        self.sprite.position = (int(self.x - stage_offset), int(self.y))
 
     def check_despawn(self, stage_offset):
         if self.right <= stage_offset:
@@ -52,10 +52,11 @@ class GameObject(pyglet.event.EventDispatcher):
         return False
 
     def despawn(self):
+        self.sprite.delete()
         self.kill()
         self.dispatch_event('on_despawn', self)
 
-    def move(self, dt, stage_offset):
+    def update(self, dt):
         if self.speed is not None:
             dx, dy = (spd * dt for spd in self.speed)
             self.x += dx
