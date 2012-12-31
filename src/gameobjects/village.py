@@ -12,6 +12,8 @@ from _baseclasses.actor import *
 class Rock(Prop):
     collision_effect = {'effect_type': 'stun', 'duration': 0.5}
     _image = pyglet.resource.image('img/sprites/rock.png')
+    builder_data = {'width': 2, 'height': 2, 'max_y': 7,
+            'x_variance': 31, 'y_variance': 55}
 
     def __init__(self, x, y, **kwargs):
         super(Rock, self).__init__(x, y, **kwargs)
@@ -24,6 +26,8 @@ class Stone(Prop):
     BUILDER_NAME = 'PROP_STONE'
     collision_effect = {'effect_type': 'trip', 'duration': 0.75}
     _image = pyglet.resource.image('img/sprites/stone.png')
+    builder_data = {'width':1, 'height':1, 'max_y':7,
+            'x_variance': 11, 'y_variance': 24}
 
     def __init__(self, x, y, **kwargs):
         super(Stone, self).__init__(x, y, **kwargs)
@@ -38,6 +42,8 @@ class House(Prop):
     _images = pyglet.image.ImageGrid(
             pyglet.resource.image('img/sprites/house.png'),
             1, 3)
+    builder_data = {'width':5, 'height':5, 'min_y':2, 'max_y': 7,
+            'x_variance': 20, 'y_variance': 19}
 
     def __init__(self, x, y, **kwargs):
         super(House, self).__init__(x, y, **kwargs)
@@ -65,6 +71,8 @@ class HeroHouse(House):
 class Church(Prop):
     collision_effect = {'effect-type': 'stun', 'duration': 0.5}
     _image = pyglet.resource.image('img/sprites/church.png')
+    builder_data = {'width':10, 'height':8, 'min_y':1,
+            'x_variance': 5, 'y_variance': 23}
 
     def __init__(self, x, y, **kwargs):
         super(Church, self).__init__(x, y, **kwargs)
@@ -76,6 +84,8 @@ class Creek(Prop):
     _image = pyglet.resource.image('img/sprites/creek.png')
     _grid = pyglet.image.ImageGrid(_image, 1, 2)
     _anim = _grid.get_animation(1.0, True)
+    builder_data = {'width':5, 'height':9,
+            'x_variance': 20}
 
     def __init__(self, x, y, **kwargs):
         super(Creek, self).__init__(x, y, **kwargs)
@@ -85,6 +95,8 @@ class Creek(Prop):
 class Skeleton(Prop):
     collision_effect = None
     _image = pyglet.resource.image('img/sprites/skeleton.png')
+    builder_data = {'width':1, 'height':1,
+            'x_variance': 14, 'y_variance': 4}
 
     def __init__(self, x, y, **kwargs):
         super(Skeleton, self).__init__(x, y, **kwargs)

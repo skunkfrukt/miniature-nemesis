@@ -2,6 +2,9 @@ import logging
 log = logging.getLogger(__name__)
 
 import pyglet
+import random
+import itertools
+
 from pyglet.graphics import OrderedGroup as Layer
 
 import world
@@ -35,6 +38,8 @@ class Stage(pyglet.event.EventDispatcher):
 
     def setup(self):
         self.reset()
+        if self.seed is not None:
+            random.seed(self.seed)
         bg_pattern = pyglet.image.SolidColorImagePattern(
             self.background_color)
         bg_image = bg_pattern.create_image(640, 360)
@@ -187,7 +192,7 @@ class StageSection(pyglet.event.EventDispatcher):
 
         self.props = None
 
-        log.debug('Initialised StageSection {}.'.format(self.name))
+        log.debug('Initialised {} {}.'.format(type(self).__name__, self.name))
 
     def setup(self):
         self.setup_props()
@@ -228,3 +233,161 @@ class Placeholder(object):
 class ProceduralStageSection(StageSection):
     def __init__(self, name):
         super(ProceduralStageSection, self).__init__(name)
+
+    def setup_props(self):
+        self.prop_list = self.generate_props()
+        super(ProceduralStageSection, self).setup_props()
+
+    def generate_props(self):
+        return generate_map(knight_path, self.prop_pool)
+
+
+def rect(x, y, width, height, cls):
+    return (x, y, width, height, cls)
+
+def cells_in_rect(r):
+    x, y, w, h, n = r
+    return set(itertools.product(range(x, x + w), range(y, y + h)))
+
+def possible_rects(cls):
+    builder_data = cls.builder_data
+    width = builder_data.get('width', 1)
+    height = builder_data.get('height', 1)
+    start_x = 0
+    limit_x = 16 + 1 - width
+    start_y = builder_data.get('min_y', 0)
+    limit_y = builder_data.get('max_y', 8) + 1
+    range_x = range(start_x, limit_x)
+    range_y = range(start_y, limit_y)
+    coords = itertools.product(range_x, range_y)
+    rects = set()
+    for coord in coords:
+        x, y = coord
+        r = rect(x, y, width, height, cls)
+        rects.add(r)
+    return rects
+
+def generate_map(path_algorithm, props={}):
+    rects = {cls: possible_rects(cls) for cls in props.keys()}
+    limits = props
+    object_type_order = sorted(limits.keys(), key=lambda x: len(rects[x]))
+    all_cells = set(itertools.product(range(16), range(9)))
+    rects_by_cell = {}
+    for c in all_cells:
+        rects_by_cell[c] = set()
+    all_rects = set()
+    for object_type in object_type_order:
+        all_rects |= rects[object_type]
+    for r in all_rects:
+        cells = cells_in_rect(r)
+        for cell in cells:
+            try:
+                rects_by_cell[cell].add(r)
+            except KeyError:
+                pass
+    invalid_rects = set()
+    used_rects = set()
+    path = path_algorithm() & all_cells
+    for c in path:
+        invalid_rects |= rects_by_cell[c]
+    for object_type in object_type_order:
+        typed_rects = rects[object_type]
+        quantity = 0
+        while quantity < limits[object_type]:
+            valid_rects = typed_rects - invalid_rects
+            if len(valid_rects) == 0:
+                break
+            r = random.choice(sorted(valid_rects))
+            used_rects.add(r)
+            quantity += 1
+            for c in cells_in_rect(r) & all_cells:
+                invalid_rects |= rects_by_cell[c]
+    return [rect_to_placeholder(r) for r in used_rects]
+
+def rect_to_placeholder(r):
+    x = r[0] * 40
+    y = r[1] * 40
+    cls = r[4]
+    x_variance = cls.builder_data.get('x_variance', 0)
+    y_variance = cls.builder_data.get('y_variance', 0)
+    x += random.randint(0, x_variance)
+    y += random.randint(0, y_variance)
+    return Placeholder(cls, x, y)
+
+def knight_path():
+    traversed_cells = set()
+
+    current_cell = (0, 4)
+    traversed_cells.add(current_cell)
+
+    max_y = 6
+    min_y = 0
+
+    while current_cell[0] < 16:
+        next_move = random.randint(0,3)
+        cx, cy = current_cell
+        if next_move == 0 and cy < max_y - 1:
+            traversed_cells.add((cx + 1, cy))
+            traversed_cells.add((cx + 1, cy + 1))
+            traversed_cells.add((cx + 1, cy + 2))
+            current_cell = (cx + 1, cy + 2)
+        elif next_move == 1 and cy < max_y:
+            traversed_cells.add((cx + 1, cy))
+            traversed_cells.add((cx + 2, cy))
+            traversed_cells.add((cx + 2, cy + 1))
+            current_cell = (cx + 2, cy + 1)
+        elif next_move == 2 and cy > min_y:
+            traversed_cells.add((cx + 1, cy))
+            traversed_cells.add((cx + 2, cy))
+            traversed_cells.add((cx + 2, cy - 1))
+            current_cell = (cx + 2, cy - 1)
+        elif next_move == 3 and cy > min_y + 1:
+            traversed_cells.add((cx + 1, cy))
+            traversed_cells.add((cx + 1, cy - 1))
+            traversed_cells.add((cx + 1, cy - 2))
+            current_cell = (cx + 1, cy - 2)
+    return traversed_cells
+
+def faff_path():
+    traversed_cells = set()
+
+    current_cell = (0, 4)
+    traversed_cells.add(current_cell)
+
+    max_y = MAP_HEIGHT - 3
+    min_y = 0
+
+    while current_cell[0] < MAP_WIDTH:
+        next_move = random.randint(0,2)
+        cx, cy = current_cell
+        if next_move == 0:
+            traversed_cells.add((cx + 1, cy))
+            current_cell = (cx + 1, cy)
+        elif next_move == 1 and cy < max_y:
+            traversed_cells.add((cx, cy + 1))
+            current_cell = (cx, cy + 1)
+        elif next_move == 2 and cy > min_y:
+            traversed_cells.add((cx, cy - 1))
+            current_cell = (cx, cy - 1)
+    return traversed_cells
+
+def noise_path():
+    traversed_cells = set()
+
+    current_cell = (-1, 4)
+    traversed_cells.add(current_cell)
+
+    max_y = MAP_HEIGHT - 1
+    min_y = 0
+
+    while current_cell[0] < MAP_WIDTH:
+        cx, cy = current_cell
+        traversed_cells.add((cx + 1, cy))
+        traversed_cells.add((cx + 2, cy))
+        current_cell = (cx + 2, cy)
+        cx, cy = current_cell
+        next_y = random.randint(min_y, max_y)
+        for y in range(min(cy, next_y), max(cy, next_y) + 1):
+            traversed_cells.add((cx, y))
+        current_cell = (cx, next_y)
+    return traversed_cells

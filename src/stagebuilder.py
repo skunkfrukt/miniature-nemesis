@@ -24,6 +24,8 @@ def parse_single_stage(data):
     stage_name = str(data.get('name', 'UNNAMED STAGE'))
     parsed_stage = stage.Stage(stage_name)
 
+    seed = data.get('seed', None)
+    parsed_stage.seed = seed
 
     parsed_stage.setup_layers(**data.get('layers'))
 
@@ -60,6 +62,8 @@ def parse_vanilla_section(data):
 def parse_procedural_section(data):
     section_name = data.get('name', 'UNNAMED SECTION')
     parsed_section = stage.ProceduralStageSection(section_name)
+    prop_pool = parse_prop_pool(data.get('prop_pool', []))
+    parsed_section.prop_pool = prop_pool
     return parsed_section
 
 def parse_prop_pool(data):
