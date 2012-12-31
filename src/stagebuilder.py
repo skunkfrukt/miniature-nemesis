@@ -21,14 +21,16 @@ def parse_multiple_stages(data):
         parse_single_stage(single_stage_data)
 
 def parse_single_stage(data):
-    stage_name = str(data['stageName'])
+    stage_name = str(data.get('name', 'UNNAMED STAGE'))
     parsed_stage = stage.Stage(stage_name)
 
-    bg_color = data.get('backgroundColor', [127,127,127,255])
-    parsed_stage.background_color = tuple([int(c) for c in bg_color])
 
-    for section_data in data.get('sections', []):
     parsed_stage.setup_layers(**data.get('layers'))
+
+    bg_color = data.get('background_color', [127,127,127,255])
+    parsed_stage.background_color = tuple(bg_color)
+
+    for section_data in data.get('section_list', []):
         parsed_section = parse_section(section_data)
         parsed_stage.add_section(parsed_section)
 
@@ -37,57 +39,59 @@ def parse_single_stage(data):
     world.stages[stage_name] = parsed_stage
 
 def parse_section(data):
-    section_name = data.get('sectionName', 'UNNAMED SECTION')
-
-    if data.get('isProcedural', False):
-        parsed_section = stage.ProceduralStageSection(section_name)
-        if 'proceduralData' in data:
-            procedural_data = data['proceduralData']
-            parsed_section.seed = procedural_data.get('seed', None)
-            if 'propPool' in procedural_data:
-                prop_pool = procedural_data['propPool']
-                parsed_section.prop_pool = parse_prop_pool(prop_pool)
+    if data.get('is_procedural', False):
+        return parse_procedural_section(data)
+    elif data.get('condition', None) is not None:
+        pass  ##TODO## Conditional sections.
     else:
-        parsed_section = stage.StageSection(section_name)
-    static_data = data.get('staticData', {})
-    prop_list = static_data.get('propList', [])
+        return parse_vanilla_section(data)
+
+def parse_vanilla_section(data):
+    section_name = data.get('name', 'UNNAMED SECTION')
+    parsed_section = stage.StageSection(section_name)
+    prop_list = data.get('prop_list', [])
     parsed_section.prop_list = parse_prop_list(prop_list)
-    actor_list = static_data.get('actorList', [])
-    parsed_section.actor_list = parse_actor_list(actor_list)
+    actor_list = data.get('actor_list', [])
+    parsed_actor_list = parse_actor_list(actor_list)
+    parsed_section.actor_list = parsed_actor_list['sentinel']
+    parsed_section.second_actor_list = parsed_actor_list['pursuer']
+    return parsed_section
+
+def parse_procedural_section(data):
+    section_name = data.get('name', 'UNNAMED SECTION')
+    parsed_section = stage.ProceduralStageSection(section_name)
     return parsed_section
 
 def parse_prop_pool(data):
+    pool_dict = {}
     for pool_item in data:
-        prop_class = parse_class(str(pool_item.get('propClass', '')))
-        pool_size = int(pool_item.get('poolSize', 0))
-    ##TODO## Actually add stuff.
+        prop_class = parse_class(str(pool_item.get('cls', '')))
+        pool_size = pool_item.get('pool_size', 0)
+        pool_dict[prop_class] = pool_size
+    return pool_dict
 
 def parse_prop_list(data):
-    parsed_prop_list = []
+    prop_list = []
     for list_item in data:
-        prop_class = parse_class(str(list_item.pop('propClass')))
-        x = int(list_item.pop('x'))
-        y = int(list_item.pop('y'))
-        kwargs = list_item
-        parsed_prop_list.append(parse_placeholder(prop_class, x, y, **kwargs))
-    return parsed_prop_list
+        prop_list.append(parse_placeholder(**list_item))
+    return prop_list
 
 def parse_actor_list(data):
-    parsed_actor_list = []
+    actor_list = {'sentinel': [], 'pursuer': []}
     for list_item in data:
-        prop_class = parse_class(str(list_item.pop('actorClass')))
-        x = int(list_item.pop('x'))
-        y = int(list_item.pop('y'))
-        is_ambusher = (x < 0)
-        kwargs = list_item
-        parsed_actor_list.append(parse_placeholder(prop_class, x, y, **kwargs))
-    return parsed_actor_list
+        if list_item['x'] < 0:
+            actor_list['pursuer'].append(parse_placeholder(**list_item))
+        else:
+            actor_list['sentinel'].append(parse_placeholder(**list_item))
+    return actor_list
 
 def parse_class(class_key):
     return CLASS_KEYS[class_key]
 
 def parse_placeholder(cls, x, y, **kwargs):
-    placeholder = stage.Placeholder(cls, x, y, **kwargs)
+    parsed_cls = parse_class(cls)
+    placeholder = stage.Placeholder(parsed_cls, x, y, **kwargs)
     return placeholder
+
 
 W_DUPLICATE_STAGE = 'Stage {stg} already exists; overwriting.'
