@@ -72,17 +72,20 @@ class Stage(pyglet.event.EventDispatcher):
         self.despawn_props(self.all_props)
         self.despawn_actors(self.all_actors)
 
-        self.is_scrolling = False
+        self.actual_scroll_speed = 0
         self.offset = 0
         self.active_section = None
 
         log.info('Reset Stage {}.'.format(self.name))
 
     def update(self, dt):
-        if self.is_scrolling:
-            self.offset += SCROLL_SPEED * dt
+        if self.active_section is not None:
+            self.offset += self.actual_scroll_speed * dt
             if self.offset >= self.active_section.offset:
                 self.advance_section()
+            if self.actual_scroll_speed < SCROLL_SPEED:
+                self.actual_scroll_speed = min(SCROLL_SPEED,
+                        self.actual_scroll_speed + (50 * dt))
         self.update_actors(dt)
         self.update_sprites()
 
@@ -104,7 +107,7 @@ class Stage(pyglet.event.EventDispatcher):
             new_section = self.section_iter.next()
             self.enter_section(new_section)
         except StopIteration:
-            self.is_scrolling = False
+            self.actual_scroll_speed = 0
             # self.dispatch_event('on_enter_final_section')
 
     def exit_section(self, old_section):
