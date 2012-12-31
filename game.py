@@ -1,6 +1,7 @@
 GAME_VERSION = "0.0.2"
 
 import argparse
+from src import world
 
 import logging
 logging.basicConfig()
@@ -19,8 +20,11 @@ parser.set_defaults(logging_level=logging.ERROR)
 args = parser.parse_args()
 
 log_level = args.logging_level
-log.info('{} logging enabled.'.format(logging.getLevelName(log_level)))
 log.setLevel(log_level)
+log.info('{} logging enabled.'.format(logging.getLevelName(log_level)))
+
+if log_level == logging.DEBUG:
+    world.ZERO = 320
 
 import pyglet
 

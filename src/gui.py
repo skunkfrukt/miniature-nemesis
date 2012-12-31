@@ -212,7 +212,7 @@ class MainWindow(pyglet.window.Window):
             pyglet.resource.image('img/icons/128x128.png'))
 
     def __init__(self, fullscreen=False):
-        super(MainWindow, self).__init__(WIN_WIDTH, WIN_HEIGHT,
+        super(MainWindow, self).__init__(WIN_WIDTH + world.ZERO*2, WIN_HEIGHT,
                 WIN_TITLE, fullscreen=fullscreen)
         self.state = None
         self.set_state(MenuState())

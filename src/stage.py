@@ -41,6 +41,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.background = pyglet.sprite.Sprite(
             bg_image, batch=self.batch,
             group=self.layers[self.bg_layer])
+        self.background.x = world.ZERO
 
         for sect in self.sections:
             sect.setup()
@@ -86,9 +87,9 @@ class Stage(pyglet.event.EventDispatcher):
 
     def update_sprites(self):
         for actor in self.all_actors:
-            actor.update_sprite(self.offset)
+            actor.update_sprite(self.offset - world.ZERO)
         for prop in self.all_props:
-            prop.update_sprite(self.offset)
+            prop.update_sprite(self.offset - world.ZERO)
 
     def advance_section(self):
         if self.active_section is not None:
