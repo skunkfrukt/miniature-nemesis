@@ -9,7 +9,7 @@ from pyglet.graphics import OrderedGroup as Layer
 
 import world
 
-SCROLL_SPEED = 100
+SCROLL_SPEED = 200
 SECTION_WIDTH = 640
 
 _section_num = 0
