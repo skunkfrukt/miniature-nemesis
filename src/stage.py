@@ -34,7 +34,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.offset = 0
         self.active_section = None
 
-        log.debug('Initialised Stage {}.'.format(self.name))
+        log.debug(D_INIT.format(type(self).__name__, self.name))
 
     def setup(self):
         self.reset()
@@ -118,7 +118,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.active_section = None
         self.dispatch_event('on_exit_section', old_section.name)
 
-        log.info('Exited Section {}.'.format(old_section.name))
+        log.info(I_EXIT_SECTION.format(old_section.name))
 
     def enter_section(self, new_section):
         if new_section is not None:
@@ -128,14 +128,13 @@ class Stage(pyglet.event.EventDispatcher):
         self.active_section = new_section
         self.dispatch_event('on_enter_section', new_section.name)
 
-        log.info('Entered Section {}.'.format(new_section.name))
+        log.info(I_ENTER_SECTION.format(new_section.name))
 
     def add_section(self, section):
         section.offset = self.stage_width
         self.sections.append(section)
 
-        log.debug('Appended Section {} to Stage {}.'.format(
-                section.name, self.name))
+        log.debug(D_ADD_SECTION.format(section.name, self.name))
 
     def spawn_props(self, props):
         for prop in props:
@@ -152,7 +151,7 @@ class Stage(pyglet.event.EventDispatcher):
         for actor in actors:
             layer = self.layers[self.actor_layer + actor.layer]
             actor.setup_sprite(self.batch, layer)
-            log.debug('Spawned actor {}'.format(type(actor).__name__))
+            log.debug(D_SPAWN_ACTOR.format(type(actor).__name__))
         self.all_actors |= actors
 
     def despawn_actors(self, actors):
@@ -197,7 +196,7 @@ class StageSection(pyglet.event.EventDispatcher):
 
         self.props = None
 
-        log.debug('Initialised {} {}.'.format(type(self).__name__, self.name))
+        log.debug(D_INIT.format(type(self).__name__, self.name))
 
     def setup(self):
         self.setup_props()
@@ -399,3 +398,10 @@ def noise_path():
             traversed_cells.add((cx, y))
         current_cell = (cx, next_y)
     return traversed_cells
+
+
+I_ENTER_SECTION = "Entered Section {}."
+I_EXIT_SECTION = "Exited Section {}."
+D_ADD_SECTION = "Appended Section {} to Stage {}."
+D_INIT = "Initialised {} {}."
+D_SPAWN_ACTOR = "Spawned actor {}."
