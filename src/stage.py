@@ -9,7 +9,7 @@ from pyglet.graphics import OrderedGroup as Layer
 
 import world
 
-SCROLL_SPEED = 200
+SCROLL_SPEED = 400
 SECTION_WIDTH = 640
 
 _section_num = 0
@@ -32,6 +32,9 @@ class Stage(pyglet.event.EventDispatcher):
         self.layers = []
 
         self.offset = 0
+        self.is_scrolling = False
+        self.actual_scroll_speed = 0
+        self.target_scroll_speed = SCROLL_SPEED
         self.active_section = None
 
         log.debug(D_INIT.format(type(self).__name__, self.name))
@@ -79,16 +82,33 @@ class Stage(pyglet.event.EventDispatcher):
         log.info('Reset Stage {}.'.format(self.name))
 
     def update(self, dt):
-        if self.active_section is not None:
-            self.offset += self.actual_scroll_speed * dt
-            if self.offset >= self.active_section.offset:
-                self.advance_section()
-            if self.actual_scroll_speed < SCROLL_SPEED:
-                self.actual_scroll_speed = min(SCROLL_SPEED,
-                        self.actual_scroll_speed + (50 * dt))
+        self.update_stage_position(dt)
         self.update_actors(dt)
         self.update_sprites()
 
+    def update_stage_position(self, dt):
+        if self.is_scrolling:
+            self.update_scroll_speed(dt)
+            self.offset += self.actual_scroll_speed * dt
+        if self.active_section is not None:
+            if self.offset >= self.active_section.offset:
+                self.advance_section()
+
+    def update_scroll_speed(self, dt):
+        actual = self.actual_scroll_speed
+        target = self.target_scroll_speed
+        if actual < target:
+            delta = 50 * dt  ##TODO## Magic number.
+            new_scroll_speed = min(target, actual + delta)
+            self.actual_scroll_speed = new_scroll_speed
+
+    def start_scrolling(self, scroll_speed):
+        self.target_scroll_speed = scroll_speed
+        self.is_scrolling = True
+
+    def stop_scrolling(self):
+        self.actual_scroll_speed = 0
+        self.is_scrolling = False
 
     def update_actors(self, dt):
         for actor in self.all_actors:
@@ -107,7 +127,7 @@ class Stage(pyglet.event.EventDispatcher):
             new_section = self.section_iter.next()
             self.enter_section(new_section)
         except StopIteration:
-            self.actual_scroll_speed = 0
+            self.stop_scrolling()
             # self.dispatch_event('on_enter_final_section')
 
     def exit_section(self, old_section):
