@@ -192,12 +192,12 @@ class Stage(pyglet.event.EventDispatcher):
 
     @property
     def stage_width(self):
-        return 640 * len(self.sections)
+        return 640 * len(self.sections)  ##TODO## MN
         return world.constants['WIN_WIDTH'] * len(self.sections)
 
     @property
     def stage_height(self):
-        return 360
+        return 360  ##TODO## MN
         return world.constants['WIN_HEIGHT']
 
 Stage.register_event_type('on_begin_stage')
@@ -236,6 +236,10 @@ class StageSection(pyglet.event.EventDispatcher):
             ambusher = placeholder.spawn(self.offset)
             ambusher.behavior = ambusher.behave_charge_ahead
             self.second_actors.add(ambusher)
+        self.setup_hero()
+
+    def setup_hero(self):
+        pass
 
     def reset(self):
         self.props = None

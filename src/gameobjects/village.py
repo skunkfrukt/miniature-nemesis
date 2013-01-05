@@ -159,10 +159,6 @@ class Peasant(Actor):
     def update_speed(self, dt):
         pass
 
-    def move(self, dt, stage_offset):
-        # self.behave(dt)
-        Actor.move(self, dt, stage_offset)
-
     def behave(self, dt):
         self.next_action_delay -= dt
         self.behavior(dt)
@@ -305,10 +301,6 @@ class PeasantB(Peasant):
 
     def update_speed(self, dt):
         pass
-
-    def move(self, dt, stage_offset):
-        # self.behave(dt)
-        Actor.move(self, dt, stage_offset)
 
     def behave(self, dt):
         self.next_action_delay -= dt

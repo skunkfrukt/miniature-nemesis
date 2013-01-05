@@ -15,8 +15,8 @@ class GameObject(pyglet.event.EventDispatcher):
         self.relative_layer = kwargs.pop('layer', 0)
         # self.kill()
         self.behavior = None
-        self.width = 1
-        self.height = 1
+        self.width = None
+        self.height = None
         self.speed = None
         self.sprite = None
         self.collider = None
@@ -35,8 +35,8 @@ class GameObject(pyglet.event.EventDispatcher):
 
     def set_sprite(self, sprite):
         self.sprite = sprite
-        self.width = self.sprite.width
-        self.height = self.sprite.height
+        self.width = self.width or self.sprite.width
+        self.height = self.height or self.sprite.height
 
     def setup_sprite(self, batch, group):
         assert self.sprite is not None, "%s setting up None-sprite." % self
