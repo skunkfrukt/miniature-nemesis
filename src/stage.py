@@ -8,6 +8,7 @@ import itertools
 from pyglet.graphics import OrderedGroup as Layer
 
 import world
+# from hero import Hero
 
 SCROLL_SPEED = 400
 SECTION_WIDTH = 640
@@ -239,7 +240,8 @@ class StageSection(pyglet.event.EventDispatcher):
         self.setup_hero()
 
     def setup_hero(self):
-        pass
+        pass  # hero = Hero()
+        
 
     def reset(self):
         self.props = None

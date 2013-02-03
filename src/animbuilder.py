@@ -38,6 +38,7 @@ def parse_single_anim_set(data):
     if anim_set_name in world.anim_sets:
         log.warning(W_DUPLICATE_ANIMSET.format(aset=anim_set_name))
     world.anim_sets[anim_set_name] = parsed_anim_set
+    log.info('Parsed anim set {}'.format(anim_set_name))
 
 
 W_DUPLICATE_ANIMSET = 'AnimSet {aset} already exists; overwriting.'

@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 
 keys = key.KeyStateHandler()
-import gameobjects._baseclasses.actor
+import actor
 import stagebuilder
 
 import world

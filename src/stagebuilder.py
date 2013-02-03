@@ -6,7 +6,7 @@ import world
 import json
 import stage
 
-from gameobjects.names import CLASSES as CLASS_KEYS
+from names import CLASSES as CLASS_KEYS
 
 def json_to_stage(json_filename):
     log.info('Parsing Stage file {}'.format(json_filename))
