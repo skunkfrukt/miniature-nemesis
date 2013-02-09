@@ -8,9 +8,9 @@ import itertools
 from pyglet.graphics import OrderedGroup as Layer
 
 import world
-# from hero import Hero
+from hero import Hero
 
-SCROLL_SPEED = 400
+SCROLL_SPEED = 100
 SECTION_WIDTH = 640
 
 _section_num = 0
@@ -58,6 +58,8 @@ class Stage(pyglet.event.EventDispatcher):
         self.section_iter = iter(self.sections)
         self.advance_section()
         self.is_scrolling = True
+        self.hero = Hero()
+        self.spawn_actors(set([self.hero]))
 
     def setup_layers(self, background=1, props=2, actors=2,
             projectiles=1, foreground=1):
@@ -200,6 +202,10 @@ class Stage(pyglet.event.EventDispatcher):
     def stage_height(self):
         return 360  ##TODO## MN
         return world.constants['WIN_HEIGHT']
+        
+    def send_keys_to_hero(self, keys, pressed=None, released=None):
+        if self.hero is not None:
+            self.hero.fixSpeed(keys)
 
 Stage.register_event_type('on_begin_stage')
 Stage.register_event_type('on_end_stage')
@@ -237,11 +243,6 @@ class StageSection(pyglet.event.EventDispatcher):
             ambusher = placeholder.spawn(self.offset)
             ambusher.behavior = ambusher.behave_charge_ahead
             self.second_actors.add(ambusher)
-        self.setup_hero()
-
-    def setup_hero(self):
-        pass  # hero = Hero()
-        
 
     def reset(self):
         self.props = None

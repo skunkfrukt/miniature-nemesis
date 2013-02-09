@@ -137,10 +137,10 @@ class PlayState(GameState):
             self.paused = not self.paused
         elif symbol == key.C:
             pass
-        # self.level.send_keys_to_hero(keys, pressed=symbol)
+        self.level.send_keys_to_hero(keys, pressed=symbol)
 
     def on_key_release(self, symbol, modifiers):
-        pass  # self.level.send_keys_to_hero(keys, released=symbol)
+        self.level.send_keys_to_hero(keys, released=symbol)
 
     def update(self, dt):
         if not self.paused:
@@ -221,7 +221,7 @@ class MainWindow(pyglet.window.Window):
             self.set_icon(*self.icons)
         except AttributeError:
             pass  # If the icon refuses to work, that's no big deal for now.
-        pyglet.clock.schedule(self.update)  # _interval(self.update, 0.02)
+        pyglet.clock.schedule(self.update)
 
     def set_state(self, new_state):
         if self.state is not None:
@@ -241,6 +241,9 @@ class MainWindow(pyglet.window.Window):
     def on_switch_state(self, new_state):
         self.set_state(new_state)
 
+    def on_close(self):
+        self.on_quit_game()
+        
     def on_quit_game(self):
         pyglet.app.exit()
 
