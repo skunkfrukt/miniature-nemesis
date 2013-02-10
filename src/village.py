@@ -100,7 +100,7 @@ class Skeleton(Prop):
 
     def __init__(self, x, y, **kwargs):
         super(Skeleton, self).__init__(x, y, **kwargs)
-        self.set_sprite(pyglet.sprite.Sprite(self._image))
+        # self.set_sprite(pyglet.sprite.Sprite(self._image))
 
 
 # Actors
@@ -114,7 +114,7 @@ class Pebble(Projectile):
 
     def __init__(self):
         super(Pebble, self).__init__()
-        self.set_sprite(AnimatedSprite(self.animations, default='thrown'))
+        # self.set_sprite(AnimatedSprite(self.animations, default='thrown'))
         self.add_collider(collider.Collider(3, 3, width=1, height=1,
                 layer=HASH_AIR, effect=self.collision_effect))
 
@@ -149,7 +149,7 @@ class Peasant(Actor):
 
     def __init__(self, x, y, **kwargs):
         super(Peasant, self).__init__(x, y, **kwargs)
-        self.set_sprite(AnimatedSprite(self.animations, default='idle'))
+        # self.set_sprite(AnimatedSprite(self.animations, default='idle'))
         self.add_collider(collider.Collider(0,0,30,20, layer=1))
         self.add_collider(collider.Detector(60))
         self.speed = (0, 0)

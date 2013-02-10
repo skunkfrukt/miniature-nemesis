@@ -3,6 +3,9 @@ log = logging.getLogger(__name__)
 
 import pyglet
 
+import spritehandler
+SH = spritehandler
+
 class GameObject(pyglet.event.EventDispatcher):
     '''Superclass of all objects that are drawn on stage.'''
     preferred_rendering_group_index = None
@@ -42,6 +45,10 @@ class GameObject(pyglet.event.EventDispatcher):
         assert self.sprite is not None, "%s setting up None-sprite." % self
         self.sprite.batch = batch
         self.sprite.group = group
+        
+    def allocate_sprite(self):
+        assert self.sprite is None
+        self.sprite = SH.get_sprite(SH.FG, self.layer)
 
     def update_sprite(self, stage_offset):
         self.sprite.position = (int(self.x - stage_offset), int(self.y))

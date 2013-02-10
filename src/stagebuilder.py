@@ -27,7 +27,7 @@ def parse_single_stage(data):
     seed = data.get('seed', None)
     parsed_stage.seed = seed
 
-    parsed_stage.setup_layers(**data.get('layers'))
+    # parsed_stage.setup_layers(**data.get('layers'))
 
     bg_color = data.get('background_color', [127,127,127,255])
     parsed_stage.background_color = tuple(bg_color)

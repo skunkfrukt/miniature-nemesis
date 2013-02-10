@@ -5,9 +5,10 @@ import pyglet
 import random
 import itertools
 
-from pyglet.graphics import OrderedGroup as Layer
-
 import world
+import spritehandler
+SH = spritehandler
+
 from hero import Hero
 
 SCROLL_SPEED = 100
@@ -28,9 +29,9 @@ class Stage(pyglet.event.EventDispatcher):
         self.all_props = set()
         self.all_actors = set()
 
-        self.batch = pyglet.graphics.Batch()
+        '''self.batch = pyglet.graphics.Batch()
         self.root_group = pyglet.graphics.OrderedGroup(0)
-        self.layers = []
+        self.layers = []'''
 
         self.offset = 0
         self.is_scrolling = False
@@ -46,10 +47,9 @@ class Stage(pyglet.event.EventDispatcher):
             random.seed(self.seed)
         bg_pattern = pyglet.image.SolidColorImagePattern(
             self.background_color)
-        bg_image = bg_pattern.create_image(640, 360)
-        self.background = pyglet.sprite.Sprite(
-            bg_image, batch=self.batch,
-            group=self.layers[self.bg_layer])
+        bg_img = bg_pattern.create_image(640, 360)
+        self.background = SH.show_sprite(SH.BG, 0)
+        self.background.image = bg_img
         self.background.x = world.ZERO
 
         for sect in self.sections:
@@ -61,7 +61,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.hero = Hero()
         self.spawn_actors(set([self.hero]))
 
-    def setup_layers(self, background=1, props=2, actors=2,
+    '''def setup_layers(self, background=1, props=2, actors=2,
             projectiles=1, foreground=1):
         self.bg_layer = 0
         self.prop_layer = self.bg_layer + background
@@ -72,7 +72,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.layers = []
         for layer_index in range(total_layers):
             layer = Layer(layer_index, parent=self.root_group)
-            self.layers.append(layer)
+            self.layers.append(layer)'''
 
     def reset(self):
         self.despawn_props(self.all_props)
@@ -161,8 +161,7 @@ class Stage(pyglet.event.EventDispatcher):
 
     def spawn_props(self, props):
         for prop in props:
-            layer = self.layers[self.prop_layer + prop.layer]
-            prop.setup_sprite(self.batch, layer)
+            prop.allocate_sprite()
         self.all_props |= props
 
     def despawn_props(self, props):
@@ -172,8 +171,7 @@ class Stage(pyglet.event.EventDispatcher):
 
     def spawn_actors(self, actors):
         for actor in actors:
-            layer = self.layers[self.actor_layer + actor.layer]
-            actor.setup_sprite(self.batch, layer)
+            actor.allocate_sprite()
             log.debug(D_SPAWN_ACTOR.format(type(actor).__name__))
         self.all_actors |= actors
 

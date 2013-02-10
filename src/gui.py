@@ -13,6 +13,8 @@ import actor
 import stagebuilder
 
 import world
+import spritehandler
+SH = spritehandler
 
 class GameMenu:
     def __init__(self,options, initial_option = 0, wrap = True):
@@ -62,27 +64,23 @@ GameState.register_event_type('on_quit_game')
 
 
 class MenuState(GameState):
-    _logo = pyglet.resource.image('img/gui/pict_logo_gold.png')
-
     def __init__(self):
         super(MenuState, self).__init__()
-        if '--skipmenu' in sys.argv:
-            self.switch_state(PlayState())
-        self.bg_group = pyglet.graphics.OrderedGroup(0)
-        self.button_group = pyglet.graphics.OrderedGroup(1)
-        self.title_bg = pyglet.sprite.Sprite(pyglet.resource.image(
-                'img/gui/title_bg.png'), batch=self.batch, group=self.bg_group)
-        self.logo = pyglet.sprite.Sprite(self._logo,
-                batch=self.batch, group=self.button_group)
+        bg_img = pyglet.resource.image('img/gui/title_bg.png')
+        logo_img = pyglet.resource.image('img/gui/pict_logo_gold.png')
+        self.title_bg = SH.show_sprite(SH.BG, 0)
+        self.title_bg.image = bg_img
+        self.logo = SH.show_sprite(SH.BG, 1)
+        self.logo.image = logo_img
         self.menu = GameMenu(['Run','Quit'])
         self.menu.labels = []
         menu_item_center = (self.logo.width + WIN_WIDTH) // 2
         for o in self.menu.options:
             ly = 60 - len(self.menu.labels) * 20
             l = pyglet.text.Label(o, font_size=16, color=(0, 0, 0, 255),
-                    anchor_x='center', batch=self.batch,
+                    anchor_x='center', batch=spritehandler._batch,
                     x=menu_item_center, y=ly,
-                    group=self.button_group)
+                    group=spritehandler.get_layer(spritehandler.UI, 1))
             self.menu.labels.append(l)
         self.select_menu_item(self.menu.selected_option())
 
@@ -236,7 +234,8 @@ class MainWindow(pyglet.window.Window):
         self.state.on_key_release(symbol, modifiers)
 
     def on_draw(self):
-        self.state.draw()
+        # self.state.draw()
+        spritehandler._batch.draw()
 
     def on_switch_state(self, new_state):
         self.set_state(new_state)
