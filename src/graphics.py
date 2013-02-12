@@ -33,21 +33,6 @@ class AnimSet(object):
             log.error(E_NO_SUCH_ANIM.format(key=key, animset=self.name))
 
 
-class AnimSprite(pyglet.sprite.Sprite):
-    def __init__(self, animset, default_anim):
-        self.animset = animset
-        super(AnimSprite, self).__init__(self.animset.get(default_anim))
-        self.current_anim = default_anim
-
-    def play(self, key, force_restart = False):
-        if key == current_anim and not force_restart:
-            return
-        else:
-            anim = self.animset.get_anim(key)
-            self.image = anim
-            self.current_anim = key
-
-
 E_NO_SUCH_ANIM = 'No Anim {key} in AnimSet {animset}.'
 W_DUPLICATE_ANIM = 'Anim {key} already exists in AnimSet {animset}.'
 D_ADD_ANIM = 'Added Anim {key} to AnimSet {animset}.'

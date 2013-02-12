@@ -4,8 +4,7 @@ log = logging.getLogger(__name__)
 import pyglet
 import math
 import collider
-from gameobject import GameObject
-from animatedsprite import AnimatedSprite
+from gameobject import AnimatedGameObject
 from projectile import Projectile
 from pyglet.window import key
 
@@ -22,7 +21,7 @@ status_severity = {
         }
 
 
-class Actor(GameObject):
+class Actor(AnimatedGameObject):
     max_speed = 0.0
     acceleration = (100, 100)
     preferred_rendering_group_index = 2

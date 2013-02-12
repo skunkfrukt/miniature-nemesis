@@ -6,16 +6,16 @@ import pyglet
 import spritehandler
 SH = spritehandler
 
+from graphics import AnimSet
+
 class GameObject(pyglet.event.EventDispatcher):
     '''Superclass of all objects that are drawn on stage.'''
-    preferred_rendering_group_index = None
     required_classes = []
 
     def __init__(self, x, y, layer=0, **kwargs):
         if len(kwargs) > 0:
             log.warning(W_EXTRA_KWARGS.format(kwargs=kwargs))
         self.x, self.y = x, y
-        self.relative_layer = kwargs.pop('layer', 0)
         # self.kill()
         self.behavior = None
         self.width = None
@@ -41,11 +41,6 @@ class GameObject(pyglet.event.EventDispatcher):
         self.width = self.width or self.sprite.width
         self.height = self.height or self.sprite.height
 
-    def setup_sprite(self, batch, group):
-        assert self.sprite is not None, "%s setting up None-sprite." % self
-        self.sprite.batch = batch
-        self.sprite.group = group
-        
     def allocate_sprite(self):
         assert self.sprite is None
         self.sprite = SH.get_sprite(SH.FG, self.layer)
@@ -53,14 +48,17 @@ class GameObject(pyglet.event.EventDispatcher):
     def update_sprite(self, stage_offset):
         self.sprite.position = (int(self.x - stage_offset), int(self.y))
 
+    def set_image(self, image):
+        self.sprite.image = image
+
     def check_despawn(self, stage_offset):
         if self.right <= stage_offset:
             return True
         return False
 
     def despawn(self):
-        self.sprite.delete()
-        self.kill()
+        spritehandler.recycle(self.sprite)
+        self.sprite = None
         self.dispatch_event('on_despawn', self)
 
     def update(self, dt):
@@ -128,6 +126,19 @@ class GameObject(pyglet.event.EventDispatcher):
         pass
 
 GameObject.register_event_type('on_despawn')
+
+
+class AnimatedGameObject(GameObject):
+    anim_set = None
+
+    def __init__(self, x, y, layer=0, **kwargs):
+        super(AnimatedGameObject, self).__init__(x, y, layer, **kwargs)
+        self.current_anim = None
+
+    def play(self, anim_key, force_restart=False):
+        if force_restart or anim_key != self.current_anim:
+            self.set_image(self.anim_set.get_anim(anim_key))
+            self.current_anim = anim_key
 
 
 W_EXTRA_KWARGS = 'GameObject received extra kwargs: {kwargs}.'
