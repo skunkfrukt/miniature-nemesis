@@ -1,5 +1,5 @@
 {
-    "animSetName": "ANIM_HERO",
+    "animSetName": "ANIMSET_HERO",
     "source": {
         "image": "img/sprites/hero.png",
         "rows": 1,

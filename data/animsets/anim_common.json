@@ -2,7 +2,7 @@
     "multiple": true,
     "animSets": [
         {
-            "animSetName": "ANIMSET_PEBBLE",
+            "animSetName": "ANIM_PEBBLE",
             "source": {
                 "image": "img/sprites/pebble.png",
                 "rows": 1,
