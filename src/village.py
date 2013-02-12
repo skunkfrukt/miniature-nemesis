@@ -10,33 +10,29 @@ from actor import *
 
 
 class Rock(Prop):
-    collision_effect = {'effect_type': 'stun', 'duration': 0.5}
+    # Collision effect: Stun 0.5 s
     image = pyglet.resource.image('img/sprites/rock.png')
     builder_data = {'width': 2, 'height': 2, 'max_y': 7,
             'x_variance': 31, 'y_variance': 55}
 
     def __init__(self, x, y, **kwargs):
         super(Rock, self).__init__(x, y, **kwargs)
-        '''self.add_collider(collider.Collider(5, 10, 25, 30,
-                effect=self.collision_effect, layer=1))'''
 
 
 class Stone(Prop):
     BUILDER_NAME = 'PROP_STONE'
-    collision_effect = {'effect_type': 'trip', 'duration': 0.75}
+    # Collision effect: Trip 0.75 s
     image = pyglet.resource.image('img/sprites/stone.png')
     builder_data = {'width':1, 'height':1, 'max_y':7,
             'x_variance': 11, 'y_variance': 24}
 
     def __init__(self, x, y, **kwargs):
         super(Stone, self).__init__(x, y, **kwargs)
-        '''self.add_collider(collider.Collider(0, 0, 10, 10,
-                effect=self.collision_effect, layer=1))'''
 
 
 class House(Prop):
     num = 0
-    collision_effect = {'effect_type': 'stun', 'duration': 0.5}
+    # Collision effect: Stun 0.5 s
     images = pyglet.image.ImageGrid(
             pyglet.resource.image('img/sprites/house.png'),
             1, 3)
@@ -45,19 +41,11 @@ class House(Prop):
 
     def __init__(self, x, y, **kwargs):
         super(House, self).__init__(x, y, **kwargs)
-        '''self.add_collider(collider.Collider(
-                left=0, right=20, bottom=20, top=180,
-                effect={'effect_type': 'stun', 'duration': 0.5},
-                layer=1))
-        self.add_collider(collider.Collider(
-                left=20, right=180, bottom=0, top=20,
-                effect={'effect_type': 'stop', 'directions': 'n'},
-                layer=1))'''
         House.num += 1
 
 
 class HeroHouse(House):
-    collision_effect = {'effect-type': 'stun', 'duration': 0.5}
+    # Collision effect: Stun 0.5 s
     image = pyglet.resource.image('img/sprites/herohouse.png')
 
     def __init__(self, x, y, **kwargs):
@@ -65,7 +53,7 @@ class HeroHouse(House):
 
 
 class Church(Prop):
-    collision_effect = {'effect-type': 'stun', 'duration': 0.5}
+    # Collision effect: Stun 0.5 s
     image = pyglet.resource.image('img/sprites/church.png')
     builder_data = {'width':10, 'height':8, 'min_y':1,
             'x_variance': 5, 'y_variance': 23}
@@ -75,7 +63,7 @@ class Church(Prop):
 
 
 class Creek(Prop):
-    collision_effect = None
+    # Collision effect: Drown
     image = pyglet.resource.image('img/sprites/creek.png')
     builder_data = {'width':5, 'height':9,
             'x_variance': 20}
@@ -85,7 +73,7 @@ class Creek(Prop):
 
 
 class Skeleton(Prop):
-    collision_effect = None
+    # Collision effect: None
     image = pyglet.resource.image('img/sprites/skeleton.png')
     builder_data = {'width':1, 'height':1,
             'x_variance': 14, 'y_variance': 4}
@@ -98,16 +86,11 @@ class Skeleton(Prop):
 
 
 class Pebble(Projectile):
-    collision_effect = {'effect_type': 'trip', 'duration': 0.2}
     image = pyglet.resource.image('img/sprites/pebble.png')
+    # Collision effect: Trip 0.2 s
 
     def __init__(self):
         super(Pebble, self).__init__()
-        self.add_collider(collider.Collider(3, 3, width=1, height=1,
-                layer=HASH_AIR, effect=self.collision_effect))
-
-    def on_collision(self, other, rect, speed, effect):
-        pass  # self.kill()
 
 
 class Peasant(Actor):
@@ -116,7 +99,7 @@ class Peasant(Actor):
 
     max_speed = 60.0
     acceleration = (100, 100)
-    collision_effect = ('trip', 0.5)
+    # Collision effect: Trip 0.5 s
 
     FIRST_AIM_DELAY = 1.2
     AIM_DELAY = 0.6
@@ -126,8 +109,6 @@ class Peasant(Actor):
 
     def __init__(self, x, y, **kwargs):
         super(Peasant, self).__init__(x, y, **kwargs)
-        self.add_collider(collider.Collider(0,0,30,20, layer=1))
-        self.add_collider(collider.Detector(60))
         self.speed = (0, 0)
         self.target = None
         self.next_action_delay = 0.0
@@ -259,16 +240,12 @@ class Peasant(Actor):
             if abs(self.y - target.y) < 200:
                 self.target = target
 
-    def on_collision(self, other, rect, speed, effect):
-        if effect is not None and effect['effect_type'] in ['stun', 'trip']:
-            self.behavior = self.behave_trip
-
 
 class PeasantB(Peasant):
 
     max_speed = 60.0
     acceleration = (100, 100)
-    # collision_effect = ('trip', 0.5)
+    # Collision effect: Trip 0.5 s
 
     FIRST_AIM_DELAY = 0.6
     AIM_DELAY = 0.3
@@ -392,7 +369,6 @@ class Preacher(Actor):
 
     def __init__(self, x, y, **kwargs):
         super(Preacher, self).__init__(x, y, **kwargs)
-        self.add_collider(collider.Collider(0,0,30,20, layer=1))
         self.speed = (0, 0)
         self.target = None
         self.next_action_delay = 0.0

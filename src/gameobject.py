@@ -22,8 +22,6 @@ class GameObject(pyglet.event.EventDispatcher):
         self.height = None
         self.speed = None
         self.sprite = None
-        self.collider = None
-        self.colliders = None
         self.layer = layer
 
     def kill(self):
@@ -68,23 +66,10 @@ class GameObject(pyglet.event.EventDispatcher):
             self.y += dy
         else:
             dx, dy = 0, 0
-        if self.colliders is not None:
-            for collider in self.colliders:
-                collider.move(self.x, self.y, (dx, dy))
 
     def behave(self, dt):
         if self.behavior is not None:
             self.behavior(dt)
-
-    def add_collider(self, collider):
-        if collider is None:
-            return
-        if self.colliders is None:
-            self.colliders = []
-        collider.parent = self
-        self.colliders.append(collider)
-        collider.move(self.x, self.y)
-        collider.push_handlers(self)
 
     @property
     def left(self):
@@ -121,9 +106,6 @@ class GameObject(pyglet.event.EventDispatcher):
     @property
     def rect(self):
         return (self.left, self.bottom, self.right, self.top)
-
-    def on_collision(self, other, rect, speed, effect):
-        pass
 
 GameObject.register_event_type('on_despawn')
 

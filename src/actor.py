@@ -3,7 +3,6 @@ log = logging.getLogger(__name__)
 
 import pyglet
 import math
-import collider
 from gameobject import AnimatedGameObject
 from projectile import Projectile
 from pyglet.window import key
@@ -169,13 +168,5 @@ class Actor(AnimatedGameObject):
         GameObject.reset(self, x, y)
         self.dispatch_event('on_spawn', self, x, y)
 
-    '''def add_collider(self, collider):
-        collider.parent = self
-        GameObject.add_collider(self, collider)'''
-
 Actor.register_event_type('on_projectile_fired')
 Actor.register_event_type('on_spawn')
-
-
-
-

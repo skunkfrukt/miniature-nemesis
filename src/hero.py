@@ -48,6 +48,3 @@ class Hero(Actor):
             else:
                 self.play('run')
 
-    def on_collision(self, other, rect, speed, effect):
-        if effect:
-            self.apply_status(**effect)
