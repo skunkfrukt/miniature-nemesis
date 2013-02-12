@@ -37,9 +37,6 @@ class Actor(GameObject):
         self.status = 'ok'
         self.apply_status('ok')
 
-    def play(self, animation):
-        self.sprite.play(animation)
-
     def wait(self, duration, priority=0):
         self.current_action_priority = priority
         self.next_action_delay = duration
