@@ -341,25 +341,6 @@ class PeasantB(Peasant):
             self.apply_status(**effect)
 
 
-class PeasantC(PeasantB):
-    _image = pyglet.resource.image('img/sprites/peasant_rc1.png')
-    FIRST_AIM_DELAY = 0.6
-    AIM_DELAY = 0.1
-    THROW_DELAY = 0.1
-    NUMBER_OF_THROWS = 8
-
-    max_speed = 300
-
-    def reset(self, x, y):
-        Actor.reset(self, x, y)
-        self.target = None
-        self.frustration = 0
-        self.behavior = self.behave_idle
-        self.aiming = False
-        self.throwing = False
-        self.sprite.color = (63, 0, 0)
-
-
 class Preacher(Actor):
     anim_set = "ANIMSET_PREACHER"
 

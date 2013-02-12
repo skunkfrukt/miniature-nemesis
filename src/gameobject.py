@@ -16,7 +16,6 @@ class GameObject(pyglet.event.EventDispatcher):
         if len(kwargs) > 0:
             log.warning(W_EXTRA_KWARGS.format(kwargs=kwargs))
         self.x, self.y = x, y
-        # self.kill()
         self.behavior = None
         self.width = None
         self.height = None
@@ -25,14 +24,7 @@ class GameObject(pyglet.event.EventDispatcher):
         self.layer = layer
 
     def kill(self):
-        pass
-        self.x = 0
-        self.y = 360
         self.dead = True
-
-    def reset(self, x, y):
-        self.x, self.y = x, y
-        self.dead = False
 
     def set_sprite(self, sprite):
         self.sprite = sprite
