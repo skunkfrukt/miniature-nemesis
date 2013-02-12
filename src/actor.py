@@ -27,15 +27,6 @@ class Actor(GameObject):
     acceleration = (100, 100)
     preferred_rendering_group_index = 2
 
-    @classmethod
-    def make_animations(cls, image, number_of_frames, frame_data):
-        fis = pyglet.image.Animation.from_image_sequence
-        grid = pyglet.image.ImageGrid(image, 1, number_of_frames)
-        animations = {}
-        for name, template in frame_data.items():
-            animations[name] = fis(grid[slice(*template[0])], *template[1:])
-        return animations
-
     def __init__(self, x, y, **kwargs):
         super(Actor, self).__init__(x, y, **kwargs)
         self.collider = None
