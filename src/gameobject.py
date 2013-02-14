@@ -6,6 +6,8 @@ import pyglet
 import spritehandler
 SH = spritehandler
 
+import world
+
 from graphics import AnimSet
 
 class GameObject(pyglet.event.EventDispatcher):
@@ -103,7 +105,7 @@ GameObject.register_event_type('on_despawn')
 
 
 class AnimatedGameObject(GameObject):
-    anim_set = None
+    _anim_set = None
 
     def __init__(self, x, y, layer=0, **kwargs):
         super(AnimatedGameObject, self).__init__(x, y, layer, **kwargs)
@@ -113,6 +115,10 @@ class AnimatedGameObject(GameObject):
         if force_restart or anim_key != self.current_anim:
             self.set_image(self.anim_set.get_anim(anim_key))
             self.current_anim = anim_key
+
+    @property
+    def anim_set(self):
+        return world.anim_sets[self._anim_set]
 
 
 W_EXTRA_KWARGS = 'GameObject received extra kwargs: {kwargs}.'

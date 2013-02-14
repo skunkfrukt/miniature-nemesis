@@ -5,7 +5,7 @@ from pyglet.window import key
 from actor import Actor
 
 class Hero(Actor):
-    anim_set = "ANIMSET_HERO"
+    _anim_set = "ANIMSET_HERO"
 
     max_speed = 80.0
     acceleration = (200, 400)

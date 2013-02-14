@@ -94,7 +94,7 @@ class Pebble(Projectile):
 
 
 class Peasant(Actor):
-    anim_set = "ANIMSET_PEASANT"
+    _anim_set = "ANIMSET_PEASANT"
     required_classes = [Pebble]
 
     max_speed = 60.0
@@ -342,7 +342,7 @@ class PeasantB(Peasant):
 
 
 class Preacher(Actor):
-    anim_set = "ANIMSET_PREACHER"
+    _anim_set = "ANIMSET_PREACHER"
 
     max_speed = 120.0
     acceleration = (100, 100)

@@ -1,3 +1,4 @@
+images = {}
 anim_sets = {}
 stages = {}
 constants = {}

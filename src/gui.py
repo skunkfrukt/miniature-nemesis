@@ -50,9 +50,6 @@ class GameState(pyglet.event.EventDispatcher):
     def __init__(self):
         self.batch = pyglet.graphics.Batch()
 
-    def draw(self):
-        self.batch.draw()
-
     def update(self, dt):
         pass
 
@@ -147,10 +144,6 @@ class PlayState(GameState):
         else:
             self.level.update(0)
 
-    def draw(self):
-        self.level.batch.draw()
-        # self.batch.draw()
-
     def on_hero_death(self):
         bm = pyglet.image.get_buffer_manager()
         id = bm.get_color_buffer().get_image_data()
@@ -243,7 +236,7 @@ class MainWindow(pyglet.window.Window):
 
     def on_close(self):
         self.on_quit_game()
-        
+
     def on_quit_game(self):
         pyglet.app.exit()
 
