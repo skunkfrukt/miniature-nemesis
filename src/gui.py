@@ -15,36 +15,7 @@ import stagebuilder
 import world
 import spritehandler
 SH = spritehandler
-
-class GameMenu:
-    def __init__(self,options, initial_option = 0, wrap = True):
-        self.options = options
-        self.selected_index = initial_option
-        self.wrap_around = wrap
-
-    def next_option(self):
-        return self.change_selected_index(1)
-
-    def previous_option(self):
-        return self.change_selected_index(-1)
-
-    def change_selected_index(self, di):
-        new_selected_index = self.selected_index + di
-        if self.wrap_around:
-            while new_selected_index < 0:
-                new_selected_index += len(self.options)
-            self.selected_index = new_selected_index % len(self.options)
-        elif new_selected_index in range(len(self_options)):
-            self.selected_index = new_selected_index
-        else:
-            pass # Throw some kind of an error or do nothing, maybe.
-        return self.selected_index
-
-    def selected_option(self):
-        return self.selected_index
-
-    def selected_option_name(self):
-        return self.options[self.selected_option()]
+import menu
 
 class GameState(pyglet.event.EventDispatcher):
     def __init__(self):
@@ -69,7 +40,7 @@ class MenuState(GameState):
         self.title_bg.image = bg_img
         self.logo = SH.show_sprite(SH.BG, 1)
         self.logo.image = logo_img
-        self.menu = GameMenu(['Run','Quit'])
+        self.menu = menu.GameMenu(['Run','Quit'])
         self.menu.labels = []
         menu_item_center = (self.logo.width + WIN_WIDTH) // 2
         for o in self.menu.options:
