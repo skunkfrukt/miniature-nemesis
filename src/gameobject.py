@@ -43,15 +43,13 @@ class GameObject(pyglet.event.EventDispatcher):
     def set_image(self, image):
         self.sprite.image = image
 
-    def check_despawn(self, stage_offset):
-        if self.right <= stage_offset:
-            return True
-        return False
-
     def despawn(self):
+        self.recycle()
+        self.dispatch_event('on_despawn', self)
+
+    def recycle(self):
         spritehandler.recycle(self.sprite)
         self.sprite = None
-        self.dispatch_event('on_despawn', self)
 
     def update(self, dt):
         if self.speed is not None:
