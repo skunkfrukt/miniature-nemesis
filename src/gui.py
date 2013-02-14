@@ -77,10 +77,11 @@ class MenuState(GameState):
         menu_item_center = (self.logo.width + WIN_WIDTH) // 2
         for o in self.menu.options:
             ly = 60 - len(self.menu.labels) * 20
-            l = pyglet.text.Label(o, font_size=16, color=(0, 0, 0, 255),
-                    anchor_x='center', batch=spritehandler._batch,
-                    x=menu_item_center, y=ly,
-                    group=spritehandler.get_layer(spritehandler.UI, 1))
+            l = pyglet.text.Label(o, font_name='Uncial Antiqua',
+                font_size=16, color=(0, 0, 0, 255),
+                anchor_x='center', batch=spritehandler._batch,
+                x=menu_item_center, y=ly,
+                group=spritehandler.get_layer(spritehandler.UI, 1))
             self.menu.labels.append(l)
         self.select_menu_item(self.menu.selected_option())
 
@@ -173,7 +174,7 @@ class GameOverState(GameState):
         self.snapshot.color = (127,0,0)
         self.game_over_label = pyglet.text.Label(
                 text='Thou diest!', color=(255, 0, 0, 255),
-                font_name='Papyrus', font_size=80,
+                font_name='Uncial Antiqua', font_size=80,
                 x=320, y=180, anchor_x='center', anchor_y='center',
                 batch=self.batch, group=self.gui_group)
 
@@ -191,7 +192,7 @@ class WinState(GameState):
         self.snapshot.color = (191,127,0)
         self.game_over_label = pyglet.text.Label(
                 text='Hurrah!', color=(255, 255, 0, 255),
-                font_name='Comic Sans MS', font_size=80,
+                font_name='Uncial Antiqua', font_size=80,
                 x=320, y=180, anchor_x='center', anchor_y='center',
                 batch=self.batch, group=self.gui_group)
 

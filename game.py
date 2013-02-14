@@ -28,6 +28,8 @@ if log_level == logging.DEBUG:
 
 import pyglet
 
+pyglet.font.add_directory('fonts')
+
 log.info('Loading game data.')
 
 from src import worldbuilder
