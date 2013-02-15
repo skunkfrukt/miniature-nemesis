@@ -23,8 +23,8 @@ log_level = args.logging_level
 log.setLevel(log_level)
 log.info('{} logging enabled.'.format(logging.getLevelName(log_level)))
 
-if log_level == logging.DEBUG:
-    world.ZERO = 320
+'''if log_level == logging.DEBUG:
+    world.ZERO = 320'''
 
 import pyglet
 
