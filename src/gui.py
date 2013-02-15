@@ -21,6 +21,12 @@ class GameState(pyglet.event.EventDispatcher):
     def __init__(self):
         self.batch = pyglet.graphics.Batch()
 
+    def setup(self):
+        pass
+
+    def teardown(self):
+        pass
+
     def update(self, dt):
         pass
 
@@ -34,39 +40,42 @@ GameState.register_event_type('on_quit_game')
 class MenuState(GameState):
     def __init__(self):
         super(MenuState, self).__init__()
+        self.menu = menu.GameMenu()
+        # If no levels have been beaten, add simple Run button.
+        plr = pyglet.image.ImageGrid(
+            pyglet.resource.image('img/sprites/hero.png'), 1, 14)
+        self.menu.add_element(menu.MenuButton('RUN',
+            *plr[2:5], x=396+(640-396-50)/2, y=100, layer=2))
+        # Else, add smaller Run button with level icons.
+        self.menu.add_element(menu.MenuButton('QUIT',
+            *plr[8:11], x=396+(640-396-50)/2, y=50, layer=2))
         bg_img = pyglet.resource.image('img/gui/title_bg.png')
         logo_img = pyglet.resource.image('img/gui/pict_logo_gold.png')
-        self.title_bg = SH.show_sprite(SH.BG, 0)
-        self.title_bg.image = bg_img
-        self.logo = SH.show_sprite(SH.BG, 1)
-        self.logo.image = logo_img
-        self.menu = menu.GameMenu(['Run','Quit'])
-        self.menu.labels = []
-        menu_item_center = (self.logo.width + WIN_WIDTH) // 2
-        for o in self.menu.options:
-            ly = 60 - len(self.menu.labels) * 20
-            l = pyglet.text.Label(o, font_name='Uncial Antiqua',
-                font_size=16, color=(0, 0, 0, 255),
-                anchor_x='center', batch=spritehandler._batch,
-                x=menu_item_center, y=ly,
-                group=spritehandler.get_layer(spritehandler.UI, 1))
-            self.menu.labels.append(l)
-        self.select_menu_item(self.menu.selected_option())
+        self.bg = menu.MenuObject(bg_img, 0, 0)
+        self.logo = menu.MenuObject(logo_img, 0, 0, layer=1)
+
+    def setup(self):
+        self.bg.allocate_sprite()
+        self.logo.allocate_sprite()
+        self.bg.show()
+        self.logo.show()
+        self.menu.setup()
+
+    def teardown(self):
+        self.bg.recycle()
+        self.logo.recycle()
+        self.menu.teardown()
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.ENTER:
-            if self.menu.selected_option_name() == 'Run':
+            if self.menu.get_selection() == 'RUN':
                 self.switch_state(PlayState())
-            elif self.menu.selected_option_name() == 'Quit':
+            elif self.menu.get_selection() == 'QUIT':
                 self.quit()
         elif symbol == key.UP:
-            self.unselect_menu_item(self.menu.selected_option())
             self.menu.previous_option()
-            self.select_menu_item(self.menu.selected_option())
         elif symbol == key.DOWN:
-            self.unselect_menu_item(self.menu.selected_option())
             self.menu.next_option()
-            self.select_menu_item(self.menu.selected_option())
 
     def on_key_release(self, symbol, modifiers):
         pass
@@ -178,19 +187,23 @@ class MainWindow(pyglet.window.Window):
         super(MainWindow, self).__init__(WIN_WIDTH + world.ZERO*2, WIN_HEIGHT,
                 WIN_TITLE, fullscreen=fullscreen)
         self.state = None
-        self.set_state(MenuState())
+        menustate = MenuState()
+        self.set_state(menustate)
         self.push_handlers(keys)
         try:
-            self.set_icon(*self.icons)
+            self.set_icon(self.icons[-1])
         except AttributeError:
             pass  # If the icon refuses to work, that's no big deal for now.
         pyglet.clock.schedule(self.update)
 
     def set_state(self, new_state):
         if self.state is not None:
+            self.state.teardown()
             self.state.pop_handlers()
         self.state = new_state
-        self.state.push_handlers(self)
+        if self.state is not None:
+            self.state.setup()
+            self.state.push_handlers(self)
 
     def on_key_press(self, symbol, modifiers):
         self.state.on_key_press(symbol, modifiers)
@@ -199,8 +212,8 @@ class MainWindow(pyglet.window.Window):
         self.state.on_key_release(symbol, modifiers)
 
     def on_draw(self):
-        # self.state.draw()
-        spritehandler._batch.draw()
+        if self.state is not None:
+            spritehandler._batch.draw()
 
     def on_switch_state(self, new_state):
         self.set_state(new_state)
@@ -209,6 +222,7 @@ class MainWindow(pyglet.window.Window):
         self.on_quit_game()
 
     def on_quit_game(self):
+        self.set_state(None)
         pyglet.app.exit()
 
     def update(self,dt):
