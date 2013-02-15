@@ -1,3 +1,6 @@
+import logging
+log = logging.getLogger(__name__)
+
 import pyglet
 
 import spritehandler
@@ -49,6 +52,7 @@ class GameMenu:
             self.set_selected_index(new_selected_index % len(self.elements))
         else:
             pass # Throw some kind of an error or do nothing, maybe.
+        log.debug('Changed to menu option {}'.format(self.get_selection()))
 
     def add_element(self, element):
         self.elements.append(element)
