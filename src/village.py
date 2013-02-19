@@ -43,6 +43,10 @@ class House(Prop):
         super(House, self).__init__(x, y, **kwargs)
         House.num += 1
 
+    @property
+    def image(self):
+        return self.images[self.num % 3]
+
 
 class HeroHouse(House):
     # Collision effect: Stun 0.5 s

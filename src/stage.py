@@ -29,10 +29,6 @@ class Stage(pyglet.event.EventDispatcher):
         self.all_props = set()
         self.all_actors = set()
 
-        '''self.batch = pyglet.graphics.Batch()
-        self.root_group = pyglet.graphics.OrderedGroup(0)
-        self.layers = []'''
-
         self.offset = 0
         self.is_scrolling = False
         self.actual_scroll_speed = 0
@@ -60,19 +56,6 @@ class Stage(pyglet.event.EventDispatcher):
         self.is_scrolling = True
         self.hero = Hero()
         self.spawn_actors(set([self.hero]))
-
-    '''def setup_layers(self, background=1, props=2, actors=2,
-            projectiles=1, foreground=1):
-        self.bg_layer = 0
-        self.prop_layer = self.bg_layer + background
-        self.actor_layer = self.prop_layer + props
-        self.projectile_layer = self.actor_layer + actors
-        self.fg_layer = self.projectile_layer + projectiles
-        total_layers = self.fg_layer + foreground
-        self.layers = []
-        for layer_index in range(total_layers):
-            layer = Layer(layer_index, parent=self.root_group)
-            self.layers.append(layer)'''
 
     def reset(self):
         self.despawn_props(self.all_props)
@@ -162,6 +145,7 @@ class Stage(pyglet.event.EventDispatcher):
     def spawn_props(self, props):
         for prop in props:
             prop.allocate_sprite()
+            prop.show()
         self.all_props |= props
 
     def despawn_props(self, props):
@@ -172,6 +156,7 @@ class Stage(pyglet.event.EventDispatcher):
     def spawn_actors(self, actors):
         for actor in actors:
             actor.allocate_sprite()
+            actor.show()
             log.debug(D_SPAWN_ACTOR.format(type(actor).__name__))
         self.all_actors |= actors
 
@@ -200,7 +185,7 @@ class Stage(pyglet.event.EventDispatcher):
     def stage_height(self):
         return 360  ##TODO## MN
         return world.constants['WIN_HEIGHT']
-        
+
     def send_keys_to_hero(self, keys, pressed=None, released=None):
         if self.hero is not None:
             self.hero.fixSpeed(keys)

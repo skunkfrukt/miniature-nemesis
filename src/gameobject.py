@@ -99,6 +99,9 @@ class GameObject(pyglet.event.EventDispatcher):
     def rect(self):
         return (self.left, self.bottom, self.right, self.top)
 
+    def show(self):
+        self.sprite.visible = True
+
 GameObject.register_event_type('on_despawn')
 
 

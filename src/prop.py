@@ -1,12 +1,15 @@
-from gameobject import GameObject
+import gameobject
 
-class Prop(GameObject):
+class Prop(gameobject.GameObject):
     collision_effect = None
-    preferred_rendering_group_index = 1  # R_GROUP_PROPS
 
     def __init__(self, x, y, **kwargs):
         super(Prop, self).__init__(x, y, **kwargs)
         # self.collider = None
+
+    def show(self):
+        self.sprite.image = self.image
+        super(Prop, self).show()
 
     '''def setup_sprite(self, batch, group):
         if self.sprite is not None:
