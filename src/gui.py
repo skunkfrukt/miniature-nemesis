@@ -197,6 +197,9 @@ class MainWindow(pyglet.window.Window):
         pyglet.clock.schedule(self.update)
 
     def set_state(self, new_state):
+        for layer in spritehandler._sprite_layers:
+            log.info('Layer {}: {}'.format(layer,
+                len(spritehandler._sprite_layers[layer]._all_sprites)))
         if self.state is not None:
             self.state.teardown()
             self.state.pop_handlers()
