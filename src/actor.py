@@ -33,7 +33,7 @@ class Actor(AnimatedGameObject):
         self.next_action_delay = 0.0
         self.current_action_priority = 0
         self.status = 'ok'
-        self.apply_status('ok')
+        # self.apply_status('ok')
 
     def wait(self, duration, priority=0):
         self.current_action_priority = priority
@@ -88,65 +88,6 @@ class Actor(AnimatedGameObject):
     def animate(self):
         pass
 
-    def apply_status(self, effect_type=None, priority=0, force=False,
-            **kwargs):
-        if not force:
-            # temp:
-            if effect_type in status_severity:
-                priority = status_severity[effect_type]
-            # end temp
-            if priority <= self.current_action_priority:
-                return False
-        try:
-            effect_method = getattr(self, effect_type)
-        except AttributeError:
-            log.debug('{} has no method {}'.format(self, effect_type))
-        else:
-            effect_method(**kwargs)
-            self.status = effect_type
-
-    def stun(self, duration=0.5, **kwargs):
-        self.speed = (-100, 0)
-        self.wait(duration, priority=4)
-
-    def stop(self, directions='nesw', **kwargs):
-        dx, dy = self.speed
-        dir_x, dir_y = cmp(dx, 0), cmp(dy, 0)
-        if dir_x < 0 and 'w' in directions:
-            dx = 0
-        elif dir_x > 0 and 'e' in directions:
-            dx = 0
-        if dir_y < 0 and 's' in directions:
-            dy = 0
-        elif dir_y > 0 and 'n' in directions:
-            dy = 0
-        self.speed = (dx, dy)
-        self.status = 'ok'
-
-    def trip(self, duration=0.2, **kwargs):
-        self.wait(duration, priority=1)
-
-    def ok(self, **kwargs):  # temp
-        self.wait(0)
-
-    def rise(self, **kwargs):  # temp
-        self.speed = (0, 0)
-        self.wait(0.3, priority=3)
-
-    def tumble(self, **kwargs):  # temp
-        self.speed = (self.max_speed * 2, 0)
-        self.wait(1.0, priority=2)
-
-    def dead(self, **kwargs):  # temp
-        self.speed = (0, 0)
-
-    def setup_sprite(self, batch, group):
-        if self.sprite is not None:
-            if batch is not None:
-                self.sprite.batch = batch
-            if group is not None:
-                self.sprite.group = group
-
     def reset(self, x, y):
         self.speed = (0,0)
         super(Actor, self).reset(x, y)
@@ -165,7 +106,7 @@ class Actor(AnimatedGameObject):
                 target_x, target_y, speed)
 
     def reset(self, x, y):
-        GameObject.reset(self, x, y)
+        super(Actor, self).reset(x, y)
         self.dispatch_event('on_spawn', self, x, y)
 
 Actor.register_event_type('on_projectile_fired')
