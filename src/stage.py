@@ -45,7 +45,7 @@ class Stage(pyglet.event.EventDispatcher):
             random.seed(self.seed)
         bg_pattern = pyglet.image.SolidColorImagePattern(
             self.background_color)
-        bg_img = bg_pattern.create_image(640, 360)
+        bg_img = bg_pattern.create_image(640, 360) ##TODO## Magic number.
         self.background = SH.show_sprite(SH.BG, 0)
         self.background.image = bg_img
         self.background.x = world.ZERO
@@ -180,12 +180,10 @@ class Stage(pyglet.event.EventDispatcher):
 
     @property
     def stage_width(self):
-        return 640 * len(self.sections)  ##TODO## MN
         return world.constants['WIN_WIDTH'] * len(self.sections)
 
     @property
     def stage_height(self):
-        return 360  ##TODO## MN
         return world.constants['WIN_HEIGHT']
 
     def send_keys_to_hero(self, keys, pressed=None, released=None):

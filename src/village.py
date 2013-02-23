@@ -120,7 +120,6 @@ class Pebble(Projectile):
 
 class Peasant(Actor):
     _anim_set = "ANIMSET_PEASANT"
-    required_classes = [Pebble]
 
     max_speed = 60.0
     acceleration = (100, 100)
