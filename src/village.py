@@ -25,7 +25,7 @@ OFFSET_SKELETON = Vector(1, 1)
 
 class Rock(Prop):
     # Collision effect: Stun 0.5 s
-    image = pyglet.resource.image('img/sprites/rock.png')
+    _image = pyglet.resource.image('img/sprites/rock.png')
     builder_data = {'width': 2, 'height': 2, 'max_y': 7,
             'x_variance': 31, 'y_variance': 55}
 
@@ -36,7 +36,7 @@ class Rock(Prop):
 class Stone(Prop):
     BUILDER_NAME = 'PROP_STONE'
     # Collision effect: Trip 0.75 s
-    image = pyglet.resource.image('img/sprites/stone.png')
+    _image = pyglet.resource.image('img/sprites/stone.png')
     builder_data = {'width':1, 'height':1, 'max_y':7,
             'x_variance': 11, 'y_variance': 24}
 
@@ -47,7 +47,7 @@ class Stone(Prop):
 class House(Prop):
     num = 0
     # Collision effect: Stun 0.5 s
-    images = pyglet.image.ImageGrid(
+    _images = pyglet.image.ImageGrid(
             pyglet.resource.image('img/sprites/house.png'),
             1, 3)
     builder_data = {'width':5, 'height':5, 'min_y':2, 'max_y': 7,
@@ -59,12 +59,12 @@ class House(Prop):
 
     @property
     def image(self):
-        return self.images[self.num % 3]
+        return self._images[self.num % 3]
 
 
 class HeroHouse(House):
     # Collision effect: Stun 0.5 s
-    image = pyglet.resource.image('img/sprites/herohouse.png')
+    _image = pyglet.resource.image('img/sprites/herohouse.png')
 
     def __init__(self, position, **kwargs):
         super(HeroHouse, self).__init__(position, **kwargs)
@@ -72,7 +72,7 @@ class HeroHouse(House):
 
 class Church(Prop):
     # Collision effect: Stun 0.5 s
-    image = pyglet.resource.image('img/sprites/church.png')
+    _image = pyglet.resource.image('img/sprites/church.png')
     builder_data = {'width':10, 'height':8, 'min_y':1,
             'x_variance': 5, 'y_variance': 23}
 
@@ -82,7 +82,9 @@ class Church(Prop):
 
 class Creek(Prop):
     # Collision effect: Drown
-    image = pyglet.resource.image('img/sprites/creek.png')
+    _sourceimg = pyglet.resource.image('img/sprites/creek.png')
+    _image = pyglet.image.Animation.from_image_sequence(
+        pyglet.image.ImageGrid(_sourceimg, 1, 2), 1.0, True)
     builder_data = {'width':5, 'height':9,
             'x_variance': 20}
 
@@ -92,7 +94,7 @@ class Creek(Prop):
 
 class Skeleton(Prop):
     # Collision effect: None
-    image = pyglet.resource.image('img/sprites/skeleton.png')
+    _image = pyglet.resource.image('img/sprites/skeleton.png')
     builder_data = {'width':1, 'height':1,
             'x_variance': 14, 'y_variance': 4}
 
@@ -109,7 +111,7 @@ HITBOX_PREACHER = Vector(1, 1)
 
 
 class Pebble(Projectile):
-    image = pyglet.resource.image('img/sprites/pebble.png')
+    _image = pyglet.resource.image('img/sprites/pebble.png')
     # Collision effect: Trip 0.2 s
 
     def __init__(self):

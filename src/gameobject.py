@@ -43,17 +43,12 @@ class GameObject(pyglet.event.EventDispatcher):
     def kill(self):
         self.dead = True
 
-    def set_sprite(self, sprite):
-        self.sprite = sprite
-        self.width = self.width or self.sprite.width
-        self.height = self.height or self.sprite.height
-
     def allocate_sprite(self):
         assert self.sprite is None
         self.sprite = SH.get_sprite(SH.FG, self.layer)
 
-    def update_sprite(self, stage_offset):
-        self.sprite.position = (int(self.x - stage_offset), int(self.y))
+    def update_sprite(self):
+        self.sprite.image = self.image
 
     def align_sprite(self, stage_offset):
         self.sprite.position = self.position + self.offset - stage_offset
@@ -116,6 +111,10 @@ class GameObject(pyglet.event.EventDispatcher):
     def show(self):
         self.sprite.visible = True
 
+    @property
+    def image(self):
+        return self._image
+
 GameObject.register_event_type('on_despawn')
 
 
@@ -128,12 +127,20 @@ class AnimatedGameObject(GameObject):
 
     def play(self, anim_key, force_restart=False):
         if force_restart or anim_key != self.current_anim:
-            self.set_image(self.anim_set.get_anim(anim_key))
             self.current_anim = anim_key
+            self.update_sprite()
 
     @property
     def anim_set(self):
         return world.anim_sets[self._anim_set]
+
+    def show(self):
+        self.update_sprite()
+        super(AnimatedGameObject, self).show()
+
+    @property
+    def image(self):
+        return self.anim_set.get_anim(self.current_anim)
 
 
 W_EXTRA_KWARGS = 'GameObject received extra kwargs: {kwargs}.'

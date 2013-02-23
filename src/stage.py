@@ -104,9 +104,9 @@ class Stage(pyglet.event.EventDispatcher):
 
     def update_sprites(self):
         for actor in self.all_actors:
-            actor.update_sprite(self.offset - world.ZERO)
+            actor.align_sprite(self.offset)
         for prop in self.all_props:
-            prop.update_sprite(self.offset - world.ZERO)
+            prop.align_sprite(self.offset)
 
     def advance_section(self):
         if self.active_section is not None:

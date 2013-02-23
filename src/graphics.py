@@ -22,6 +22,8 @@ class AnimSet(object):
         if key in self.anims:
             log.warning(W_DUPLICATE_ANIM.format(key=key, animset=self.name))
         anim = afis([self.grid[f] for f in frames], period, loop)
+        if len(self.anims) == 0:
+            self.anims[None] = anim
         self.anims[key] = anim
 
         log.debug(D_ADD_ANIM.format(key=key, animset=self.name))
