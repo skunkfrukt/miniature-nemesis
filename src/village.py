@@ -136,13 +136,15 @@ class Peasant(Actor):
         self.speed = VECTOR_NULL
         self.target = None
         self.next_action_delay = 0.0
+        self.behavior = self.behave_charge_ahead
 
     def update_speed(self, dt):
         pass
 
     def behave(self, dt):
         self.next_action_delay -= dt
-        self.behavior(dt)
+        if self.behavior is not None:
+            self.behavior(dt)
 
     def reset(self, x, y):
         Actor.reset(self, x, y)
