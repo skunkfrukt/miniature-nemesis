@@ -4,14 +4,21 @@ from pyglet.window import key
 
 from actor import Actor
 
+from vector import *
+
+
+HITBOX_HERO = Vector(30, 20)
+OFFSET_HERO = VECTOR_NULL
+
+
 class Hero(Actor):
     _anim_set = "ANIMSET_HERO"
 
     max_speed = 80.0
-    acceleration = (200, 400)
+    acceleration = Vector(200, 400)
 
-    def __init__(self):
-        super(Hero, self).__init__(0, 0)
+    def __init__(self, position):
+        super(Hero, self).__init__(position, HITBOX_HERO)
 
     def fixSpeed(self, keys):
         dirx = 0

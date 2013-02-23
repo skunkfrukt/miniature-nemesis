@@ -9,14 +9,28 @@ from actor import *
 # Props
 
 
+HITBOX_ROCK = Vector(1, 1)
+HITBOX_STONE = Vector(1, 1)
+HITBOX_HOUSE = Vector(1, 1)
+HITBOX_CHURCH = Vector(1, 1)
+HITBOX_CREEK = Vector(1, 1)
+HITBOX_SKELETON = Vector(1, 1)
+OFFSET_ROCK = Vector(1, 1)
+OFFSET_STONE = Vector(1, 1)
+OFFSET_HOUSE = Vector(1, 1)
+OFFSET_CHURCH = Vector(1, 1)
+OFFSET_CREEK = Vector(1, 1)
+OFFSET_SKELETON = Vector(1, 1)
+
+
 class Rock(Prop):
     # Collision effect: Stun 0.5 s
     image = pyglet.resource.image('img/sprites/rock.png')
     builder_data = {'width': 2, 'height': 2, 'max_y': 7,
             'x_variance': 31, 'y_variance': 55}
 
-    def __init__(self, x, y, **kwargs):
-        super(Rock, self).__init__(x, y, **kwargs)
+    def __init__(self, position, **kwargs):
+        super(Rock, self).__init__(position, HITBOX_ROCK, **kwargs)
 
 
 class Stone(Prop):
@@ -26,8 +40,8 @@ class Stone(Prop):
     builder_data = {'width':1, 'height':1, 'max_y':7,
             'x_variance': 11, 'y_variance': 24}
 
-    def __init__(self, x, y, **kwargs):
-        super(Stone, self).__init__(x, y, **kwargs)
+    def __init__(self, position, **kwargs):
+        super(Stone, self).__init__(position, HITBOX_STONE, **kwargs)
 
 
 class House(Prop):
@@ -39,8 +53,8 @@ class House(Prop):
     builder_data = {'width':5, 'height':5, 'min_y':2, 'max_y': 7,
             'x_variance': 20, 'y_variance': 19}
 
-    def __init__(self, x, y, **kwargs):
-        super(House, self).__init__(x, y, **kwargs)
+    def __init__(self, position, **kwargs):
+        super(House, self).__init__(position, HITBOX_HOUSE, **kwargs)
         House.num += 1
 
     @property
@@ -52,8 +66,8 @@ class HeroHouse(House):
     # Collision effect: Stun 0.5 s
     image = pyglet.resource.image('img/sprites/herohouse.png')
 
-    def __init__(self, x, y, **kwargs):
-        super(HeroHouse, self).__init__(x, y, **kwargs)
+    def __init__(self, position, **kwargs):
+        super(HeroHouse, self).__init__(position, **kwargs)
 
 
 class Church(Prop):
@@ -62,8 +76,8 @@ class Church(Prop):
     builder_data = {'width':10, 'height':8, 'min_y':1,
             'x_variance': 5, 'y_variance': 23}
 
-    def __init__(self, x, y, **kwargs):
-        super(Church, self).__init__(x, y, **kwargs)
+    def __init__(self, position, **kwargs):
+        super(Church, self).__init__(position, HITBOX_CHURCH, **kwargs)
 
 
 class Creek(Prop):
@@ -72,8 +86,8 @@ class Creek(Prop):
     builder_data = {'width':5, 'height':9,
             'x_variance': 20}
 
-    def __init__(self, x, y, **kwargs):
-        super(Creek, self).__init__(x, y, **kwargs)
+    def __init__(self, position, **kwargs):
+        super(Creek, self).__init__(position, HITBOX_CREEK, **kwargs)
 
 
 class Skeleton(Prop):
@@ -82,11 +96,16 @@ class Skeleton(Prop):
     builder_data = {'width':1, 'height':1,
             'x_variance': 14, 'y_variance': 4}
 
-    def __init__(self, x, y, **kwargs):
-        super(Skeleton, self).__init__(x, y, **kwargs)
+    def __init__(self, position, **kwargs):
+        super(Skeleton, self).__init__(position, HITBOX_SKELETON, **kwargs)
 
 
 # Actors
+
+
+HITBOX_PEBBLE = Vector(1, 1)
+HITBOX_PEASANT = Vector(1, 1)
+HITBOX_PREACHER = Vector(1, 1)
 
 
 class Pebble(Projectile):
@@ -111,9 +130,9 @@ class Peasant(Actor):
     LEAP_SPEED = (220, 0)
     LEAP_TIME = 0.4
 
-    def __init__(self, x, y, **kwargs):
-        super(Peasant, self).__init__(x, y, **kwargs)
-        self.speed = (0, 0)
+    def __init__(self, position, **kwargs):
+        super(Peasant, self).__init__(position, HITBOX_PEASANT, **kwargs)
+        self.speed = VECTOR_NULL
         self.target = None
         self.next_action_delay = 0.0
 
@@ -132,7 +151,7 @@ class Peasant(Actor):
 
     def behave_idle(self, dt):
         self.play('idle')
-        self.speed = (0, 0)
+        self.speed = VECTOR_NULL
         if self.target is not None:
             self.play('notice')
             self.next_action_delay = 0.4
@@ -175,7 +194,7 @@ class Peasant(Actor):
                 self.next_action_delay = self.THROW_DELAY
         elif self.throwing:
             self.play('throw')
-            self.speed = (0, 0)
+            self.speed = VECTOR_NULL
             if self.next_action_delay <= 0:
                 self.throwing = False
                 self.aiming = True
@@ -189,7 +208,7 @@ class Peasant(Actor):
         self.play('leap')
         self.approach_target_speed(dt, (0, 0))
         if self.next_action_delay <= 0:
-            self.speed = (0, 0)
+            self.speed = VECTOR_NULL
             self.behavior = self.behave_down
 
 
@@ -197,7 +216,7 @@ class Peasant(Actor):
         self.play('trip')
         self.approach_target_speed(dt, (0, 0))
         if self.speed[0] < 20:
-            self.speed = (0, 0)
+            self.speed = VECTOR_NULL
             self.behavior = self.behave_down
 
 
@@ -300,7 +319,7 @@ class PeasantB(Peasant):
                 self.next_action_delay = self.THROW_DELAY
         elif self.throwing:
             self.play('throw')
-            self.speed = (0, 0)
+            self.speed = VECTOR_NULL
             if self.next_action_delay <= 0:
                 if self.frustration < self.NUMBER_OF_THROWS:
                     self.throwing = False
@@ -349,12 +368,12 @@ class Preacher(Actor):
     _anim_set = "ANIMSET_PREACHER"
 
     max_speed = 120.0
-    acceleration = (100, 100)
+    acceleration = Vector(100, 100)
     collision_effect = ('trip', 0.5)
 
-    def __init__(self, x, y, **kwargs):
-        super(Preacher, self).__init__(x, y, **kwargs)
-        self.speed = (0, 0)
+    def __init__(self, position, **kwargs):
+        super(Preacher, self).__init__(position, HITBOX_PREACHER, **kwargs)
+        self.speed = VECTOR_NULL
         self.target = None
         self.next_action_delay = 0.0
 

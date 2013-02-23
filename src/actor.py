@@ -7,6 +7,8 @@ from gameobject import AnimatedGameObject
 from projectile import Projectile
 from pyglet.window import key
 
+from vector import *
+
 MIN_Y, MAX_Y = 0, 275
 
 
@@ -22,18 +24,15 @@ status_severity = {
 
 class Actor(AnimatedGameObject):
     max_speed = 0.0
-    acceleration = (100, 100)
-    preferred_rendering_group_index = 2
+    acceleration = Vector(100, 100)
 
-    def __init__(self, x, y, **kwargs):
-        super(Actor, self).__init__(x, y, **kwargs)
-        self.collider = None
+    def __init__(self, position, size, **kwargs):
+        super(Actor, self).__init__(position, size, **kwargs)
         self.direction = (0, 0)
-        self.speed = (0.0, 0.0)
+        self.speed = VECTOR_NULL
         self.next_action_delay = 0.0
         self.current_action_priority = 0
         self.status = 'ok'
-        # self.apply_status('ok')
 
     def wait(self, duration, priority=0):
         self.current_action_priority = priority
@@ -57,11 +56,11 @@ class Actor(AnimatedGameObject):
                 self.apply_status('tumble', force=True)
         elif self.status == 'stun':
             if self.next_action_delay <= 0:
-                self.speed = (0, 0)
+                self.speed = VECTOR_NULL
                 self.apply_status('ok', force=True)
         self.next_action_delay -= dt
 
-    def approach_target_speed(self, dt, target=(0, 0)):
+    def approach_target_speed(self, dt, target=VECTOR_NULL):
         dx, dy = self.speed
         tx, ty = target
         ax, ay = self.acceleration
@@ -77,7 +76,7 @@ class Actor(AnimatedGameObject):
         elif ty > dy:
             dy += ay * dt
             dy = min(dy, ty)
-        self.speed = (dx, dy)
+        self.speed = Vector(dx, dy)
 
     def update(self, dt):
         self.behave(dt)
@@ -89,25 +88,22 @@ class Actor(AnimatedGameObject):
         pass
 
     def reset(self, x, y):
-        self.speed = (0,0)
+        self.speed = VECTOR_NULL
         super(Actor, self).reset(x, y)
         self.apply_status('ok')
 
     def fire_projectile(self, projectile_cls, speed, target=None):
-        origin_x = self.x + 30
-        origin_y = self.y + 30
+        origin = self.position
         if target is not None:
-            target_x, target_y = target.x + 100, target.y + 25
+            target_pos = target.position
         else:
-            target_x = self.x  # origin_x + 1
-            target_y = self.y  # origin_y
+            target_pos = origin + VECTOR_EAST
         self.dispatch_event('on_projectile_fired',
-                projectile_cls, origin_x, origin_y,
-                target_x, target_y, speed)
+                projectile_cls, origin, target_pos, speed)
 
-    def reset(self, x, y):
-        super(Actor, self).reset(x, y)
-        self.dispatch_event('on_spawn', self, x, y)
+    def reset(self, position):
+        super(Actor, self).reset(position)
+        self.dispatch_event('on_spawn', self, position)
 
 Actor.register_event_type('on_projectile_fired')
 Actor.register_event_type('on_spawn')

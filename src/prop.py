@@ -3,9 +3,8 @@ import gameobject
 class Prop(gameobject.GameObject):
     collision_effect = None
 
-    def __init__(self, x, y, **kwargs):
-        super(Prop, self).__init__(x, y, **kwargs)
-        # self.collider = None
+    def __init__(self, position, size, **kwargs):
+        super(Prop, self).__init__(position, size, **kwargs)
 
     def show(self):
         self.sprite.image = self.image

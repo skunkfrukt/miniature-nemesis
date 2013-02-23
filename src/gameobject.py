@@ -9,21 +9,36 @@ SH = spritehandler
 import world
 
 from graphics import AnimSet
+from vector import *
+
 
 class GameObject(pyglet.event.EventDispatcher):
-    '''Superclass of all objects that are drawn on stage.'''
-    required_classes = []
-
-    def __init__(self, x, y, layer=0, **kwargs):
+    def __init__(self, position, size, offset=VECTOR_NULL, layer=0, **kwargs):
         if len(kwargs) > 0:
             log.warning(W_EXTRA_KWARGS.format(kwargs=kwargs))
-        self.x, self.y = x, y
+        self.position = position
+        self.size = size
+        self.offset = offset
         self.behavior = None
-        self.width = None
-        self.height = None
         self.speed = None
         self.sprite = None
         self.layer = layer
+
+    @property
+    def x(self):
+        return self.position.x
+
+    @property
+    def y(self):
+        return self.position.y
+
+    @property
+    def width(self):
+        return self.size.x
+
+    @property
+    def height(self):
+        return self.size.y
 
     def kill(self):
         self.dead = True
@@ -40,6 +55,9 @@ class GameObject(pyglet.event.EventDispatcher):
     def update_sprite(self, stage_offset):
         self.sprite.position = (int(self.x - stage_offset), int(self.y))
 
+    def align_sprite(self, stage_offset):
+        self.sprite.position = self.position + self.offset - stage_offset
+
     def set_image(self, image):
         self.sprite.image = image
 
@@ -53,11 +71,7 @@ class GameObject(pyglet.event.EventDispatcher):
 
     def update(self, dt):
         if self.speed is not None:
-            dx, dy = (spd * dt for spd in self.speed)
-            self.x += dx
-            self.y += dy
-        else:
-            dx, dy = 0, 0
+            self.position += self.speed * dt
 
     def behave(self, dt):
         if self.behavior is not None:
@@ -108,8 +122,8 @@ GameObject.register_event_type('on_despawn')
 class AnimatedGameObject(GameObject):
     _anim_set = None
 
-    def __init__(self, x, y, layer=0, **kwargs):
-        super(AnimatedGameObject, self).__init__(x, y, layer, **kwargs)
+    def __init__(self, position, size, **kwargs):
+        super(AnimatedGameObject, self).__init__(position, size, **kwargs)
         self.current_anim = None
 
     def play(self, anim_key, force_restart=False):
