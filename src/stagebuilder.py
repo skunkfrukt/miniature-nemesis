@@ -8,6 +8,8 @@ import stage
 
 from names import CLASSES as CLASS_KEYS
 
+from vector import *
+
 def json_to_stage(json_filename):
     log.info('Parsing Stage file {}'.format(json_filename))
     data = json.load(open(json_filename))
@@ -27,7 +29,7 @@ def parse_single_stage(data):
     seed = data.get('seed', None)
     parsed_stage.seed = seed
 
-    parsed_stage.setup_layers(**data.get('layers'))
+    # parsed_stage.setup_layers(**data.get('layers'))
 
     bg_color = data.get('background_color', [127,127,127,255])
     parsed_stage.background_color = tuple(bg_color)
@@ -94,7 +96,7 @@ def parse_class(class_key):
 
 def parse_placeholder(cls, x, y, **kwargs):
     parsed_cls = parse_class(cls)
-    placeholder = stage.Placeholder(parsed_cls, x, y, **kwargs)
+    placeholder = stage.Placeholder(parsed_cls, Vector(x, y), **kwargs)
     return placeholder
 
 

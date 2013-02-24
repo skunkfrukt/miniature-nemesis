@@ -1,5 +1,5 @@
 {
-    "animSetName": "ANIM_HERO",
+    "animSetName": "ANIMSET_HERO",
     "source": {
         "image": "img/sprites/hero.png",
         "rows": 1,
@@ -9,7 +9,7 @@
         {
             "key": "idle",
             "frames": [0, 1],
-            "period": 0.12,
+            "period": 0.5,
             "loop": true
         },
         {

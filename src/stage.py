@@ -5,12 +5,15 @@ import pyglet
 import random
 import itertools
 
-from pyglet.graphics import OrderedGroup as Layer
-
 import world
+import spritehandler
+SH = spritehandler
+
 from hero import Hero
 
-SCROLL_SPEED = 100
+from vector import *
+
+SCROLL_SPEED = Vector(100, 0)
 SECTION_WIDTH = 640
 
 _section_num = 0
@@ -28,13 +31,9 @@ class Stage(pyglet.event.EventDispatcher):
         self.all_props = set()
         self.all_actors = set()
 
-        self.batch = pyglet.graphics.Batch()
-        self.root_group = pyglet.graphics.OrderedGroup(0)
-        self.layers = []
-
-        self.offset = 0
+        self.offset = VECTOR_NULL
         self.is_scrolling = False
-        self.actual_scroll_speed = 0
+        self.actual_scroll_speed = VECTOR_NULL
         self.target_scroll_speed = SCROLL_SPEED
         self.active_section = None
 
@@ -46,11 +45,10 @@ class Stage(pyglet.event.EventDispatcher):
             random.seed(self.seed)
         bg_pattern = pyglet.image.SolidColorImagePattern(
             self.background_color)
-        bg_image = bg_pattern.create_image(640, 360)
-        self.background = pyglet.sprite.Sprite(
-            bg_image, batch=self.batch,
-            group=self.layers[self.bg_layer])
-        self.background.x = world.ZERO
+        bg_img = bg_pattern.create_image(640, 360) ##TODO## Magic number.
+        self.background = SH.show_sprite(SH.BG, 0)
+        self.background.image = bg_img
+        # self.background.x = world.ZERO
 
         for sect in self.sections:
             sect.setup()
@@ -58,28 +56,15 @@ class Stage(pyglet.event.EventDispatcher):
         self.section_iter = iter(self.sections)
         self.advance_section()
         self.is_scrolling = True
-        self.hero = Hero()
+        self.hero = Hero(Vector(100, 100))
         self.spawn_actors(set([self.hero]))
-
-    def setup_layers(self, background=1, props=2, actors=2,
-            projectiles=1, foreground=1):
-        self.bg_layer = 0
-        self.prop_layer = self.bg_layer + background
-        self.actor_layer = self.prop_layer + props
-        self.projectile_layer = self.actor_layer + actors
-        self.fg_layer = self.projectile_layer + projectiles
-        total_layers = self.fg_layer + foreground
-        self.layers = []
-        for layer_index in range(total_layers):
-            layer = Layer(layer_index, parent=self.root_group)
-            self.layers.append(layer)
 
     def reset(self):
         self.despawn_props(self.all_props)
         self.despawn_actors(self.all_actors)
 
-        self.actual_scroll_speed = 0
-        self.offset = 0
+        self.actual_scroll_speed = VECTOR_NULL
+        self.offset = VECTOR_NULL
         self.active_section = None
 
         log.info('Reset Stage {}.'.format(self.name))
@@ -94,23 +79,23 @@ class Stage(pyglet.event.EventDispatcher):
             self.update_scroll_speed(dt)
             self.offset += self.actual_scroll_speed * dt
         if self.active_section is not None:
-            if self.offset >= self.active_section.offset:
+            if self.offset.x >= self.active_section.offset.x:
                 self.advance_section()
 
     def update_scroll_speed(self, dt):
-        actual = self.actual_scroll_speed
-        target = self.target_scroll_speed
+        actual = self.actual_scroll_speed.x
+        target = self.target_scroll_speed.x
         if actual < target:
             delta = 50 * dt  ##TODO## Magic number.
             new_scroll_speed = min(target, actual + delta)
-            self.actual_scroll_speed = new_scroll_speed
+            self.actual_scroll_speed = Vector(new_scroll_speed, 0)
 
     def start_scrolling(self, scroll_speed):
         self.target_scroll_speed = scroll_speed
         self.is_scrolling = True
 
     def stop_scrolling(self):
-        self.actual_scroll_speed = 0
+        self.actual_scroll_speed = VECTOR_NULL
         self.is_scrolling = False
 
     def update_actors(self, dt):
@@ -119,9 +104,9 @@ class Stage(pyglet.event.EventDispatcher):
 
     def update_sprites(self):
         for actor in self.all_actors:
-            actor.update_sprite(self.offset - world.ZERO)
+            actor.align_sprite(self.offset)
         for prop in self.all_props:
-            prop.update_sprite(self.offset - world.ZERO)
+            prop.align_sprite(self.offset)
 
     def advance_section(self):
         if self.active_section is not None:
@@ -154,15 +139,15 @@ class Stage(pyglet.event.EventDispatcher):
         log.info(I_ENTER_SECTION.format(new_section.name))
 
     def add_section(self, section):
-        section.offset = self.stage_width
+        section.offset = Vector(self.stage_width, 0)
         self.sections.append(section)
 
         log.debug(D_ADD_SECTION.format(section.name, self.name))
 
     def spawn_props(self, props):
         for prop in props:
-            layer = self.layers[self.prop_layer + prop.layer]
-            prop.setup_sprite(self.batch, layer)
+            prop.allocate_sprite()
+            prop.show()
         self.all_props |= props
 
     def despawn_props(self, props):
@@ -172,8 +157,8 @@ class Stage(pyglet.event.EventDispatcher):
 
     def spawn_actors(self, actors):
         for actor in actors:
-            layer = self.layers[self.actor_layer + actor.layer]
-            actor.setup_sprite(self.batch, layer)
+            actor.allocate_sprite()
+            actor.show()
             log.debug(D_SPAWN_ACTOR.format(type(actor).__name__))
         self.all_actors |= actors
 
@@ -195,14 +180,12 @@ class Stage(pyglet.event.EventDispatcher):
 
     @property
     def stage_width(self):
-        return 640 * len(self.sections)  ##TODO## MN
         return world.constants['WIN_WIDTH'] * len(self.sections)
 
     @property
     def stage_height(self):
-        return 360  ##TODO## MN
         return world.constants['WIN_HEIGHT']
-        
+
     def send_keys_to_hero(self, keys, pressed=None, released=None):
         if self.hero is not None:
             self.hero.fixSpeed(keys)
@@ -254,14 +237,21 @@ StageSection.register_event_type('on_display_section')
 
 
 class Placeholder(object):
-    def __init__(self, Cls, x, y, **kwargs):
+    def __init__(self, Cls, position, **kwargs):
         self.Cls = Cls
-        self.x = x
-        self.y = y
+        self.position = position
         self.kwargs = kwargs
 
+    @property
+    def x(self):
+        return self.position.x
+
+    @property
+    def y(self):
+        return self.position.y
+
     def spawn(self, offset):
-        return self.Cls(self.x + offset, self.y, **self.kwargs)
+        return self.Cls(self.position + offset, **self.kwargs)
 
 
 class ProceduralStageSection(StageSection):
@@ -346,7 +336,7 @@ def rect_to_placeholder(r):
     y_variance = cls.builder_data.get('y_variance', 0)
     x += random.randint(0, x_variance)
     y += random.randint(0, y_variance)
-    return Placeholder(cls, x, y)
+    return Placeholder(cls, Vector(x, y))
 
 def knight_path():
     traversed_cells = set()

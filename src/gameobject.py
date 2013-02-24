@@ -3,83 +3,74 @@ log = logging.getLogger(__name__)
 
 import pyglet
 
-class GameObject(pyglet.event.EventDispatcher):
-    '''Superclass of all objects that are drawn on stage.'''
-    preferred_rendering_group_index = None
-    required_classes = []
+import spritehandler
+SH = spritehandler
 
-    def __init__(self, x, y, layer=0, **kwargs):
+import world
+
+from graphics import AnimSet
+from vector import *
+
+
+class GameObject(pyglet.event.EventDispatcher):
+    def __init__(self, position, size, offset=VECTOR_NULL, layer=0, **kwargs):
         if len(kwargs) > 0:
             log.warning(W_EXTRA_KWARGS.format(kwargs=kwargs))
-        self.x, self.y = x, y
-        self.relative_layer = kwargs.pop('layer', 0)
-        # self.kill()
+        self.position = position
+        self.size = size
+        self.offset = offset
         self.behavior = None
-        self.width = None
-        self.height = None
         self.speed = None
         self.sprite = None
-        self.collider = None
-        self.colliders = None
         self.layer = layer
 
+    @property
+    def x(self):
+        return self.position.x
+
+    @property
+    def y(self):
+        return self.position.y
+
+    @property
+    def width(self):
+        return self.size.x
+
+    @property
+    def height(self):
+        return self.size.y
+
     def kill(self):
-        pass
-        self.x = 0
-        self.y = 360
         self.dead = True
 
-    def reset(self, x, y):
-        self.x, self.y = x, y
-        self.dead = False
+    def allocate_sprite(self):
+        assert self.sprite is None
+        self.sprite = SH.get_sprite(SH.FG, self.layer)
 
-    def set_sprite(self, sprite):
-        self.sprite = sprite
-        self.width = self.width or self.sprite.width
-        self.height = self.height or self.sprite.height
+    def update_sprite(self):
+        self.sprite.image = self.image
 
-    def setup_sprite(self, batch, group):
-        assert self.sprite is not None, "%s setting up None-sprite." % self
-        self.sprite.batch = batch
-        self.sprite.group = group
+    def align_sprite(self, stage_offset):
+        self.sprite.position = self.position + self.offset - stage_offset
 
-    def update_sprite(self, stage_offset):
-        self.sprite.position = (int(self.x - stage_offset), int(self.y))
-
-    def check_despawn(self, stage_offset):
-        if self.right <= stage_offset:
-            return True
-        return False
+    def set_image(self, image):
+        self.sprite.image = image
 
     def despawn(self):
-        self.sprite.delete()
-        self.kill()
+        self.recycle()
         self.dispatch_event('on_despawn', self)
+
+    def recycle(self):
+        spritehandler.recycle(self.sprite)
+        self.sprite = None
 
     def update(self, dt):
         if self.speed is not None:
-            dx, dy = (spd * dt for spd in self.speed)
-            self.x += dx
-            self.y += dy
-        else:
-            dx, dy = 0, 0
-        if self.colliders is not None:
-            for collider in self.colliders:
-                collider.move(self.x, self.y, (dx, dy))
+            self.position += self.speed * dt
 
     def behave(self, dt):
         if self.behavior is not None:
             self.behavior(dt)
-
-    def add_collider(self, collider):
-        if collider is None:
-            return
-        if self.colliders is None:
-            self.colliders = []
-        collider.parent = self
-        self.colliders.append(collider)
-        collider.move(self.x, self.y)
-        collider.push_handlers(self)
 
     @property
     def left(self):
@@ -87,7 +78,7 @@ class GameObject(pyglet.event.EventDispatcher):
 
     @left.setter
     def left(self, value):
-        self.x = value
+        self.position = Vector(value, self.y)
 
     @property
     def right(self):
@@ -95,7 +86,7 @@ class GameObject(pyglet.event.EventDispatcher):
 
     @right.setter
     def right(self, value):
-        self.x = value - self.width
+        self.position = Vector(value - self.width, self.y)
 
     @property
     def bottom(self):
@@ -103,7 +94,7 @@ class GameObject(pyglet.event.EventDispatcher):
 
     @bottom.setter
     def bottom(self, value):
-        self.y = value
+        self.position = Vector(self.x, value)
 
     @property
     def top(self):
@@ -111,16 +102,45 @@ class GameObject(pyglet.event.EventDispatcher):
 
     @top.setter
     def top(self, value):
-        self.y = value - self.height
+        self.position = Vector(self.x, value - self.height)
 
     @property
     def rect(self):
         return (self.left, self.bottom, self.right, self.top)
 
-    def on_collision(self, other, rect, speed, effect):
-        pass
+    def show(self):
+        self.sprite.visible = True
+
+    @property
+    def image(self):
+        return self._image
 
 GameObject.register_event_type('on_despawn')
+
+
+class AnimatedGameObject(GameObject):
+    _anim_set = None
+
+    def __init__(self, position, size, **kwargs):
+        super(AnimatedGameObject, self).__init__(position, size, **kwargs)
+        self.current_anim = None
+
+    def play(self, anim_key, force_restart=False):
+        if force_restart or anim_key != self.current_anim:
+            self.current_anim = anim_key
+            self.update_sprite()
+
+    @property
+    def anim_set(self):
+        return world.anim_sets[self._anim_set]
+
+    def show(self):
+        self.update_sprite()
+        super(AnimatedGameObject, self).show()
+
+    @property
+    def image(self):
+        return self.anim_set.get_anim(self.current_anim)
 
 
 W_EXTRA_KWARGS = 'GameObject received extra kwargs: {kwargs}.'
