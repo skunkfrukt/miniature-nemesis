@@ -48,7 +48,7 @@ class Stage(pyglet.event.EventDispatcher):
         bg_img = bg_pattern.create_image(640, 360) ##TODO## Magic number.
         self.background = SH.show_sprite(SH.BG, 0)
         self.background.image = bg_img
-        self.background.x = world.ZERO
+        # self.background.x = world.ZERO
 
         for sect in self.sections:
             sect.setup()

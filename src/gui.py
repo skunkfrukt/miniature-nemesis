@@ -83,11 +83,11 @@ class MenuState(GameState):
     def update(self, dt):
         pass
 
-    def unselect_menu_item(self, index):
+    '''def unselect_menu_item(self, index):
         self.menu.labels[index].color = (0,0,0,255)
 
     def select_menu_item(self, index):
-        self.menu.labels[index].color = (255,0,0,255)
+        self.menu.labels[index].color = (255,0,0,255)'''
 
     def quit(self):
         self.dispatch_event('on_quit_game')
@@ -176,12 +176,7 @@ class WinState(GameState):
 fps_display = pyglet.clock.ClockDisplay()
 
 class MainWindow(pyglet.window.Window):
-    icons = (pyglet.resource.image('img/icons/16x16.png'),
-            pyglet.resource.image('img/icons/24x24.png'),
-            pyglet.resource.image('img/icons/32x32.png'),
-            pyglet.resource.image('img/icons/48x48.png'),
-            pyglet.resource.image('img/icons/72x72.png'),
-            pyglet.resource.image('img/icons/128x128.png'))
+    icon = pyglet.resource.image('img/icons/128x128.png')
 
     def __init__(self, fullscreen=False):
         super(MainWindow, self).__init__(WIN_WIDTH + world.ZERO*2, WIN_HEIGHT,
@@ -191,7 +186,7 @@ class MainWindow(pyglet.window.Window):
         self.set_state(menustate)
         self.push_handlers(keys)
         try:
-            self.set_icon(self.icons[-1])
+            self.set_icon(self.icon)
         except AttributeError:
             pass  # If the icon refuses to work, that's no big deal for now.
         pyglet.clock.schedule(self.update)
