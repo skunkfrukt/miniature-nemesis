@@ -152,7 +152,7 @@ class Peasant(Actor):
         self.frustration = 0
         self.behavior = self.behave_idle
 
-    def behave_idle(self, dt):
+    '''def behave_idle(self, dt):
         self.play('idle')
         self.speed = VECTOR_NULL
         if self.target is not None:
@@ -224,13 +224,13 @@ class Peasant(Actor):
 
 
     def behave_down(self, dt):
-        self.play('down')
+        self.play('down')'''
 
-        if self.next_action_delay <= 0:
     def behave_charge_ahead(self, dt, speed=Vector(110, 0)):  #TODO magic number
+        '''if self.next_action_delay <= 0:
             self.throwing = False
             self.aiming = False
-            self.behavior = self.behave_throw
+            self.behavior = self.behave_throw'''
         self.play('run')
         final_speed = speed
         if self.target is not None:
@@ -245,7 +245,7 @@ class Peasant(Actor):
                     final_speed = self.LEAP_SPEED
         self.approach_target_speed(dt, final_speed)
 
-    def pursue(self, target, dt, speed=60):
+    '''def pursue(self, target, dt, speed=60):
         dist_x = target.x - 60 - self.x
         dist_y = target.y - self.y
         if dist_x <= 0:
@@ -264,10 +264,10 @@ class Peasant(Actor):
     def on_detection(self, target):
         if self.target is None and type(target) is Hero:
             if abs(self.y - target.y) < 200:
-                self.target = target
+                self.target = target'''
 
 
-class PeasantB(Peasant):
+'''class PeasantB(Peasant):
 
     max_speed = 60.0
     acceleration = (100, 100)
@@ -364,7 +364,7 @@ class PeasantB(Peasant):
 
     def on_collision(self, other, rect, speed, effect):
         if effect:
-            self.apply_status(**effect)
+            self.apply_status(**effect)'''
 
 
 class Preacher(Actor):
@@ -372,7 +372,7 @@ class Preacher(Actor):
 
     max_speed = 120.0
     acceleration = Vector(100, 100)
-    collision_effect = ('trip', 0.5)
+    # collision_effect = ('trip', 0.5)
 
     def __init__(self, position, **kwargs):
         super(Preacher, self).__init__(position, HITBOX_PREACHER, **kwargs)
