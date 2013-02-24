@@ -21,24 +21,21 @@ class Hero(Actor):
         super(Hero, self).__init__(position, HITBOX_HERO)
 
     def fixSpeed(self, keys):
-        dirx = 0
-        diry = 0
+        dir = VECTOR_NULL
         if keys[key.W] or keys[key.UP]:
-            diry += 1
+            dir += VECTOR_NORTH
         if keys[key.S] or keys[key.DOWN]:
-            diry -= 1
+            dir += VECTOR_SOUTH
         if keys[key.A] or keys[key.LEFT]:
-            dirx -= 1
+            dir += VECTOR_WEST
         if keys[key.D] or keys[key.RIGHT]:
-            dirx += 1
-        self.direction = (dirx, diry)
+            dir += VECTOR_EAST
+        self.direction = dir
 
     def move(self, dt, stage_offset):
-        dirx, diry = self.direction
         Actor.move(self, dt, stage_offset)
 
     def animate(self):
-        dirx, diry = self.direction
         if self.status == 'stun':
             self.play('hurt')
         elif self.status == 'trip':
@@ -48,9 +45,9 @@ class Hero(Actor):
         elif self.status == 'rise':
             self.play('rise')
         elif self.status == 'ok':
-            if dirx > 0:
+            if self.direction.x > 0:
                 self.play('sprint')
-            elif dirx < 0 and self.speed[0] > 0:
+            elif self.direction.x < 0 and self.speed.x > 0:
                 self.play('stop')
             else:
                 self.play('run')

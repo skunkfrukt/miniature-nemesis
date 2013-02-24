@@ -78,7 +78,7 @@ class GameObject(pyglet.event.EventDispatcher):
 
     @left.setter
     def left(self, value):
-        self.x = value
+        self.position = Vector(value, self.y)
 
     @property
     def right(self):
@@ -86,7 +86,7 @@ class GameObject(pyglet.event.EventDispatcher):
 
     @right.setter
     def right(self, value):
-        self.x = value - self.width
+        self.position = Vector(value - self.width, self.y)
 
     @property
     def bottom(self):
@@ -94,7 +94,7 @@ class GameObject(pyglet.event.EventDispatcher):
 
     @bottom.setter
     def bottom(self, value):
-        self.y = value
+        self.position = Vector(self.x, value)
 
     @property
     def top(self):
@@ -102,7 +102,7 @@ class GameObject(pyglet.event.EventDispatcher):
 
     @top.setter
     def top(self, value):
-        self.y = value - self.height
+        self.position = Vector(self.x, value - self.height)
 
     @property
     def rect(self):

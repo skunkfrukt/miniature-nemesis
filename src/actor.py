@@ -27,8 +27,8 @@ class Actor(AnimatedGameObject):
     acceleration = Vector(100, 100)
 
     def __init__(self, position, size, **kwargs):
-        super(Actor, self).__init__(position, size, **kwargs)
-        self.direction = (0, 0)
+        super(Actor, self).__init__(position, size, layer=1, **kwargs)
+        self.direction = VECTOR_NULL
         self.speed = VECTOR_NULL
         self.next_action_delay = 0.0
         self.current_action_priority = 0
@@ -40,9 +40,8 @@ class Actor(AnimatedGameObject):
 
     def update_speed(self, dt):
         if self.status == 'ok':
-            dirx, diry = self.direction
-            tx, ty = 100 + dirx * self.max_speed, diry * self.max_speed
-            self.approach_target_speed(dt, (tx, ty))
+            target_speed = self.direction * self.max_speed + VECTOR_EAST * 100
+            self.approach_target_speed(dt, target_speed)
         elif self.status == 'rise':
             if self.next_action_delay <= 0:
                 self.apply_status('ok', force=True)
@@ -50,7 +49,7 @@ class Actor(AnimatedGameObject):
             if self.speed[0] < 1:
                 self.apply_status('rise', force=True)
             else:
-                self.approach_target_speed(dt, (0,0))
+                self.approach_target_speed(dt, VECTOR_NULL)
         elif self.status == 'trip':
             if self.next_action_delay <= 0:
                 self.apply_status('tumble', force=True)
@@ -60,7 +59,8 @@ class Actor(AnimatedGameObject):
                 self.apply_status('ok', force=True)
         self.next_action_delay -= dt
 
-    def approach_target_speed(self, dt, target=VECTOR_NULL):
+    def approach_target_speed(self, dt, target):
+        ##TODO## Do this is a nicer way with vectors.
         dx, dy = self.speed
         tx, ty = target
         ax, ay = self.acceleration
@@ -87,9 +87,9 @@ class Actor(AnimatedGameObject):
     def animate(self):
         pass
 
-    def reset(self, x, y):
+    def reset(self, position):
         self.speed = VECTOR_NULL
-        super(Actor, self).reset(x, y)
+        super(Actor, self).reset(position)
         self.apply_status('ok')
 
     def fire_projectile(self, projectile_cls, speed, target=None):

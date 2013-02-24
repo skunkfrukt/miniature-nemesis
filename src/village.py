@@ -146,8 +146,8 @@ class Peasant(Actor):
         if self.behavior is not None:
             self.behavior(dt)
 
-    def reset(self, x, y):
-        Actor.reset(self, x, y)
+    def reset(self, position):
+        super(Peasant, self).reset(position)
         self.target = None
         self.frustration = 0
         self.behavior = self.behave_idle
@@ -226,8 +226,8 @@ class Peasant(Actor):
     def behave_down(self, dt):
         self.play('down')
 
-    def behave_charge_ahead(self, dt, speed=110):  #TODO magic number
         if self.next_action_delay <= 0:
+    def behave_charge_ahead(self, dt, speed=Vector(110, 0)):  #TODO magic number
             self.throwing = False
             self.aiming = False
             self.behavior = self.behave_throw
@@ -243,7 +243,7 @@ class Peasant(Actor):
                     self.behavior = self.behave_leap
                 else:
                     final_speed = self.LEAP_SPEED
-        self.approach_target_speed(dt, (final_speed, 0))
+        self.approach_target_speed(dt, final_speed)
 
     def pursue(self, target, dt, speed=60):
         dist_x = target.x - 60 - self.x
