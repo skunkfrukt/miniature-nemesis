@@ -1,1 +1,3 @@
-*.py[cod]
+/miniature-nemesis.sws
+/.gitignore~
+*.py[cod~]

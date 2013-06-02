@@ -189,7 +189,7 @@ class MainWindow(pyglet.window.Window):
             self.set_icon(self.icon)
         except AttributeError:
             pass  # If the icon refuses to work, that's no big deal for now.
-        pyglet.clock.schedule(self.update)
+        pyglet.clock.schedule_interval(self.update, 0.05)
 
     def set_state(self, new_state):
         for layer in spritehandler._sprite_layers:
@@ -224,4 +224,5 @@ class MainWindow(pyglet.window.Window):
         pyglet.app.exit()
 
     def update(self,dt):
-        self.state.update(dt)
+        if self.state is not None:
+            self.state.update(dt)
