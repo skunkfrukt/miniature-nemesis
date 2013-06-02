@@ -1,6 +1,8 @@
 import logging
 log = logging.getLogger(__name__)
 
+import random
+
 import pyglet
 
 import spritehandler
@@ -20,7 +22,7 @@ class GameObject(pyglet.event.EventDispatcher):
         self.size = size
         self.offset = offset
         self.behavior = None
-        self.speed = None
+        self.speed = VECTOR_NULL
         self.sprite = None
         self.layer = layer
 
@@ -62,6 +64,7 @@ class GameObject(pyglet.event.EventDispatcher):
 
     def recycle(self):
         spritehandler.recycle(self.sprite)
+        self.sprite.color = (255, 255, 255)
         self.sprite = None
 
     def update(self, dt):
@@ -114,6 +117,12 @@ class GameObject(pyglet.event.EventDispatcher):
     @property
     def image(self):
         return self._image
+    
+    def collide(self, other):
+        r = random.randint(0, 1) * 255
+        g = random.randint(0, 1) * 255
+        b = random.randint(0, 1) * 255
+        self.sprite.color = (r, g, b)
 
 GameObject.register_event_type('on_despawn')
 

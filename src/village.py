@@ -11,19 +11,22 @@ from actor import *
 
 HITBOX_ROCK = Vector(1, 1)
 HITBOX_STONE = Vector(1, 1)
-HITBOX_HOUSE = Vector(1, 1)
+HITBOX_HOUSE = Vector(166, 141)
 HITBOX_CHURCH = Vector(1, 1)
 HITBOX_CREEK = Vector(1, 1)
 HITBOX_SKELETON = Vector(1, 1)
 OFFSET_ROCK = Vector(1, 1)
 OFFSET_STONE = Vector(1, 1)
-OFFSET_HOUSE = Vector(1, 1)
+OFFSET_HOUSE = Vector(-7, -1)
 OFFSET_CHURCH = Vector(1, 1)
 OFFSET_CREEK = Vector(1, 1)
 OFFSET_SKELETON = Vector(1, 1)
 
 
 class Rock(Prop):
+    """ Rock
+        An obstacle. Causes knockback.
+    """
     # Collision effect: Stun 0.5 s
     _image = pyglet.resource.image('img/sprites/rock.png')
     builder_data = {'width': 2, 'height': 2, 'max_y': 7,
@@ -34,6 +37,9 @@ class Rock(Prop):
 
 
 class Stone(Prop):
+    """ Stone
+        An obstacle. Causes stumble.
+    """
     BUILDER_NAME = 'PROP_STONE'
     # Collision effect: Trip 0.75 s
     _image = pyglet.resource.image('img/sprites/stone.png')
@@ -106,8 +112,10 @@ class Skeleton(Prop):
 
 
 HITBOX_PEBBLE = Vector(1, 1)
-HITBOX_PEASANT = Vector(1, 1)
-HITBOX_PREACHER = Vector(1, 1)
+HITBOX_PEASANT = Vector(23, 23)
+OFFSET_PEASANT = Vector(-18, -4)
+HITBOX_PREACHER = Vector(20, 20)
+OFFSET_PREACHER = Vector(0, 0)
 
 
 class Pebble(Projectile):
@@ -132,7 +140,8 @@ class Peasant(Actor):
     LEAP_TIME = 0.4
 
     def __init__(self, position, **kwargs):
-        super(Peasant, self).__init__(position, HITBOX_PEASANT, **kwargs)
+        super(Peasant, self).__init__(
+            position, HITBOX_PEASANT, offset=OFFSET_PEASANT, **kwargs)
         self.speed = VECTOR_NULL
         self.target = None
         self.next_action_delay = 0.0

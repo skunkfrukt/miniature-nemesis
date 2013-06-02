@@ -1,3 +1,8 @@
+import logging
+log = logging.getLogger(__name__)
+
+import random
+
 import pyglet
 
 from pyglet.window import key
@@ -7,8 +12,8 @@ from actor import Actor
 from vector import *
 
 
-HITBOX_HERO = Vector(30, 20)
-OFFSET_HERO = VECTOR_NULL
+HITBOX_HERO = Vector(16, 16)
+OFFSET_HERO = Vector(-14, -3)
 
 
 class Hero(Actor):
@@ -18,7 +23,7 @@ class Hero(Actor):
     acceleration = Vector(200, 400)
 
     def __init__(self, position):
-        super(Hero, self).__init__(position, HITBOX_HERO)
+        super(Hero, self).__init__(position, HITBOX_HERO, offset=OFFSET_HERO)
 
     def fixSpeed(self, keys):
         dir = VECTOR_NULL

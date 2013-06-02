@@ -9,6 +9,8 @@ import world
 import spritehandler
 SH = spritehandler
 
+import collider
+
 from hero import Hero
 
 from vector import *
@@ -36,6 +38,8 @@ class Stage(pyglet.event.EventDispatcher):
         self.actual_scroll_speed = VECTOR_NULL
         self.target_scroll_speed = SCROLL_SPEED
         self.active_section = None
+        
+        self.spatial_hash = None
 
         log.debug(D_INIT.format(type(self).__name__, self.name))
 
@@ -49,6 +53,8 @@ class Stage(pyglet.event.EventDispatcher):
         self.background = SH.show_sprite(SH.BG, 0)
         self.background.image = bg_img
         # self.background.x = world.ZERO
+        self.spatial_hash = collider.SpatialHash(
+            self.stage_width, self.stage_height, 40, 40)
 
         for sect in self.sections:
             sect.setup()
@@ -72,7 +78,9 @@ class Stage(pyglet.event.EventDispatcher):
     def update(self, dt):
         self.update_stage_position(dt)
         self.update_actors(dt)
+
         self.update_sprites()
+        self.check_collisions()
 
     def update_stage_position(self, dt):
         if self.is_scrolling:
@@ -166,6 +174,10 @@ class Stage(pyglet.event.EventDispatcher):
         for actor in actors:
             actor.despawn()
         self.all_actors -= actors
+        
+    def check_collisions(self):
+        self.spatial_hash.collide(
+            self.active_rect, self.all_actors, self.current_props)
 
     @property
     def current_props(self):
@@ -185,6 +197,12 @@ class Stage(pyglet.event.EventDispatcher):
     @property
     def stage_height(self):
         return world.constants['WIN_HEIGHT']
+    
+    @property
+    def active_rect(self):
+        return (self.offset.x - 100, 0,
+            self.offset.x + world.constants['WIN_WIDTH'] + 100,
+            world.constants['WIN_HEIGHT'])
 
     def send_keys_to_hero(self, keys, pressed=None, released=None):
         if self.hero is not None:

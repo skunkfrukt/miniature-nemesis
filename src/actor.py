@@ -87,10 +87,10 @@ class Actor(AnimatedGameObject):
     def animate(self):
         pass
 
-    def reset(self, position):
+    '''def reset(self, position):
         self.speed = VECTOR_NULL
         super(Actor, self).reset(position)
-        self.apply_status('ok')
+        self.apply_status('ok')'''
 
     def fire_projectile(self, projectile_cls, speed, target=None):
         origin = self.position
