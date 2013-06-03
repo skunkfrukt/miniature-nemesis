@@ -11,7 +11,7 @@ log = logging.getLogger()
 parser = argparse.ArgumentParser(description="A danmaku runner.")
 parser.add_argument('-v', '--version', action='version', version=GAME_VERSION)
 parser.add_argument('-fs', '--fullscreen', action='store_true',
-        dest='fullscreen', help='launch the game in fullscreen mode')
+    dest='fullscreen', help='launch the game in fullscreen mode')
 logging_options = parser.add_mutually_exclusive_group()
 logging_options.add_argument('--debug', action='store_const', dest='logging_level', const=logging.DEBUG, help='log DEBUG-level messages')
 logging_options.add_argument('--info', action='store_const', dest='logging_level', const=logging.INFO, help='log INFO-level messages')

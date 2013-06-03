@@ -3,6 +3,8 @@ import pyglet
 import logging
 log = logging.getLogger(__name__)
 
+from vector import *
+
 
 def pairs(items):
     for first_index, first_item in enumerate(items):
@@ -56,19 +58,23 @@ class SpatialHash(object):
             cell = self.grid[cell_index]
             if len(cell) >= 2:
                 for a, b in pairs(cell):
-                    log.info('Something may have collided.')
                     hitbox_collide(a, b)
 
-                    
+
 def hitbox_collide(a, b):
-    collision_speed = get_collision_speed(a, b)
-    if collision_speed is not None:
+
+    # Collision vector from a's perspective, i.e. as if a were static.
+    collision_vector = b.speed - a.speed
+
+    if collision_vector != VECTOR_NULL:
         collision_rect = get_collision_rect(a, b)
     else:
         collision_rect = None
     if collision_rect is not None:
-        a.collide(b)
-        b.collide(a)
+        collision_direction = calculate_collision_direction(
+            collision_vector, collision_rect)
+        a.collide(b, collision_vector, collision_direction)
+        b.collide(a, -collision_vector, -collision_direction)
 
 def get_collision_rect(a, b):
     rect_left = max(a.left, b.left)
@@ -80,8 +86,46 @@ def get_collision_rect(a, b):
     else:
         return None
 
-def get_collision_speed(a, b):
-    if a.speed.x != b.speed.x or a.speed.y != b.speed.y:
-        return (a.speed.x - b.speed.x, a.speed.y - b.speed.y)
+def calculate_collision_direction(vector, overlap_rect):
+    rect_left, rect_bottom, rect_right, rect_top = overlap_rect
+    rect_width = rect_right - rect_left
+    rect_height = rect_top - rect_bottom
+
+    # First we figure out how long it took the objects to reach their current
+    # state of overlap, from the time of impact.
+    if vector.x == 0:
+        time_x = 0
     else:
-        return None
+        time_x = rect_width / abs(vector.x)
+    if vector.y == 0:
+        time_y = 0
+    else:
+        time_y = rect_height / abs(vector.y)
+
+    # Then we handle the cases where the collision was horizontal,
+    # i.e., when the horizontal overlap would have taken longer.
+    if time_x > time_y:
+        if vector.x < 0:
+            return VECTOR_WEST
+        else:
+            return VECTOR_EAST
+
+    # Then we handle the cases where the collision was vertical.
+    elif time_x < time_y:
+        if vector.y < 0:
+            return VECTOR_SOUTH
+        else:
+            return VECTOR_NORTH
+
+    # Not? Okay, then it was diagonal. *Sigh*
+    else:
+        if vector.x < 0:
+            if vector.y < 0:
+                return VECTOR_SOUTHWEST
+            else:
+                return VECTOR_NORTHWEST
+        else:
+            if vector.y < 0:
+                return VECTOR_SOUTHEAST
+            else:
+                return VECTOR_NORTHEAST

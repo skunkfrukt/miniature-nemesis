@@ -117,12 +117,22 @@ class GameObject(pyglet.event.EventDispatcher):
     @property
     def image(self):
         return self._image
-    
-    def collide(self, other):
+
+    def collide(self, other, vector, direction):
+        """ Handles a collision with another GameObject.
+
+            other - what we're colliding with.
+            vector - the collision vector seen from this object's perspective
+                (i.e. as if this object were static).
+            direction - the direction of the first impact.
+        """
         r = random.randint(0, 1) * 255
         g = random.randint(0, 1) * 255
         b = random.randint(0, 1) * 255
         self.sprite.color = (r, g, b)
+
+    def send_effect(self, effect):
+        pass
 
 GameObject.register_event_type('on_despawn')
 

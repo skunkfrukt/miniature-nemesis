@@ -57,3 +57,7 @@ class Hero(Actor):
             else:
                 self.play('run')
 
+    def collide(self, other, vector, direction):
+        super(Hero, self).collide(other, vector, direction)
+        log.debug('Hero collided {}'.format(direction))
+

@@ -33,6 +33,21 @@ class Vector(object):
         except:
             return Vector(self.x / other, self.y / other)
 
+    def __eq__(self, other):
+        try:
+            return self.x == other.x and self.y == other.y
+        except:
+            return False
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __neg__(self):
+        return VECTOR_NULL - self
+
+    def __str__(self):
+        return '({}{})'.format(*self)
+
     def dot(self, other):
         return self.x * other.x + self.y * other.y
 
@@ -67,3 +82,7 @@ VECTOR_NORTH = Vector(0, 1)
 VECTOR_EAST = Vector(1, 0)
 VECTOR_SOUTH = Vector(0, -1)
 VECTOR_WEST = Vector(-1, 0)
+VECTOR_NORTHEAST = VECTOR_NORTH + VECTOR_EAST
+VECTOR_SOUTHEAST = VECTOR_EAST + VECTOR_SOUTH
+VECTOR_SOUTHWEST = VECTOR_SOUTH + VECTOR_WEST
+VECTOR_NORTHWEST = VECTOR_NORTH + VECTOR_WEST
