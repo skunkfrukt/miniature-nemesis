@@ -87,6 +87,7 @@ def get_collision_rect(a, b):
         return None
 
 def calculate_collision_direction(vector, overlap_rect):
+    return VECTOR_NULL # Fulfix
     rect_left, rect_bottom, rect_right, rect_top = overlap_rect
     rect_width = rect_right - rect_left
     rect_height = rect_top - rect_bottom

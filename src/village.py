@@ -9,16 +9,16 @@ from actor import *
 # Props
 
 
-HITBOX_ROCK = Vector(1, 1)
-HITBOX_STONE = Vector(1, 1)
+HITBOX_ROCK = Vector(28, 15)
+HITBOX_STONE = Vector(20, 12)
 HITBOX_HOUSE = Vector(166, 141)
-HITBOX_CHURCH = Vector(1, 1)
+HITBOX_CHURCH = Vector(370, 170)
 HITBOX_CREEK = Vector(1, 1)
 HITBOX_SKELETON = Vector(1, 1)
-OFFSET_ROCK = Vector(1, 1)
-OFFSET_STONE = Vector(1, 1)
-OFFSET_HOUSE = Vector(-7, -1)
-OFFSET_CHURCH = Vector(1, 1)
+OFFSET_ROCK = Vector(-6, -1)
+OFFSET_STONE = Vector(-2, -2)
+OFFSET_HOUSE = Vector(-10, -1)
+OFFSET_CHURCH = Vector(-14, 0)
 OFFSET_CREEK = Vector(1, 1)
 OFFSET_SKELETON = Vector(1, 1)
 
@@ -33,7 +33,12 @@ class Rock(Prop):
             'x_variance': 31, 'y_variance': 55}
 
     def __init__(self, position, **kwargs):
-        super(Rock, self).__init__(position, HITBOX_ROCK, **kwargs)
+        super(Rock, self).__init__(position, HITBOX_ROCK,
+            offset=OFFSET_ROCK, **kwargs)
+
+    def collide(self, other, vector, direction):
+        super(Rock, self).collide(other, vector, direction)
+        other.send_effect('knockback')
 
 
 class Stone(Prop):
@@ -47,7 +52,12 @@ class Stone(Prop):
             'x_variance': 11, 'y_variance': 24}
 
     def __init__(self, position, **kwargs):
-        super(Stone, self).__init__(position, HITBOX_STONE, **kwargs)
+        super(Stone, self).__init__(position, HITBOX_STONE,
+            offset=OFFSET_STONE, **kwargs)
+
+    def collide(self, other, vector, direction):
+        super(Stone, self).collide(other, vector, direction)
+        other.send_effect('trip')
 
 
 class House(Prop):
@@ -60,8 +70,13 @@ class House(Prop):
             'x_variance': 20, 'y_variance': 19}
 
     def __init__(self, position, **kwargs):
-        super(House, self).__init__(position, HITBOX_HOUSE, **kwargs)
+        super(House, self).__init__(position, HITBOX_HOUSE,
+            offset=OFFSET_HOUSE, **kwargs)
         House.num += 1
+
+    def collide(self, other, vector, direction):
+        super(House, self).collide(other, vector, direction)
+        other.send_effect('wall')
 
     @property
     def image(self):
@@ -83,7 +98,12 @@ class Church(Prop):
             'x_variance': 5, 'y_variance': 23}
 
     def __init__(self, position, **kwargs):
-        super(Church, self).__init__(position, HITBOX_CHURCH, **kwargs)
+        super(Church, self).__init__(position, HITBOX_CHURCH,
+            offset=OFFSET_CHURCH, **kwargs)
+
+    def collide(self, other, vector, direction):
+        super(Church, self).collide(other, vector, direction)
+        other.send_effect('wall')
 
 
 class Creek(Prop):
@@ -95,7 +115,12 @@ class Creek(Prop):
             'x_variance': 20}
 
     def __init__(self, position, **kwargs):
-        super(Creek, self).__init__(position, HITBOX_CREEK, **kwargs)
+        super(Creek, self).__init__(position, HITBOX_CREEK,
+            offset=OFFSET_CREEK, **kwargs)
+
+    def collide(self, other, vector, direction):
+        super(Creek, self).collide(other, vector, direction)
+        other.send_effect('drown')
 
 
 class Skeleton(Prop):
@@ -105,7 +130,8 @@ class Skeleton(Prop):
             'x_variance': 14, 'y_variance': 4}
 
     def __init__(self, position, **kwargs):
-        super(Skeleton, self).__init__(position, HITBOX_SKELETON, **kwargs)
+        super(Skeleton, self).__init__(position, HITBOX_SKELETON,
+            offset=OFFSET_SKELETON, **kwargs)
 
 
 # Actors
@@ -124,6 +150,10 @@ class Pebble(Projectile):
 
     def __init__(self):
         super(Pebble, self).__init__()
+
+    def collide(self, other, vector, direction):
+        super(Pebble, self).collide(other, vector, direction)
+        other.send_effect('trip')
 
 
 class Peasant(Actor):
@@ -160,6 +190,10 @@ class Peasant(Actor):
         self.target = None
         self.frustration = 0
         self.behavior = self.behave_idle
+
+    def collide(self, other, vector, direction):
+        super(Peasant, self).collide(other, vector, direction)
+        other.send_effect('trip')
 
     '''def behave_idle(self, dt):
         self.play('idle')
@@ -388,6 +422,10 @@ class Preacher(Actor):
         self.speed = VECTOR_NULL
         self.target = None
         self.next_action_delay = 0.0
+
+    def collide(self, other, vector, direction):
+        super(Preacher, self).collide(other, vector, direction)
+        other.send_effect('trip')
 
 
 BUILDER_NAMES = {

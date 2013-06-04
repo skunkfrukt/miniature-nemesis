@@ -59,5 +59,20 @@ class Hero(Actor):
 
     def collide(self, other, vector, direction):
         super(Hero, self).collide(other, vector, direction)
-        log.debug('Hero collided {}'.format(direction))
+        other.send_effect('hero_hit')
+
+    def send_effect(self, effect, **kwargs):
+        if effect == 'trip':
+            log.info('Jean-Baptiste Flynn tripped!')
+            pass
+        elif effect == 'knockback':
+            log.info('Jean-Baptiste Flynn was knocked back!!')
+            self.speed = Vector(-150, 0)
+        elif effect == 'wall':
+            log.info('Jean-Baptiste Flynn ran into a wall!!!')
+            self.speed = Vector(-250, 0)
+        elif effect == 'drown':
+            log.info('Jean-Baptiste Flynn drowned!!!!')
+        elif effect == 'burn':
+            log.info('Jean-Baptiste Flynn was burnt to a crisp!!!!!')
 

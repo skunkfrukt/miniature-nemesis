@@ -131,7 +131,7 @@ class GameObject(pyglet.event.EventDispatcher):
         b = random.randint(0, 1) * 255
         self.sprite.color = (r, g, b)
 
-    def send_effect(self, effect):
+    def send_effect(self, effect, **kwargs):
         pass
 
 GameObject.register_event_type('on_despawn')
