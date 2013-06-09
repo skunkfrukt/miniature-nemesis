@@ -160,7 +160,7 @@ class Peasant(Actor):
     _anim_set = "ANIMSET_PEASANT"
 
     max_speed = 60.0
-    acceleration = (100, 100)
+    acceleration = 100
     # Collision effect: Trip 0.5 s
 
     FIRST_AIM_DELAY = 1.2
@@ -414,7 +414,7 @@ class Preacher(Actor):
     _anim_set = "ANIMSET_PREACHER"
 
     max_speed = 120.0
-    acceleration = Vector(100, 100)
+    acceleration = 100
     # collision_effect = ('trip', 0.5)
 
     def __init__(self, position, **kwargs):

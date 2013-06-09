@@ -20,7 +20,7 @@ class Hero(Actor):
     _anim_set = "ANIMSET_HERO"
 
     max_speed = 80.0
-    acceleration = Vector(200, 400)
+    acceleration = 200
 
     def __init__(self, position):
         super(Hero, self).__init__(position, HITBOX_HERO, offset=OFFSET_HERO)

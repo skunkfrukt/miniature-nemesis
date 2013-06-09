@@ -24,7 +24,7 @@ status_severity = {
 
 class Actor(AnimatedGameObject):
     max_speed = 0.0
-    acceleration = Vector(100, 100)
+    acceleration = 100
 
     def __init__(self, position, size, **kwargs):
         super(Actor, self).__init__(position, size, layer=1, **kwargs)
@@ -41,15 +41,15 @@ class Actor(AnimatedGameObject):
     def update_speed(self, dt):
         if self.status == 'ok':
             target_speed = self.direction * self.max_speed + VECTOR_EAST * 100
-            self.approach_target_speed(dt, target_speed)
+            self.accelerate(dt, target_speed)
         elif self.status == 'rise':
             if self.next_action_delay <= 0:
                 self.apply_status('ok', force=True)
         elif self.status == 'tumble':
-            if self.speed[0] < 1:
+            if self.speed.x == 0:
                 self.apply_status('rise', force=True)
             else:
-                self.approach_target_speed(dt, VECTOR_NULL)
+                self.accelerate(dt/2.0, VECTOR_NULL)
         elif self.status == 'trip':
             if self.next_action_delay <= 0:
                 self.apply_status('tumble', force=True)
@@ -59,24 +59,13 @@ class Actor(AnimatedGameObject):
                 self.apply_status('ok', force=True)
         self.next_action_delay -= dt
 
-    def approach_target_speed(self, dt, target):
-        ##TODO## Do this is a nicer way with vectors.
-        dx, dy = self.speed
-        tx, ty = target
-        ax, ay = self.acceleration
-        if tx < dx:
-            dx -= ax * dt
-            dx = max(dx, tx)
-        elif tx > dx:
-            dx += ax * dt
-            dx = min(dx, tx)
-        if ty < dy:
-            dy -= ay * dt
-            dy = max(dy, ty)
-        elif ty > dy:
-            dy += ay * dt
-            dy = min(dy, ty)
-        self.speed = Vector(dx, dy)
+    def accelerate(self, dt, target_speed):
+        diff = target_speed - self.speed
+        frame_acceleration = self.acceleration * dt
+        if diff.length <= frame_acceleration:
+            self.speed = target_speed
+        else:
+            self.speed += diff.unit * frame_acceleration
 
     def update(self, dt):
         self.behave(dt)
@@ -86,11 +75,6 @@ class Actor(AnimatedGameObject):
 
     def animate(self):
         pass
-
-    '''def reset(self, position):
-        self.speed = VECTOR_NULL
-        super(Actor, self).reset(position)
-        self.apply_status('ok')'''
 
     def fire_projectile(self, projectile_cls, speed, target=None):
         origin = self.position
