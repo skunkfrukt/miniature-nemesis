@@ -87,46 +87,4 @@ def get_collision_rect(a, b):
         return None
 
 def calculate_collision_direction(vector, overlap_rect):
-    return VECTOR_NULL # Fulfix
-    rect_left, rect_bottom, rect_right, rect_top = overlap_rect
-    rect_width = rect_right - rect_left
-    rect_height = rect_top - rect_bottom
-
-    # First we figure out how long it took the objects to reach their current
-    # state of overlap, from the time of impact.
-    if vector.x == 0:
-        time_x = 0
-    else:
-        time_x = rect_width / abs(vector.x)
-    if vector.y == 0:
-        time_y = 0
-    else:
-        time_y = rect_height / abs(vector.y)
-
-    # Then we handle the cases where the collision was horizontal,
-    # i.e., when the horizontal overlap would have taken longer.
-    if time_x > time_y:
-        if vector.x < 0:
-            return VECTOR_WEST
-        else:
-            return VECTOR_EAST
-
-    # Then we handle the cases where the collision was vertical.
-    elif time_x < time_y:
-        if vector.y < 0:
-            return VECTOR_SOUTH
-        else:
-            return VECTOR_NORTH
-
-    # Not? Okay, then it was diagonal. *Sigh*
-    else:
-        if vector.x < 0:
-            if vector.y < 0:
-                return VECTOR_SOUTHWEST
-            else:
-                return VECTOR_NORTHWEST
-        else:
-            if vector.y < 0:
-                return VECTOR_SOUTHEAST
-            else:
-                return VECTOR_NORTHEAST
+    return VECTOR_NULL #TODO: Fulfix!!
