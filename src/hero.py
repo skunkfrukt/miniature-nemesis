@@ -77,12 +77,12 @@ class Hero(Actor):
             if self.status in ('ok', 'trip', 'tumble', 'rise'):
                 log.info('Jean-Baptiste Flynn was knocked back!!')
                 self.status = 'knockback'
-                self.speed = Vector(-150, 0)
+                self.speed = self.speed * -0.5 + Vector(-100, 0)
         elif effect == 'wall':
             if self.status in ('ok', 'trip', 'tumble', 'rise'):
                 log.info('Jean-Baptiste Flynn ran into a wall!!!')
                 self.status = 'knockback'
-                self.speed = Vector(-200, 0)
+                self.speed = self.speed * -0.5 + Vector(-150, 0)
         elif effect == 'drown':
             if self.status in ('tumble', 'rise'):
                 # Die ^_^
