@@ -37,10 +37,10 @@
             "loop": false
         },
         {
-            "key": "trip",
             "frames": [10],
+            "key": "trip",
             "period": 0.12,
-            "loop": false
+            "loop": true
         },
         {
             "key": "tumble",
@@ -52,7 +52,7 @@
             "key": "rise",
             "frames": [13],
             "period": 0.12,
-            "loop": false
+            "loop": true
         }
     ]
 }

@@ -53,10 +53,11 @@ class Actor(AnimatedGameObject):
         elif self.status == 'trip':
             if self.next_action_delay <= 0:
                 self.apply_status('tumble', force=True)
-        elif self.status == 'stun':
-            if self.next_action_delay <= 0:
-                self.speed = VECTOR_NULL
+        elif self.status == 'knockback':
+            if self.speed.x == 0:
                 self.apply_status('ok', force=True)
+            else:
+                self.accelerate(dt, VECTOR_NULL)
         self.next_action_delay -= dt
 
     def accelerate(self, dt, target_speed):

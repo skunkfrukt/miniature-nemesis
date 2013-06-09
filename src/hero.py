@@ -24,6 +24,7 @@ class Hero(Actor):
 
     def __init__(self, position):
         super(Hero, self).__init__(position, HITBOX_HERO, offset=OFFSET_HERO)
+        self.apply_status = self.send_effect
 
     def fixSpeed(self, keys):
         dir = VECTOR_NULL
@@ -37,11 +38,8 @@ class Hero(Actor):
             dir += VECTOR_EAST
         self.direction = dir
 
-    def move(self, dt, stage_offset):
-        Actor.move(self, dt, stage_offset)
-
     def animate(self):
-        if self.status == 'stun':
+        if self.status == 'knockback':
             self.play('hurt')
         elif self.status == 'trip':
             self.play('trip')
@@ -63,16 +61,38 @@ class Hero(Actor):
 
     def send_effect(self, effect, **kwargs):
         if effect == 'trip':
-            log.info('Jean-Baptiste Flynn tripped!')
-            pass
+            if self.status in ('ok',):
+                log.info('Jean-Baptiste Flynn tripped!')
+                self.status = 'trip'
+                self.next_action_delay = 0.2
+        elif effect == 'tumble':
+            if self.status in ('trip',):
+                self.status = 'tumble'
+        elif effect == 'rise':
+            if self.status in ('tumble',):
+                self.status = 'rise'
+                self.speed = VECTOR_NULL
+                self.next_action_delay = 0.4
         elif effect == 'knockback':
-            log.info('Jean-Baptiste Flynn was knocked back!!')
-            self.speed = Vector(-150, 0)
+            if self.status in ('ok', 'trip', 'tumble', 'rise'):
+                log.info('Jean-Baptiste Flynn was knocked back!!')
+                self.status = 'knockback'
+                self.speed = Vector(-150, 0)
         elif effect == 'wall':
-            log.info('Jean-Baptiste Flynn ran into a wall!!!')
-            self.speed = Vector(-250, 0)
+            if self.status in ('ok', 'trip', 'tumble', 'rise'):
+                log.info('Jean-Baptiste Flynn ran into a wall!!!')
+                self.status = 'knockback'
+                self.speed = Vector(-200, 0)
         elif effect == 'drown':
-            log.info('Jean-Baptiste Flynn drowned!!!!')
+            if self.status in ('tumble', 'rise'):
+                # Die ^_^
+                log.info('Jean-Baptiste Flynn drowned!!!!')
+            else:
+                # We won't fall into the river if we can help it.
+                self.send_effect('knockback')
         elif effect == 'burn':
+            # Die \^_^/
             log.info('Jean-Baptiste Flynn was burnt to a crisp!!!!!')
+        elif effect == 'ok': #TODO: Fulfix!
+            self.status = 'ok'
 
