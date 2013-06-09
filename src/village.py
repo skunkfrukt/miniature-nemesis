@@ -10,17 +10,23 @@ from actor import *
 
 
 HITBOX_ROCK = Vector(28, 15)
-HITBOX_STONE = Vector(20, 12)
-HITBOX_HOUSE = Vector(166, 141)
-HITBOX_CHURCH = Vector(370, 170)
-HITBOX_CREEK = Vector(1, 1)
-HITBOX_SKELETON = Vector(1, 1)
 OFFSET_ROCK = Vector(-6, -1)
+HITBOX_STONE = Vector(20, 12)
 OFFSET_STONE = Vector(-2, -2)
+HITBOX_HOUSE = Vector(150, 141)
 OFFSET_HOUSE = Vector(-10, -1)
+HITBOX_CHURCH = Vector(370, 170)
 OFFSET_CHURCH = Vector(-14, 0)
+HITBOX_CREEK = Vector(1, 1)
 OFFSET_CREEK = Vector(1, 1)
+HITBOX_SKELETON = Vector(1, 1)
 OFFSET_SKELETON = Vector(1, 1)
+
+HITBOX_PEBBLE = Vector(1, 1)
+HITBOX_PEASANT = Vector(23, 23)
+OFFSET_PEASANT = Vector(-18, -4)
+HITBOX_PREACHER = Vector(20, 20)
+OFFSET_PREACHER = Vector(0, 0)
 
 
 class Rock(Prop):
@@ -89,6 +95,10 @@ class HeroHouse(House):
 
     def __init__(self, position, **kwargs):
         super(HeroHouse, self).__init__(position, **kwargs)
+        
+    @property
+    def image(self):
+        return self._image
 
 
 class Church(Prop):
@@ -135,13 +145,6 @@ class Skeleton(Prop):
 
 
 # Actors
-
-
-HITBOX_PEBBLE = Vector(1, 1)
-HITBOX_PEASANT = Vector(23, 23)
-OFFSET_PEASANT = Vector(-18, -4)
-HITBOX_PREACHER = Vector(20, 20)
-OFFSET_PREACHER = Vector(0, 0)
 
 
 class Pebble(Projectile):
@@ -286,7 +289,7 @@ class Peasant(Actor):
                     self.behavior = self.behave_leap
                 else:
                     final_speed = self.LEAP_SPEED
-        self.approach_target_speed(dt, final_speed)
+        self.accelerate(dt, final_speed)
 
     '''def pursue(self, target, dt, speed=60):
         dist_x = target.x - 60 - self.x
@@ -415,7 +418,6 @@ class Preacher(Actor):
 
     max_speed = 120.0
     acceleration = 100
-    # collision_effect = ('trip', 0.5)
 
     def __init__(self, position, **kwargs):
         super(Preacher, self).__init__(position, HITBOX_PREACHER, **kwargs)

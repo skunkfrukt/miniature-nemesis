@@ -27,7 +27,7 @@ class SpatialHash(object):
         left, bottom, right, top = rect
         left = max(0, left)
         bottom = max(0, bottom)
-        right = min(right, self.width- 1)
+        right = min(right, self.width - 1)
         top = min(top, self.height - 1)
         left_cell = int(left / self.cell_width)
         right_cell = int(right / self.cell_width) + 1

@@ -25,6 +25,26 @@ class GameObject(pyglet.event.EventDispatcher):
         self.speed = VECTOR_NULL
         self.sprite = None
         self.layer = layer
+        try:
+            hitbox_color = pyglet.image.SolidColorImagePattern((255,255,255,255))
+            hitbox_img = hitbox_color.create_image(self.size.x, 1)
+            hitbox_img2 = hitbox_color.create_image(1, self.size.y)
+            self.image.blit_into(hitbox_img, -self.offset.x, -self.offset.y, 0)
+            self.image.blit_into(hitbox_img, -self.offset.x, -self.offset.y + self.size.y, 0)
+            self.image.blit_into(hitbox_img2, -self.offset.x, -self.offset.y, 0)
+            self.image.blit_into(hitbox_img2, -self.offset.x + self.size.x, -self.offset.y, 0)
+        except:
+            try:
+                for img in self.anim_set.grid:
+                    hitbox_color = pyglet.image.SolidColorImagePattern((255,255,255,255))
+                    hitbox_img = hitbox_color.create_image(self.size.x, 1)
+                    hitbox_img2 = hitbox_color.create_image(1, self.size.y)
+                    img.blit_into(hitbox_img, -self.offset.x, -self.offset.y, 0)
+                    img.blit_into(hitbox_img, -self.offset.x, -self.offset.y + self.size.y, 0)
+                    img.blit_into(hitbox_img2, -self.offset.x, -self.offset.y, 0)
+                    img.blit_into(hitbox_img2, -self.offset.x + self.size.x, -self.offset.y, 0)
+            except:
+                pass #TODO: Remove this when no longer needed.
 
     @property
     def x(self):
