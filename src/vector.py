@@ -3,6 +3,7 @@ import math
 class Vector(object):
     def __init__(self, x, y):
         self._tuple = (x, y)
+        self._length = None
 
     @property
     def x(self):
@@ -46,7 +47,7 @@ class Vector(object):
         return VECTOR_NULL - self
 
     def __str__(self):
-        return '({}{})'.format(*self)
+        return '({},{})'.format(*self)
 
     def dot(self, other):
         return self.x * other.x + self.y * other.y
@@ -54,14 +55,19 @@ class Vector(object):
     def cross(self, other):
         return self.x * other.y - self.y * other.x
 
+    @property
     def length(self):
-        return self.squared_length() ** 0.5
+        if self._length is None:
+            self._length = self.squared_length ** 0.5
+        return self._length
 
+    @property
     def squared_length(self):
         return self.x ** 2 + self.y ** 2
 
+    @property
     def unit(self):
-        return self / self.length()
+        return self / self.length
 
     def turn_left(self):
         return Vector(-self.y, self.x)
