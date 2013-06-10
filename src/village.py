@@ -17,8 +17,8 @@ HITBOX_HOUSE = Vector(150, 141)
 OFFSET_HOUSE = Vector(-10, -1)
 HITBOX_CHURCH = Vector(370, 170)
 OFFSET_CHURCH = Vector(-14, 0)
-HITBOX_CREEK = Vector(1, 1)
-OFFSET_CREEK = Vector(1, 1)
+HITBOX_CREEK = Vector(100, 360)
+OFFSET_CREEK = Vector(-40, 0)
 HITBOX_SKELETON = Vector(1, 1)
 OFFSET_SKELETON = Vector(1, 1)
 
@@ -95,7 +95,7 @@ class HeroHouse(House):
 
     def __init__(self, position, **kwargs):
         super(HeroHouse, self).__init__(position, **kwargs)
-        
+
     @property
     def image(self):
         return self._image
@@ -119,8 +119,9 @@ class Church(Prop):
 class Creek(Prop):
     # Collision effect: Drown
     _sourceimg = pyglet.resource.image('img/sprites/creek.png')
-    _image = pyglet.image.Animation.from_image_sequence(
-        pyglet.image.ImageGrid(_sourceimg, 1, 2), 1.0, True)
+    #_image = pyglet.image.Animation.from_image_sequence(
+    #    pyglet.image.ImageGrid(_sourceimg, 1, 2), 1.0, True)
+    _image = pyglet.image.ImageGrid(_sourceimg, 1, 2)[0]
     builder_data = {'width':5, 'height':9,
             'x_variance': 20}
 
