@@ -15,6 +15,10 @@ from vector import *
 HITBOX_HERO = Vector(16, 16)
 OFFSET_HERO = Vector(-14, -3)
 
+SOUND_TRIP = pyglet.resource.media('sound/trip.wav', streaming=False)
+SOUND_KNOCKBACK = pyglet.resource.media('sound/knockback.wav', streaming=False)
+SOUND_WALL = pyglet.resource.media('sound/wall.wav', streaming=False)
+
 
 class Hero(Actor):
     _anim_set = "ANIMSET_HERO"
@@ -62,6 +66,7 @@ class Hero(Actor):
     def send_effect(self, effect, **kwargs):
         if effect == 'trip':
             if self.status in ('ok',):
+                SOUND_TRIP.play()
                 log.info('Jean-Baptiste Flynn tripped!')
                 self.status = 'trip'
                 self.next_action_delay = 0.2
@@ -75,11 +80,13 @@ class Hero(Actor):
                 self.next_action_delay = 0.4
         elif effect == 'knockback':
             if self.status in ('ok', 'trip', 'tumble', 'rise'):
+                SOUND_KNOCKBACK.play()
                 log.info('Jean-Baptiste Flynn was knocked back!!')
                 self.status = 'knockback'
                 self.speed = self.speed * -0.5 + Vector(-100, 0)
         elif effect == 'wall':
             if self.status in ('ok', 'trip', 'tumble', 'rise'):
+                SOUND_WALL.play()
                 log.info('Jean-Baptiste Flynn ran into a wall!!!')
                 self.status = 'knockback'
                 self.speed = self.speed * -0.5 + Vector(-150, 0)

@@ -17,6 +17,10 @@ import spritehandler
 SH = spritehandler
 import menu
 
+
+SOUND_MENU = pyglet.resource.media('sound/menu.wav', streaming=False)
+
+
 class GameState(pyglet.event.EventDispatcher):
     def __init__(self):
         self.batch = pyglet.graphics.Batch()
@@ -74,8 +78,10 @@ class MenuState(GameState):
                 self.quit()
         elif symbol == key.UP:
             self.menu.previous_option()
+            SOUND_MENU.play()
         elif symbol == key.DOWN:
             self.menu.next_option()
+            SOUND_MENU.play()
 
     def on_key_release(self, symbol, modifiers):
         pass
