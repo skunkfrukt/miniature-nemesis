@@ -63,6 +63,10 @@ class Hero(Actor):
         super(Hero, self).collide(other, vector, direction)
         other.send_effect('hero_hit')
 
+    def move(self, dt):
+        super(Hero, self).move(dt)
+        self.dispatch_event('on_hero_moved', self, self.position)
+
     def send_effect(self, effect, **kwargs):
         if effect == 'trip':
             if self.status in ('ok',):
@@ -77,7 +81,7 @@ class Hero(Actor):
             if self.status in ('tumble',):
                 self.status = 'rise'
                 self.speed = VECTOR_NULL
-                self.next_action_delay = 0.4
+                self.next_action_delay = 0.6
         elif effect == 'knockback':
             if self.status in ('ok', 'trip', 'tumble', 'rise'):
                 SOUND_KNOCKBACK.play()
@@ -103,3 +107,4 @@ class Hero(Actor):
         elif effect == 'ok': #TODO: Fulfix!
             self.status = 'ok'
 
+Hero.register_event_type('on_hero_moved')

@@ -38,7 +38,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.actual_scroll_speed = VECTOR_NULL
         self.target_scroll_speed = SCROLL_SPEED
         self.active_section = None
-        
+
         self.spatial_hash = None
 
         log.debug(D_INIT.format(type(self).__name__, self.name))
@@ -64,6 +64,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.is_scrolling = True
         self.hero = Hero(Vector(100, 100))
         self.spawn_actors(set([self.hero]))
+        self.hero.push_handlers(self)
 
     def reset(self):
         self.despawn_props(self.all_props)
@@ -174,7 +175,7 @@ class Stage(pyglet.event.EventDispatcher):
         for actor in actors:
             actor.despawn()
         self.all_actors -= actors
-        
+
     def check_collisions(self):
         self.spatial_hash.collide(
             self.active_rect, self.all_actors, self.current_props)
@@ -197,7 +198,7 @@ class Stage(pyglet.event.EventDispatcher):
     @property
     def stage_height(self):
         return world.constants['WIN_HEIGHT']
-    
+
     @property
     def active_rect(self):
         return (self.offset.x - 100, 0,
@@ -207,6 +208,15 @@ class Stage(pyglet.event.EventDispatcher):
     def send_keys_to_hero(self, keys, pressed=None, released=None):
         if self.hero is not None:
             self.hero.fixSpeed(keys)
+
+    def on_hero_moved(self, the_hero, position):
+        if position.x < self.offset.x - 100:
+            log.info('Hero left to the left.')
+        elif position.x > self.offset.x + world.constants['WIN_WIDTH'] + 10:
+            log.info('Hero left to the right.')
+            if the_hero.status != 'knockback':
+                the_hero.send_effect('knockback')
+                self.target_scroll_speed *= 2
 
 Stage.register_event_type('on_begin_stage')
 Stage.register_event_type('on_end_stage')
