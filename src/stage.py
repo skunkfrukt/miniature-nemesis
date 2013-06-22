@@ -216,7 +216,9 @@ class Stage(pyglet.event.EventDispatcher):
             log.info('Hero left to the right.')
             if the_hero.status != 'knockback':
                 the_hero.send_effect('knockback')
-                self.target_scroll_speed *= 2
+                self.target_scroll_speed *= 1.2
+                # the_hero.acceleration *= 1.2
+                the_hero.max_speed *= 1.2
 
 Stage.register_event_type('on_begin_stage')
 Stage.register_event_type('on_end_stage')
