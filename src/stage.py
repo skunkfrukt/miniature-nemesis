@@ -55,6 +55,7 @@ class Stage(pyglet.event.EventDispatcher):
         # self.background.x = world.ZERO
         self.spatial_hash = collider.SpatialHash(
             self.stage_width, self.stage_height, 40, 40)
+        self.bg_mark = 0
 
         for sect in self.sections:
             sect.setup()
@@ -120,6 +121,8 @@ class Stage(pyglet.event.EventDispatcher):
     def advance_section(self):
         if self.active_section is not None:
             self.exit_section(self.active_section)
+            self.background.color = (255, 255 * self.bg_mark, 255)
+            self.bg_mark = (self.bg_mark + 1) % 2
         try:
             new_section = self.section_iter.next()
             self.enter_section(new_section)
