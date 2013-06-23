@@ -9,7 +9,7 @@ import world
 import spritehandler
 SH = spritehandler
 
-import collider
+import rabbyt.collisions as collider  ## import collider
 
 from hero import Hero
 
@@ -39,7 +39,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.target_scroll_speed = SCROLL_SPEED
         self.active_section = None
 
-        self.spatial_hash = None
+        ## self.spatial_hash = None
 
         log.debug(D_INIT.format(type(self).__name__, self.name))
 
@@ -52,9 +52,9 @@ class Stage(pyglet.event.EventDispatcher):
         bg_img = bg_pattern.create_image(640, 360)  # TODO: Magic number.
         self.background = SH.show_sprite(SH.BG, 0)
         self.background.image = bg_img
-        self.spatial_hash = collider.SpatialHash(
-            self.stage_width, self.stage_height, 40, 40)
         ## self.background.x = world.ZERO
+        '''self.spatial_hash = collider.SpatialHash(
+            self.stage_width, self.stage_height, 40, 40)'''
         self.bg_mark = 0
 
         for sect in self.sections:
@@ -180,8 +180,14 @@ class Stage(pyglet.event.EventDispatcher):
         self.all_actors -= actors
 
     def check_collisions(self):
-        self.spatial_hash.collide(
-            self.active_rect, self.all_actors, self.current_props)
+        game_objects = list(self.all_actors | self.current_props)
+        collisions = collider.aabb_collide(game_objects)
+        for group in collisions:
+            a, b = group
+            a.collide(b, VECTOR_NULL, VECTOR_NULL)
+            b.collide(a, VECTOR_NULL, VECTOR_NULL)
+        '''self.spatial_hash.collide(
+            self.active_rect, self.all_actors, self.current_props)'''
 
     @property
     def current_props(self):
