@@ -89,12 +89,6 @@ class MenuState(GameState):
     def update(self, dt):
         pass
 
-    '''def unselect_menu_item(self, index):
-        self.menu.labels[index].color = (0,0,0,255)
-
-    def select_menu_item(self, index):
-        self.menu.labels[index].color = (255,0,0,255)'''
-
     def quit(self):
         self.dispatch_event('on_quit_game')
 

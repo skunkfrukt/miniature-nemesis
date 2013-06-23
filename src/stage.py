@@ -49,12 +49,12 @@ class Stage(pyglet.event.EventDispatcher):
             random.seed(self.seed)
         bg_pattern = pyglet.image.SolidColorImagePattern(
             self.background_color)
-        bg_img = bg_pattern.create_image(640, 360) ##TODO## Magic number.
+        bg_img = bg_pattern.create_image(640, 360)  # TODO: Magic number.
         self.background = SH.show_sprite(SH.BG, 0)
         self.background.image = bg_img
-        # self.background.x = world.ZERO
         self.spatial_hash = collider.SpatialHash(
             self.stage_width, self.stage_height, 40, 40)
+        ## self.background.x = world.ZERO
         self.bg_mark = 0
 
         for sect in self.sections:
@@ -96,7 +96,7 @@ class Stage(pyglet.event.EventDispatcher):
         actual = self.actual_scroll_speed.x
         target = self.target_scroll_speed.x
         if actual < target:
-            delta = 50 * dt  ##TODO## Magic number.
+            delta = 50 * dt  # TODO: Magic number.
             new_scroll_speed = min(target, actual + delta)
             self.actual_scroll_speed = Vector(new_scroll_speed, 0)
 
@@ -128,7 +128,7 @@ class Stage(pyglet.event.EventDispatcher):
             self.enter_section(new_section)
         except StopIteration:
             self.stop_scrolling()
-            # self.dispatch_event('on_enter_final_section')
+            ## self.dispatch_event('on_enter_final_section')
 
     def exit_section(self, old_section):
         self.despawn_props(self.old_props)
@@ -142,7 +142,7 @@ class Stage(pyglet.event.EventDispatcher):
 
     def enter_section(self, new_section):
         if new_section is not None:
-            # new_section.setup()
+            ## new_section.setup()
             self.spawn_props(new_section.props)
             self.spawn_actors(new_section.actors)
         self.active_section = new_section
@@ -220,7 +220,7 @@ class Stage(pyglet.event.EventDispatcher):
             if the_hero.status != 'knockback':
                 the_hero.send_effect('knockback')
                 self.target_scroll_speed *= 1.2
-                # the_hero.acceleration *= 1.2
+                ## the_hero.acceleration *= 1.2
                 the_hero.max_speed *= 1.2
 
 Stage.register_event_type('on_begin_stage')
