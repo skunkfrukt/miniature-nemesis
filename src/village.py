@@ -78,6 +78,7 @@ class House(Prop):
     def __init__(self, position, **kwargs):
         super(House, self).__init__(position, HITBOX_HOUSE,
             offset=OFFSET_HOUSE, **kwargs)
+        self.num = House.num
         House.num += 1
 
     def collide(self, other, vector, direction):
