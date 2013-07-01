@@ -177,7 +177,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.all_actors -= actors
 
     def check_collisions(self):
-        game_objects = list(self.all_actors | self.current_props)
+        game_objects = list(self.all_actors | self.all_props)
         collisions = collider.aabb_collide(game_objects)
         for group in collisions:
             a, b = group
