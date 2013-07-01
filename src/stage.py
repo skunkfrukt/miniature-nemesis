@@ -171,6 +171,13 @@ class Stage(pyglet.event.EventDispatcher):
             log.debug(D_SPAWN_ACTOR.format(type(actor).__name__))
         self.all_actors |= actors
 
+    def spawn_projectile(self, projectile):
+        projectile.allocate_sprite()
+        projectile.align_sprite(self.offset)
+        projectile.show()
+        log.debug(D_SPAWN_BULLET.format(type(projectile).__name__))
+        self.all_actors.add(projectile)
+
     def despawn_actors(self, actors):
         for actor in actors:
             actor.despawn()
@@ -214,6 +221,8 @@ class Stage(pyglet.event.EventDispatcher):
     def send_keys_to_hero(self, keys, pressed=None, released=None):
         if self.hero is not None:
             self.hero.fixSpeed(keys)
+        if pressed is not None:
+            self.hero.throw_pebble()
 
     def on_hero_moved(self, the_hero, position):
         if position.x < self.offset.x - 100:
@@ -225,6 +234,9 @@ class Stage(pyglet.event.EventDispatcher):
                 self.target_scroll_speed *= 1.2
                 ## the_hero.acceleration *= 1.2
                 the_hero.max_speed *= 1.2
+
+    def on_emit(self, projectile):
+        self.spawn_projectile(projectile)
 
 Stage.register_event_type('on_begin_stage')
 Stage.register_event_type('on_end_stage')
@@ -458,3 +470,4 @@ I_EXIT_SECTION = "Exited Section {}."
 D_ADD_SECTION = "Appended Section {} to Stage {}."
 D_INIT = "Initialised {} {}."
 D_SPAWN_ACTOR = "Spawned actor {}."
+D_SPAWN_BULLET = "Spawned bullet {}."

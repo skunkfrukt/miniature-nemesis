@@ -23,6 +23,7 @@ HITBOX_SKELETON = Vector(1, 1)
 OFFSET_SKELETON = Vector(1, 1)
 
 HITBOX_PEBBLE = Vector(1, 1)
+OFFSET_PEBBLE = Vector(-5, -5)
 HITBOX_PEASANT = Vector(23, 23)
 OFFSET_PEASANT = Vector(-18, -4)
 HITBOX_PREACHER = Vector(20, 20)
@@ -150,11 +151,15 @@ class Skeleton(Prop):
 
 
 class Pebble(Projectile):
-    _image = pyglet.resource.image('img/sprites/pebble.png')
+    _image = pyglet.image.Animation.from_image_sequence(
+        pyglet.image.ImageGrid(
+            pyglet.resource.image('img/sprites/pebble.png'), 1, 3),
+            0.05, True)
     # Collision effect: Trip 0.2 s
 
-    def __init__(self):
-        super(Pebble, self).__init__()
+    def __init__(self, position, speed):
+        super(Pebble, self).__init__(position, offset=OFFSET_PEBBLE,
+            speed=speed)
 
     def collide(self, other, vector, direction):
         super(Pebble, self).collide(other, vector, direction)

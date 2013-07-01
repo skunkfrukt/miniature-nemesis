@@ -11,6 +11,8 @@ from actor import Actor
 
 from vector import *
 
+# TEMP
+from village import Pebble
 
 HITBOX_HERO = Vector(16, 16)
 OFFSET_HERO = Vector(-14, -3)
@@ -106,5 +108,9 @@ class Hero(Actor):
             log.info('Jean-Baptiste Flynn was burnt to a crisp!!!!!')
         elif effect == 'ok': #TODO: Fulfix!
             self.status = 'ok'
+
+    def throw_pebble(self):
+        pebble = Pebble(self.position, speed=Vector(500, 100))
+        self.fire_projectile(pebble)
 
 Hero.register_event_type('on_hero_moved')

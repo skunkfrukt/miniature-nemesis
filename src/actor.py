@@ -77,18 +77,12 @@ class Actor(AnimatedGameObject):
     def animate(self):
         pass
 
-    def fire_projectile(self, projectile_cls, speed, target=None):
-        origin = self.position
-        if target is not None:
-            target_pos = target.position
-        else:
-            target_pos = origin + VECTOR_EAST
-        self.dispatch_event('on_projectile_fired',
-                projectile_cls, origin, target_pos, speed)
+    def fire_projectile(self, projectile):
+        self.dispatch_event('on_emit', projectile)
 
     def reset(self, position):
         super(Actor, self).reset(position)
         self.dispatch_event('on_spawn', self, position)
 
-Actor.register_event_type('on_projectile_fired')
+Actor.register_event_type('on_emit')
 Actor.register_event_type('on_spawn')

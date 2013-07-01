@@ -139,6 +139,7 @@ class GameObject(pyglet.event.EventDispatcher):
         return (self.left, self.bottom, self.right, self.top)
 
     def show(self):
+        self.update_sprite()
         self.sprite.visible = True
 
     @property
@@ -178,7 +179,7 @@ class AnimatedGameObject(GameObject):
         return world.anim_sets[self._anim_set]
 
     def show(self):
-        self.update_sprite()
+        ## self.update_sprite()
         super(AnimatedGameObject, self).show()
 
     @property
