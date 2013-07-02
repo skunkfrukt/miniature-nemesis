@@ -15,6 +15,8 @@ from vector import *
 
 
 class GameObject(pyglet.event.EventDispatcher):
+    despawn_on_exit = True
+
     def __init__(self, position, size, offset=VECTOR_NULL, layer=0, **kwargs):
         if len(kwargs) > 0:
             log.warning(W_EXTRA_KWARGS.format(kwargs=kwargs))
@@ -97,6 +99,7 @@ class GameObject(pyglet.event.EventDispatcher):
 
     def move(self, dt):
         self.position += self.speed * dt
+        self.dispatch_event('on_object_moved', self, self.position)
 
     def behave(self, dt):
         if self.behavior is not None:
@@ -160,7 +163,7 @@ class GameObject(pyglet.event.EventDispatcher):
         pass
 
 GameObject.register_event_type('on_despawn')
-
+GameObject.register_event_type('on_object_moved')
 
 class AnimatedGameObject(GameObject):
     _anim_set = None
@@ -185,6 +188,7 @@ class AnimatedGameObject(GameObject):
     @property
     def image(self):
         return self.anim_set.get_anim(self.current_anim)
+
 
 
 W_EXTRA_KWARGS = 'GameObject received extra kwargs: {kwargs}.'

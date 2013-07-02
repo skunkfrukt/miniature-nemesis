@@ -38,6 +38,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.actual_scroll_speed = VECTOR_NULL
         self.target_scroll_speed = SCROLL_SPEED
         self.active_section = None
+        self.despawned_objects = set()
 
         ## self.spatial_hash = None
 
@@ -108,6 +109,10 @@ class Stage(pyglet.event.EventDispatcher):
         self.is_scrolling = False
 
     def update_actors(self, dt):
+        self.all_actors -= self.despawned_objects
+        for obj in self.despawned_objects:
+            obj.despawn()
+        self.despawned_objects = set()
         for actor in self.all_actors:
             actor.update(dt)
 
@@ -177,6 +182,7 @@ class Stage(pyglet.event.EventDispatcher):
         projectile.show()
         log.debug(D_SPAWN_BULLET.format(type(projectile).__name__))
         self.all_actors.add(projectile)
+        projectile.push_handlers(self)
 
     def despawn_actors(self, actors):
         for actor in actors:
@@ -218,6 +224,22 @@ class Stage(pyglet.event.EventDispatcher):
             self.offset.x + world.constants['WIN_WIDTH'] + 100,
             world.constants['WIN_HEIGHT'])
 
+    @property
+    def left(self):
+        return self.offset.x
+
+    @property
+    def right(self):
+        return self.offset.x + world.constants['WIN_WIDTH']
+
+    @property
+    def bottom(self):
+        return self.offset.y
+
+    @property
+    def top(self):
+        return self.offset.y + world.constants['WIN_HEIGHT']
+
     def send_keys_to_hero(self, keys, pressed=None, released=None):
         if self.hero is not None:
             self.hero.fixSpeed(keys)
@@ -237,6 +259,17 @@ class Stage(pyglet.event.EventDispatcher):
 
     def on_emit(self, projectile):
         self.spawn_projectile(projectile)
+
+    def on_object_moved(self, obj, position):
+        if obj.despawn_on_exit:
+            if obj.left >= self.right or obj.right <= self.left:
+                self.despawn(obj)
+            elif obj.bottom >= self.top or obj.top <= self.bottom:
+                self.despawn(obj)
+
+    def despawn(self, obj):
+        self.despawned_objects.add(obj)
+        log.debug('Despawning {}'.format(obj))
 
 Stage.register_event_type('on_begin_stage')
 Stage.register_event_type('on_end_stage')
@@ -471,3 +504,4 @@ D_ADD_SECTION = "Appended Section {} to Stage {}."
 D_INIT = "Initialised {} {}."
 D_SPAWN_ACTOR = "Spawned actor {}."
 D_SPAWN_BULLET = "Spawned bullet {}."
+D_DESPAWN_OBJECT = "Despawned {}."

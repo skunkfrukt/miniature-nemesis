@@ -25,6 +25,7 @@ status_severity = {
 class Actor(AnimatedGameObject):
     max_speed = 0.0
     acceleration = 100
+    despawn_on_exit = False
 
     def __init__(self, position, size, **kwargs):
         super(Actor, self).__init__(position, size, layer=1, **kwargs)
