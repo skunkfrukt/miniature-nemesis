@@ -230,21 +230,24 @@ class Stage(pyglet.event.EventDispatcher):
 
     def on_hero_moved(self, the_hero, position):
         if position.x < self.offset.x - 100:
-            log.info('Hero left to the left.')
+            pass  ## log.info('Hero left to the left.')
         elif position.x > self.offset.x + world.constants['WIN_WIDTH'] + 10:
-            log.info('Hero left to the right.')
-            if the_hero.status != 'knockback':
-                the_hero.send_effect('knockback')
-                self.target_scroll_speed *= 1.2
-                ## the_hero.acceleration *= 1.2
-                the_hero.max_speed *= 1.2
+            ## log.info('Hero left to the right.')
+            if self.right < self.width:
+                if the_hero.status != 'knockback':
+                    the_hero.send_effect('knockback')
+                    self.target_scroll_speed *= 1.2
+                    ## the_hero.acceleration *= 1.2
+                    the_hero.max_speed *= 1.2
+            else:
+                self.dispatch_event('on_end_stage')
 
     def on_emit(self, projectile):
         self.spawn_projectile(projectile)
 
     def on_object_moved(self, obj, position):
         if obj.despawn_on_exit:
-            if obj.left >= self.right or obj.right <= self.left:
+            if obj.right <= self.left:  ## or obj.left >= self.right
                 self.despawn(obj)
             elif obj.bottom >= self.top or obj.top <= self.bottom:
                 self.despawn(obj)

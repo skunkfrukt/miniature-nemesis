@@ -110,6 +110,7 @@ class Hero(Actor):
             self.status = 'ok'
 
     def throw_pebble(self):
+        return
         pebble = Pebble(self.position, speed=Vector(500, 100))
         self.fire_projectile(pebble)
 
