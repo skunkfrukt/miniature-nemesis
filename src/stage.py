@@ -30,8 +30,7 @@ class Stage(pyglet.event.EventDispatcher):
     def __init__(self, name):
         self.name = name
         self.sections = []
-        self.all_props = set()
-        self.all_actors = set()
+        self.game_objects = set()
 
         self.offset = VECTOR_NULL
         self.is_scrolling = False
@@ -55,7 +54,7 @@ class Stage(pyglet.event.EventDispatcher):
         self.background.image = bg_img
         ## self.background.x = world.ZERO
         '''self.spatial_hash = collider.SpatialHash(
-            self.stage_width, self.stage_height, 40, 40)'''
+            self.width, self.height, 40, 40)'''
 
         for sect in self.sections:
             sect.setup()
@@ -64,12 +63,11 @@ class Stage(pyglet.event.EventDispatcher):
         self.advance_section()
         self.is_scrolling = True
         self.hero = Hero(Vector(100, 100))
-        self.spawn_actors(set([self.hero]))
+        self.spawn_game_objects(set([self.hero]))
         self.hero.push_handlers(self)
 
     def reset(self):
-        self.despawn_props(self.all_props)
-        self.despawn_actors(self.all_actors)
+        self.despawn_game_objects(self.game_objects)
 
         self.actual_scroll_speed = VECTOR_NULL
         self.offset = VECTOR_NULL
@@ -79,7 +77,7 @@ class Stage(pyglet.event.EventDispatcher):
 
     def update(self, dt):
         self.update_stage_position(dt)
-        self.update_actors(dt)
+        self.update_game_objects(dt)
 
         self.update_sprites()
         self.check_collisions()
@@ -108,19 +106,17 @@ class Stage(pyglet.event.EventDispatcher):
         self.actual_scroll_speed = VECTOR_NULL
         self.is_scrolling = False
 
-    def update_actors(self, dt):
-        self.all_actors -= self.despawned_objects
+    def update_game_objects(self, dt):
+        self.game_objects -= self.despawned_objects
         for obj in self.despawned_objects:
             obj.despawn()
         self.despawned_objects = set()
-        for actor in self.all_actors:
-            actor.update(dt)
+        for gob in self.game_objects:
+            gob.update(dt)
 
     def update_sprites(self):
-        for actor in self.all_actors:
-            actor.align_sprite(self.offset)
-        for prop in self.all_props:
-            prop.align_sprite(self.offset)
+        for gob in self.game_objects:
+            gob.align_sprite(self.offset)
 
     def advance_section(self):
         if self.active_section is not None:
@@ -133,9 +129,9 @@ class Stage(pyglet.event.EventDispatcher):
             ## self.dispatch_event('on_enter_final_section')
 
     def exit_section(self, old_section):
-        self.despawn_props(self.old_props)
+        ## self.despawn_props(self.old_props)
         if old_section is not None:
-            self.spawn_actors(old_section.second_actors)
+            self.spawn_game_objects(old_section.second_actors)
             old_section.reset()
         self.active_section = None
         self.dispatch_event('on_exit_section', old_section.name)
@@ -145,53 +141,43 @@ class Stage(pyglet.event.EventDispatcher):
     def enter_section(self, new_section):
         if new_section is not None:
             ## new_section.setup()
-            self.spawn_props(new_section.props)
-            self.spawn_actors(new_section.actors)
+            self.spawn_game_objects(new_section.props)
+            self.spawn_game_objects(new_section.actors)
         self.active_section = new_section
         self.dispatch_event('on_enter_section', new_section.name)
 
         log.info(I_ENTER_SECTION.format(new_section.name))
 
     def add_section(self, section):
-        section.offset = Vector(self.stage_width, 0)
+        section.offset = Vector(self.width, 0)
         self.sections.append(section)
 
         log.debug(D_ADD_SECTION.format(section.name, self.name))
 
-    def spawn_props(self, props):
-        for prop in props:
-            prop.allocate_sprite()
-            prop.show()
-        self.all_props |= props
-
-    def despawn_props(self, props):
-        for prop in props:
-            prop.despawn()
-        self.all_props -= props
-
-    def spawn_actors(self, actors):
-        for actor in actors:
-            actor.allocate_sprite()
-            actor.show()
-            log.debug(D_SPAWN_ACTOR.format(type(actor).__name__))
-        self.all_actors |= actors
+    def spawn_game_objects(self, game_objects):
+        for gob in game_objects:
+            gob.allocate_sprite()
+            gob.show()
+            gob.push_handlers(self)
+            log.debug(D_SPAWN.format(type(gob).__name__,
+                len(self.game_objects)))
+        self.game_objects |= game_objects
 
     def spawn_projectile(self, projectile):
         projectile.allocate_sprite()
         projectile.align_sprite(self.offset)
         projectile.show()
         log.debug(D_SPAWN_BULLET.format(type(projectile).__name__))
-        self.all_actors.add(projectile)
+        self.game_objects.add(projectile)
         projectile.push_handlers(self)
 
-    def despawn_actors(self, actors):
-        for actor in actors:
-            actor.despawn()
-        self.all_actors -= actors
+    def despawn_game_objects(self, game_objects):
+        for gob in game_objects:
+            gob.despawn()
+        self.game_objects -= game_objects
 
     def check_collisions(self):
-        game_objects = list(self.all_actors | self.all_props)
-        collisions = collider.aabb_collide(game_objects)
+        collisions = collider.aabb_collide(list(self.game_objects))
         for group in collisions:
             a, b = group
             a.collide(b, VECTOR_NULL, VECTOR_NULL)
@@ -207,15 +193,11 @@ class Stage(pyglet.event.EventDispatcher):
             return set()
 
     @property
-    def old_props(self):
-        return self.all_props - self.current_props
-
-    @property
-    def stage_width(self):
+    def width(self):
         return world.constants['WIN_WIDTH'] * len(self.sections)
 
     @property
-    def stage_height(self):
+    def height(self):
         return world.constants['WIN_HEIGHT']
 
     @property
@@ -269,7 +251,7 @@ class Stage(pyglet.event.EventDispatcher):
 
     def despawn(self, obj):
         self.despawned_objects.add(obj)
-        log.debug('Despawning {}'.format(obj))
+        log.debug('Despawning {}'.format(type(obj).__name__))
 
 Stage.register_event_type('on_begin_stage')
 Stage.register_event_type('on_end_stage')
@@ -502,6 +484,6 @@ I_ENTER_SECTION = "Entered Section {}."
 I_EXIT_SECTION = "Exited Section {}."
 D_ADD_SECTION = "Appended Section {} to Stage {}."
 D_INIT = "Initialised {} {}."
-D_SPAWN_ACTOR = "Spawned actor {}."
+D_SPAWN = "Spawned {}. Number of gobs: {}"
 D_SPAWN_BULLET = "Spawned bullet {}."
 D_DESPAWN_OBJECT = "Despawned {}."

@@ -94,8 +94,10 @@ class GameObject(pyglet.event.EventDispatcher):
         self.sprite = None
 
     def update(self, dt):
-        if self.speed is not None:
-            self.move(dt)
+        if self.speed is None:
+            self.speed = VECTOR_NULL
+        ##if self.speed is not None:
+        self.move(dt)
 
     def move(self, dt):
         self.position += self.speed * dt
