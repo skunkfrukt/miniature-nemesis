@@ -19,7 +19,7 @@ logging_options.add_argument('--warning', action='store_const', dest='logging_le
 parser.set_defaults(logging_level=logging.ERROR)
 args = parser.parse_args()
 
-log_level = args.logging_level
+log_level = logging.DEBUG  ## log_level = args.logging_level
 log.setLevel(log_level)
 log.info('{} logging enabled.'.format(logging.getLevelName(log_level)))
 

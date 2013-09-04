@@ -225,4 +225,4 @@ class MainWindow(pyglet.window.Window):
 
     def update(self,dt):
         if self.state is not None:
-            self.state.update(dt)
+            self.state.update(dt * 4)
