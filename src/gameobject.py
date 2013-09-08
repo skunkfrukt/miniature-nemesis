@@ -70,10 +70,6 @@ class GameObject(pyglet.event.EventDispatcher):
     def allocate_sprite(self):
         assert self.sprite is None
         self.sprite = SH.get_sprite(SH.FG, self.layer)
-        r = random.randint(0, 1) * 255
-        g = random.randint(0, 1) * 255
-        b = random.randint(0, 1) * 255
-        self.sprite.color = (r, g, b)
 
     def update_sprite(self):
         self.sprite.image = self.image
