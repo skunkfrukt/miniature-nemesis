@@ -1,0 +1,2932 @@
+{
+    "width": 32000,
+    "name": "Proto Village",
+    "background": [
+        63,
+        127,
+        0,
+        255
+    ],
+    "stage": [
+        {
+            "trigger": 100,
+            "object": {
+                "position": [
+                    100,
+                    200
+                ],
+                "class": "Peasant"
+            }
+        },
+        {
+            "trigger": 150,
+            "object": {
+                "position": [
+                    150,
+                    50
+                ],
+                "class": "Peasant"
+            }
+        },
+        {
+            "trigger": 200,
+            "object": {
+                "position": [
+                    200,
+                    100
+                ],
+                "class": "Peasant"
+            }
+        },
+        {
+            "trigger": 315,
+            "object": {
+                "position": [
+                    315,
+                    138
+                ],
+                "class": "HeroHouse"
+            }
+        },
+        {
+            "trigger": 370,
+            "object": {
+                "position": [
+                    370,
+                    123
+                ],
+                "class": "Skeleton"
+            }
+        },
+        {
+            "trigger": 658,
+            "object": {
+                "position": [
+                    658,
+                    292
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 1402,
+            "object": {
+                "position": [
+                    1402,
+                    144
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 1487,
+            "object": {
+                "position": [
+                    1487,
+                    19
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 1723,
+            "object": {
+                "position": [
+                    1723,
+                    293
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 1963,
+            "object": {
+                "position": [
+                    1963,
+                    284
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 2120,
+            "object": {
+                "position": [
+                    2120,
+                    85
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 2164,
+            "object": {
+                "position": [
+                    2164,
+                    291
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 2924,
+            "object": {
+                "position": [
+                    2924,
+                    283
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 2931,
+            "object": {
+                "position": [
+                    2931,
+                    167
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 3006,
+            "object": {
+                "position": [
+                    3006,
+                    168
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 3125,
+            "object": {
+                "position": [
+                    3125,
+                    7
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 3218,
+            "object": {
+                "position": [
+                    3218,
+                    291
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 3287,
+            "object": {
+                "position": [
+                    3287,
+                    223
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 3488,
+            "object": {
+                "position": [
+                    3488,
+                    284
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 3847,
+            "object": {
+                "position": [
+                    3847,
+                    217
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 4006,
+            "object": {
+                "position": [
+                    4006,
+                    169
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 4240,
+            "object": {
+                "position": [
+                    4240,
+                    280
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 4245,
+            "object": {
+                "position": [
+                    4245,
+                    238
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 4483,
+            "object": {
+                "position": [
+                    4483,
+                    248
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 4580,
+            "object": {
+                "position": [
+                    4580,
+                    247
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 4778,
+            "object": {
+                "position": [
+                    4778,
+                    39
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 4850,
+            "object": {
+                "position": [
+                    4850,
+                    97
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 4890,
+            "object": {
+                "position": [
+                    4890,
+                    323
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 4936,
+            "object": {
+                "position": [
+                    4936,
+                    48
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 5006,
+            "object": {
+                "position": [
+                    5006,
+                    283
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 5024,
+            "object": {
+                "position": [
+                    5024,
+                    200
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 5087,
+            "object": {
+                "position": [
+                    5087,
+                    142
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 5206,
+            "object": {
+                "position": [
+                    5206,
+                    51
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 5217,
+            "object": {
+                "position": [
+                    5217,
+                    88
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 5323,
+            "object": {
+                "position": [
+                    5323,
+                    54
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 5578,
+            "object": {
+                "position": [
+                    5578,
+                    163
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 5644,
+            "object": {
+                "position": [
+                    5644,
+                    86
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 5775,
+            "object": {
+                "position": [
+                    5775,
+                    296
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 6018,
+            "object": {
+                "position": [
+                    6018,
+                    208
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 6220,
+            "object": {
+                "position": [
+                    6220,
+                    287
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 6450,
+            "object": {
+                "position": [
+                    6450,
+                    300
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 6620,
+            "object": {
+                "position": [
+                    6620,
+                    0
+                ],
+                "class": "Creek"
+            }
+        },
+        {
+            "trigger": 6830,
+            "object": {
+                "position": [
+                    6830,
+                    200
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 6840,
+            "object": {
+                "position": [
+                    6840,
+                    120
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 7255,
+            "object": {
+                "position": [
+                    7255,
+                    280
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 7324,
+            "object": {
+                "position": [
+                    7324,
+                    177
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 7327,
+            "object": {
+                "position": [
+                    7327,
+                    205
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 7329,
+            "object": {
+                "position": [
+                    7329,
+                    139
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 7584,
+            "object": {
+                "position": [
+                    7584,
+                    294
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 7600,
+            "object": {
+                "position": [
+                    7600,
+                    232
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 7727,
+            "object": {
+                "position": [
+                    7727,
+                    280
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 7803,
+            "object": {
+                "position": [
+                    7803,
+                    19
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 7938,
+            "object": {
+                "position": [
+                    7938,
+                    20
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 8004,
+            "object": {
+                "position": [
+                    8004,
+                    97
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 8084,
+            "object": {
+                "position": [
+                    8084,
+                    261
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 8200,
+            "object": {
+                "position": [
+                    8200,
+                    288
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 8287,
+            "object": {
+                "position": [
+                    8287,
+                    3
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 8326,
+            "object": {
+                "position": [
+                    8326,
+                    212
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 8360,
+            "object": {
+                "position": [
+                    8360,
+                    233
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 8446,
+            "object": {
+                "position": [
+                    8446,
+                    165
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 8489,
+            "object": {
+                "position": [
+                    8489,
+                    3
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 8659,
+            "object": {
+                "position": [
+                    8659,
+                    284
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 9219,
+            "object": {
+                "position": [
+                    9219,
+                    289
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 9332,
+            "object": {
+                "position": [
+                    9332,
+                    21
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 9419,
+            "object": {
+                "position": [
+                    9419,
+                    285
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 9600,
+            "object": {
+                "position": [
+                    9600,
+                    55
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 9684,
+            "object": {
+                "position": [
+                    9684,
+                    289
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 9891,
+            "object": {
+                "position": [
+                    9891,
+                    208
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 9892,
+            "object": {
+                "position": [
+                    9892,
+                    256
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 10089,
+            "object": {
+                "position": [
+                    10089,
+                    281
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10142,
+            "object": {
+                "position": [
+                    10142,
+                    207
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10240,
+            "object": {
+                "position": [
+                    10240,
+                    280
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10261,
+            "object": {
+                "position": [
+                    10261,
+                    50
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10288,
+            "object": {
+                "position": [
+                    10288,
+                    208
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 10290,
+            "object": {
+                "position": [
+                    10290,
+                    127
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10336,
+            "object": {
+                "position": [
+                    10336,
+                    8
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10337,
+            "object": {
+                "position": [
+                    10337,
+                    308
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10414,
+            "object": {
+                "position": [
+                    10414,
+                    172
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 10447,
+            "object": {
+                "position": [
+                    10447,
+                    7
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 10467,
+            "object": {
+                "position": [
+                    10467,
+                    110
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10520,
+            "object": {
+                "position": [
+                    10520,
+                    121
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 10586,
+            "object": {
+                "position": [
+                    10586,
+                    27
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10600,
+            "object": {
+                "position": [
+                    10600,
+                    249
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10652,
+            "object": {
+                "position": [
+                    10652,
+                    288
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 10686,
+            "object": {
+                "position": [
+                    10686,
+                    212
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10687,
+            "object": {
+                "position": [
+                    10687,
+                    89
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 10688,
+            "object": {
+                "position": [
+                    10688,
+                    42
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10724,
+            "object": {
+                "position": [
+                    10724,
+                    121
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10762,
+            "object": {
+                "position": [
+                    10762,
+                    256
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 10782,
+            "object": {
+                "position": [
+                    10782,
+                    36
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 10851,
+            "object": {
+                "position": [
+                    10851,
+                    260
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 11011,
+            "object": {
+                "position": [
+                    11011,
+                    211
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 11243,
+            "object": {
+                "position": [
+                    11243,
+                    285
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 11321,
+            "object": {
+                "position": [
+                    11321,
+                    293
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 11538,
+            "object": {
+                "position": [
+                    11538,
+                    284
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 11847,
+            "object": {
+                "position": [
+                    11847,
+                    283
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 12367,
+            "object": {
+                "position": [
+                    12367,
+                    296
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 12605,
+            "object": {
+                "position": [
+                    12605,
+                    254
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 12842,
+            "object": {
+                "position": [
+                    12842,
+                    83
+                ],
+                "class": "Church"
+            }
+        },
+        {
+            "trigger": 13160,
+            "object": {
+                "position": [
+                    13160,
+                    50
+                ],
+                "class": "Preacher"
+            }
+        },
+        {
+            "trigger": 13653,
+            "object": {
+                "position": [
+                    13653,
+                    259
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 13780,
+            "object": {
+                "position": [
+                    13780,
+                    72
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 13853,
+            "object": {
+                "position": [
+                    13853,
+                    253
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 14208,
+            "object": {
+                "position": [
+                    14208,
+                    163
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 14249,
+            "object": {
+                "position": [
+                    14249,
+                    286
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 14470,
+            "object": {
+                "position": [
+                    14470,
+                    46
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 14884,
+            "object": {
+                "position": [
+                    14884,
+                    139
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 15104,
+            "object": {
+                "position": [
+                    15104,
+                    303
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 15365,
+            "object": {
+                "position": [
+                    15365,
+                    54
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 15680,
+            "object": {
+                "position": [
+                    15680,
+                    18
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 15692,
+            "object": {
+                "position": [
+                    15692,
+                    268
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 15897,
+            "object": {
+                "position": [
+                    15897,
+                    49
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 16020,
+            "object": {
+                "position": [
+                    16020,
+                    19
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 16120,
+            "object": {
+                "position": [
+                    16120,
+                    11
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 16243,
+            "object": {
+                "position": [
+                    16243,
+                    304
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 16349,
+            "object": {
+                "position": [
+                    16349,
+                    22
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 16455,
+            "object": {
+                "position": [
+                    16455,
+                    205
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 16566,
+            "object": {
+                "position": [
+                    16566,
+                    24
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 16729,
+            "object": {
+                "position": [
+                    16729,
+                    4
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 16811,
+            "object": {
+                "position": [
+                    16811,
+                    217
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 16934,
+            "object": {
+                "position": [
+                    16934,
+                    329
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 16943,
+            "object": {
+                "position": [
+                    16943,
+                    171
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 17175,
+            "object": {
+                "position": [
+                    17175,
+                    293
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 17361,
+            "object": {
+                "position": [
+                    17361,
+                    202
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 17486,
+            "object": {
+                "position": [
+                    17486,
+                    323
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 17486,
+            "object": {
+                "position": [
+                    17486,
+                    179
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 17575,
+            "object": {
+                "position": [
+                    17575,
+                    244
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 17704,
+            "object": {
+                "position": [
+                    17704,
+                    88
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 17939,
+            "object": {
+                "position": [
+                    17939,
+                    315
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18131,
+            "object": {
+                "position": [
+                    18131,
+                    92
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18184,
+            "object": {
+                "position": [
+                    18184,
+                    76
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18200,
+            "object": {
+                "position": [
+                    18200,
+                    138
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18241,
+            "object": {
+                "position": [
+                    18241,
+                    262
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18306,
+            "object": {
+                "position": [
+                    18306,
+                    171
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18400,
+            "object": {
+                "position": [
+                    18400,
+                    125
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18408,
+            "object": {
+                "position": [
+                    18408,
+                    238
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18450,
+            "object": {
+                "position": [
+                    18450,
+                    34
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18471,
+            "object": {
+                "position": [
+                    18471,
+                    293
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18563,
+            "object": {
+                "position": [
+                    18563,
+                    209
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18567,
+            "object": {
+                "position": [
+                    18567,
+                    2
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18591,
+            "object": {
+                "position": [
+                    18591,
+                    291
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18640,
+            "object": {
+                "position": [
+                    18640,
+                    178
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18651,
+            "object": {
+                "position": [
+                    18651,
+                    259
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18659,
+            "object": {
+                "position": [
+                    18659,
+                    332
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18684,
+            "object": {
+                "position": [
+                    18684,
+                    204
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18727,
+            "object": {
+                "position": [
+                    18727,
+                    68
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18727,
+            "object": {
+                "position": [
+                    18727,
+                    177
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18730,
+            "object": {
+                "position": [
+                    18730,
+                    222
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18738,
+            "object": {
+                "position": [
+                    18738,
+                    285
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18806,
+            "object": {
+                "position": [
+                    18806,
+                    15
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18807,
+            "object": {
+                "position": [
+                    18807,
+                    142
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18818,
+            "object": {
+                "position": [
+                    18818,
+                    331
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18888,
+            "object": {
+                "position": [
+                    18888,
+                    6
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 18891,
+            "object": {
+                "position": [
+                    18891,
+                    313
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18903,
+            "object": {
+                "position": [
+                    18903,
+                    42
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 18970,
+            "object": {
+                "position": [
+                    18970,
+                    82
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 19091,
+            "object": {
+                "position": [
+                    19091,
+                    52
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 19142,
+            "object": {
+                "position": [
+                    19142,
+                    296
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 19287,
+            "object": {
+                "position": [
+                    19287,
+                    245
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 19327,
+            "object": {
+                "position": [
+                    19327,
+                    261
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 19467,
+            "object": {
+                "position": [
+                    19467,
+                    64
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 19484,
+            "object": {
+                "position": [
+                    19484,
+                    4
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 19737,
+            "object": {
+                "position": [
+                    19737,
+                    252
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 19905,
+            "object": {
+                "position": [
+                    19905,
+                    47
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 19974,
+            "object": {
+                "position": [
+                    19974,
+                    282
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 20161,
+            "object": {
+                "position": [
+                    20161,
+                    55
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 20211,
+            "object": {
+                "position": [
+                    20211,
+                    299
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 20360,
+            "object": {
+                "position": [
+                    20360,
+                    129
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 20421,
+            "object": {
+                "position": [
+                    20421,
+                    53
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 20486,
+            "object": {
+                "position": [
+                    20486,
+                    116
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 20501,
+            "object": {
+                "position": [
+                    20501,
+                    265
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 20567,
+            "object": {
+                "position": [
+                    20567,
+                    286
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 20666,
+            "object": {
+                "position": [
+                    20666,
+                    235
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 20705,
+            "object": {
+                "position": [
+                    20705,
+                    163
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 20720,
+            "object": {
+                "position": [
+                    20720,
+                    256
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 20774,
+            "object": {
+                "position": [
+                    20774,
+                    172
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 20850,
+            "object": {
+                "position": [
+                    20850,
+                    120
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 21052,
+            "object": {
+                "position": [
+                    21052,
+                    296
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 21065,
+            "object": {
+                "position": [
+                    21065,
+                    200
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 21080,
+            "object": {
+                "position": [
+                    21080,
+                    162
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 21127,
+            "object": {
+                "position": [
+                    21127,
+                    104
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 21135,
+            "object": {
+                "position": [
+                    21135,
+                    297
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 21141,
+            "object": {
+                "position": [
+                    21141,
+                    53
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 21247,
+            "object": {
+                "position": [
+                    21247,
+                    259
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 21281,
+            "object": {
+                "position": [
+                    21281,
+                    10
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 21376,
+            "object": {
+                "position": [
+                    21376,
+                    290
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 21411,
+            "object": {
+                "position": [
+                    21411,
+                    60
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 21458,
+            "object": {
+                "position": [
+                    21458,
+                    79
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 21483,
+            "object": {
+                "position": [
+                    21483,
+                    123
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 21526,
+            "object": {
+                "position": [
+                    21526,
+                    86
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 21571,
+            "object": {
+                "position": [
+                    21571,
+                    50
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 21576,
+            "object": {
+                "position": [
+                    21576,
+                    280
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 21685,
+            "object": {
+                "position": [
+                    21685,
+                    7
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 21768,
+            "object": {
+                "position": [
+                    21768,
+                    142
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 21897,
+            "object": {
+                "position": [
+                    21897,
+                    241
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 21931,
+            "object": {
+                "position": [
+                    21931,
+                    51
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 21989,
+            "object": {
+                "position": [
+                    21989,
+                    133
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 22098,
+            "object": {
+                "position": [
+                    22098,
+                    285
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 22171,
+            "object": {
+                "position": [
+                    22171,
+                    145
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 22282,
+            "object": {
+                "position": [
+                    22282,
+                    85
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 22406,
+            "object": {
+                "position": [
+                    22406,
+                    253
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 22619,
+            "object": {
+                "position": [
+                    22619,
+                    246
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 22721,
+            "object": {
+                "position": [
+                    22721,
+                    23
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 22859,
+            "object": {
+                "position": [
+                    22859,
+                    281
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 22865,
+            "object": {
+                "position": [
+                    22865,
+                    0
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 22890,
+            "object": {
+                "position": [
+                    22890,
+                    231
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 23000,
+            "object": {
+                "position": [
+                    23000,
+                    6
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 23050,
+            "object": {
+                "position": [
+                    23050,
+                    90
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 23091,
+            "object": {
+                "position": [
+                    23091,
+                    313
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 23175,
+            "object": {
+                "position": [
+                    23175,
+                    284
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 23246,
+            "object": {
+                "position": [
+                    23246,
+                    249
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 23418,
+            "object": {
+                "position": [
+                    23418,
+                    123
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 23487,
+            "object": {
+                "position": [
+                    23487,
+                    46
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 23643,
+            "object": {
+                "position": [
+                    23643,
+                    126
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 23740,
+            "object": {
+                "position": [
+                    23740,
+                    256
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 23882,
+            "object": {
+                "position": [
+                    23882,
+                    125
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 23965,
+            "object": {
+                "position": [
+                    23965,
+                    292
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 23968,
+            "object": {
+                "position": [
+                    23968,
+                    94
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 24171,
+            "object": {
+                "position": [
+                    24171,
+                    97
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 24185,
+            "object": {
+                "position": [
+                    24185,
+                    243
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 24227,
+            "object": {
+                "position": [
+                    24227,
+                    53
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 24367,
+            "object": {
+                "position": [
+                    24367,
+                    45
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 24410,
+            "object": {
+                "position": [
+                    24410,
+                    216
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 24463,
+            "object": {
+                "position": [
+                    24463,
+                    253
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 24522,
+            "object": {
+                "position": [
+                    24522,
+                    213
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 24583,
+            "object": {
+                "position": [
+                    24583,
+                    297
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 24616,
+            "object": {
+                "position": [
+                    24616,
+                    12
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 24699,
+            "object": {
+                "position": [
+                    24699,
+                    333
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 24720,
+            "object": {
+                "position": [
+                    24720,
+                    138
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 24727,
+            "object": {
+                "position": [
+                    24727,
+                    161
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 24981,
+            "object": {
+                "position": [
+                    24981,
+                    103
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 25082,
+            "object": {
+                "position": [
+                    25082,
+                    18
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 25137,
+            "object": {
+                "position": [
+                    25137,
+                    290
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 25282,
+            "object": {
+                "position": [
+                    25282,
+                    133
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 25340,
+            "object": {
+                "position": [
+                    25340,
+                    255
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 25420,
+            "object": {
+                "position": [
+                    25420,
+                    160
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 25529,
+            "object": {
+                "position": [
+                    25529,
+                    252
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 25627,
+            "object": {
+                "position": [
+                    25627,
+                    60
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 25695,
+            "object": {
+                "position": [
+                    25695,
+                    245
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 25724,
+            "object": {
+                "position": [
+                    25724,
+                    53
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 25829,
+            "object": {
+                "position": [
+                    25829,
+                    187
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 26015,
+            "object": {
+                "position": [
+                    26015,
+                    284
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 26019,
+            "object": {
+                "position": [
+                    26019,
+                    168
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 26164,
+            "object": {
+                "position": [
+                    26164,
+                    128
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 26443,
+            "object": {
+                "position": [
+                    26443,
+                    207
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 26884,
+            "object": {
+                "position": [
+                    26884,
+                    284
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 26903,
+            "object": {
+                "position": [
+                    26903,
+                    84
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 27020,
+            "object": {
+                "position": [
+                    27020,
+                    66
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 27249,
+            "object": {
+                "position": [
+                    27249,
+                    62
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 27283,
+            "object": {
+                "position": [
+                    27283,
+                    149
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 27291,
+            "object": {
+                "position": [
+                    27291,
+                    291
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 27408,
+            "object": {
+                "position": [
+                    27408,
+                    103
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 27526,
+            "object": {
+                "position": [
+                    27526,
+                    292
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 27604,
+            "object": {
+                "position": [
+                    27604,
+                    170
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 27647,
+            "object": {
+                "position": [
+                    27647,
+                    123
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 27764,
+            "object": {
+                "position": [
+                    27764,
+                    51
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 27860,
+            "object": {
+                "position": [
+                    27860,
+                    310
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 27968,
+            "object": {
+                "position": [
+                    27968,
+                    297
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 28003,
+            "object": {
+                "position": [
+                    28003,
+                    253
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 28220,
+            "object": {
+                "position": [
+                    28220,
+                    292
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 28245,
+            "object": {
+                "position": [
+                    28245,
+                    52
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 28362,
+            "object": {
+                "position": [
+                    28362,
+                    81
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 28385,
+            "object": {
+                "position": [
+                    28385,
+                    32
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 28508,
+            "object": {
+                "position": [
+                    28508,
+                    53
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 28569,
+            "object": {
+                "position": [
+                    28569,
+                    251
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 28724,
+            "object": {
+                "position": [
+                    28724,
+                    137
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 28843,
+            "object": {
+                "position": [
+                    28843,
+                    288
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 28884,
+            "object": {
+                "position": [
+                    28884,
+                    13
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 28897,
+            "object": {
+                "position": [
+                    28897,
+                    88
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 28934,
+            "object": {
+                "position": [
+                    28934,
+                    55
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 29168,
+            "object": {
+                "position": [
+                    29168,
+                    257
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 29248,
+            "object": {
+                "position": [
+                    29248,
+                    88
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 29331,
+            "object": {
+                "position": [
+                    29331,
+                    0
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 29458,
+            "object": {
+                "position": [
+                    29458,
+                    244
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 29489,
+            "object": {
+                "position": [
+                    29489,
+                    289
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 29533,
+            "object": {
+                "position": [
+                    29533,
+                    293
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 29589,
+            "object": {
+                "position": [
+                    29589,
+                    85
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 29680,
+            "object": {
+                "position": [
+                    29680,
+                    19
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 29722,
+            "object": {
+                "position": [
+                    29722,
+                    128
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 29819,
+            "object": {
+                "position": [
+                    29819,
+                    285
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 30130,
+            "object": {
+                "position": [
+                    30130,
+                    300
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 30300,
+            "object": {
+                "position": [
+                    30300,
+                    0
+                ],
+                "class": "Creek"
+            }
+        },
+        {
+            "trigger": 30510,
+            "object": {
+                "position": [
+                    30510,
+                    200
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 30520,
+            "object": {
+                "position": [
+                    30520,
+                    120
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 30738,
+            "object": {
+                "position": [
+                    30738,
+                    288
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 30767,
+            "object": {
+                "position": [
+                    30767,
+                    208
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 30777,
+            "object": {
+                "position": [
+                    30777,
+                    16
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 30885,
+            "object": {
+                "position": [
+                    30885,
+                    92
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 30909,
+            "object": {
+                "position": [
+                    30909,
+                    286
+                ],
+                "class": "Rock"
+            }
+        },
+        {
+            "trigger": 31138,
+            "object": {
+                "position": [
+                    31138,
+                    166
+                ],
+                "class": "House"
+            }
+        },
+        {
+            "trigger": 31321,
+            "object": {
+                "position": [
+                    31321,
+                    223
+                ],
+                "class": "Stone"
+            }
+        },
+        {
+            "trigger": 31910,
+            "object": {
+                "position": [
+                    31910,
+                    200
+                ],
+                "class": "Tree"
+            }
+        }
+    ]
+}

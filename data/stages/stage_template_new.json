@@ -1,0 +1,25 @@
+{
+    "name": "Tekilili Village",
+    "width": 6400,
+    "background": [63, 127, 0, 255],
+    "layers": {
+        "background": 1,
+        "props": 2,
+        "actors": 1,
+        "projectiles": 0,
+        "foreground": 0
+    },
+    "stage": [
+        {
+            "trigger": 0,
+            "object": {
+                "class": "P_HeroHouse",
+                "position": [300, 200]
+            },
+            "event": null,
+            "log": null,
+            "message": null,
+            "suppress_warnings": false
+        }
+    ]
+}
