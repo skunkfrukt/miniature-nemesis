@@ -42,8 +42,6 @@ class Stage(pyglet.event.EventDispatcher):
         self.active_section = None
         self.despawned_objects = set()
 
-        ## self.spatial_hash = None
-
         log.debug(D_INIT.format(type(self).__name__, self.name))
 
     def setup(self):
@@ -125,10 +123,8 @@ class Stage(pyglet.event.EventDispatcher):
             self.enter_section(new_section)
         except StopIteration:
             self.stop_scrolling()
-            ## self.dispatch_event('on_enter_final_section')
 
     def exit_section(self, old_section):
-        ## self.despawn_props(self.old_props)
         if old_section is not None:
             self.spawn_game_objects(old_section.second_actors)
             old_section.reset()
@@ -139,7 +135,6 @@ class Stage(pyglet.event.EventDispatcher):
 
     def enter_section(self, new_section):
         if new_section is not None:
-            ## new_section.setup()
             self.spawn_game_objects(new_section.props)
             self.spawn_game_objects(new_section.actors)
         self.active_section = new_section
@@ -181,8 +176,6 @@ class Stage(pyglet.event.EventDispatcher):
             a, b = group
             a.collide(b, VECTOR_NULL, VECTOR_NULL)
             b.collide(a, VECTOR_NULL, VECTOR_NULL)
-        '''self.spatial_hash.collide(
-            self.active_rect, self.all_actors, self.current_props)'''
 
     @property
     def current_props(self):
@@ -236,7 +229,6 @@ class Stage(pyglet.event.EventDispatcher):
                 if the_hero.status != 'knockback':
                     the_hero.send_effect('knockback')
                     self.target_scroll_speed *= 1.2
-                    ## the_hero.acceleration *= 1.2
                     the_hero.max_speed *= 1.2
             else:
                 self.dispatch_event('on_end_stage')
