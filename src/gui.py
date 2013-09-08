@@ -10,6 +10,7 @@ log = logging.getLogger(__name__)
 
 keys = key.KeyStateHandler()
 import actor
+import stage
 import stagebuilder
 
 import world
@@ -212,6 +213,9 @@ class MainWindow(pyglet.window.Window):
     def on_draw(self):
         if self.state is not None:
             spritehandler._batch.draw()
+            stage.Stage.progress_bar.draw()
+            stage.Stage.progress_ball.draw()
+
 
     def on_switch_state(self, new_state):
         self.set_state(new_state)

@@ -27,6 +27,9 @@ def generate_section_name():
 
 
 class Stage(pyglet.event.EventDispatcher):
+    progress_bar = pyglet.sprite.Sprite(pyglet.resource.image('img/gui/progress_bar.png'), 0, 344)
+    progress_ball = pyglet.sprite.Sprite(pyglet.resource.image('img/gui/progress_ball.png'), 0, 344)
+
     def __init__(self, name):
         self.name = name
         self.sections = []
@@ -78,6 +81,7 @@ class Stage(pyglet.event.EventDispatcher):
 
         self.update_sprites()
         self.check_collisions()
+        self.update_progress_ball()
 
     def update_stage_position(self, dt):
         if self.is_scrolling:
@@ -252,6 +256,9 @@ class Stage(pyglet.event.EventDispatcher):
     def despawn(self, obj):
         self.despawned_objects.add(obj)
         log.debug('Despawning {}'.format(type(obj).__name__))
+
+    def update_progress_ball(self):
+        self.progress_ball.x = min(624, int(624 * self.hero.x / self.width))
 
 Stage.register_event_type('on_begin_stage')
 Stage.register_event_type('on_end_stage')
