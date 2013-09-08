@@ -92,12 +92,10 @@ class Stage(pyglet.event.EventDispatcher):
                 self.advance_section()
 
     def update_scroll_speed(self, dt):
-        actual = self.actual_scroll_speed.x
-        target = self.target_scroll_speed.x
-        if actual < target:
-            delta = 50 * dt  # TODO: Magic number.
-            new_scroll_speed = min(target, actual + delta)
-            self.actual_scroll_speed = Vector(new_scroll_speed, 0)
+        if self.target_scroll_speed != self.actual_scroll_speed:
+            delta = 50 * dt
+            diff = self.target_scroll_speed - self.actual_scroll_speed
+            self.actual_scroll_speed += diff.unit * min(delta, diff.length)
 
     def start_scrolling(self, scroll_speed):
         self.target_scroll_speed = scroll_speed
