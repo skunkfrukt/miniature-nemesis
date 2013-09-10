@@ -7,6 +7,7 @@ import logging
 logging.basicConfig()
 log = logging.getLogger()
 
+GAME_SPEED = 2
 
 parser = argparse.ArgumentParser(description="A danmaku runner.")
 parser.add_argument('-v', '--version', action='version', version=GAME_VERSION)
@@ -37,7 +38,7 @@ from src import gui
 
 log.info('Launching game.')
 
-gui.MainWindow(fullscreen=args.fullscreen)
+gui.MainWindow(fullscreen=args.fullscreen, speed=GAME_SPEED)
 
 pyglet.app.run()
 

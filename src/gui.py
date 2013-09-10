@@ -179,9 +179,10 @@ fps_display = pyglet.clock.ClockDisplay()
 class MainWindow(pyglet.window.Window):
     icon = pyglet.resource.image('img/icons/128x128.png')
 
-    def __init__(self, fullscreen=False):
+    def __init__(self, fullscreen=False, speed=1):
         super(MainWindow, self).__init__(WIN_WIDTH + world.ZERO*2, WIN_HEIGHT,
                 WIN_TITLE, fullscreen=fullscreen)
+        self.speed = speed
         self.state = None
         menustate = MenuState()
         self.set_state(menustate)
@@ -229,4 +230,4 @@ class MainWindow(pyglet.window.Window):
 
     def update(self,dt):
         if self.state is not None:
-            self.state.update(dt * 4)
+            self.state.update(dt * self.speed)
