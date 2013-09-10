@@ -219,9 +219,19 @@
                     "y": 300
                 },
                 {
-                    "cls": "PROP_CREEK",
+                    "cls": "PROP_RIVER",
                     "x": 220,
-                    "y": 0
+                    "y": -300
+                },
+                {
+                    "cls": "PROP_RIVER",
+                    "x": 220,
+                    "y": 217
+                },
+                {
+                    "cls": "PROP_BRIDGE",
+                    "x": 193,
+                    "y": 100
                 },
                 {
                     "cls": "PROP_HOUSE",
@@ -881,9 +891,19 @@
                     "y": 300
                 },
                 {
-                    "cls": "PROP_CREEK",
+                    "cls": "PROP_RIVER",
                     "x": 220,
-                    "y": 0
+                    "y": -200
+                },
+                {
+                    "cls": "PROP_RIVER",
+                    "x": 220,
+                    "y": 317
+                },
+                {
+                    "cls": "PROP_BRIDGE",
+                    "x": 193,
+                    "y": 200
                 },
                 {
                     "cls": "PROP_HOUSE",
